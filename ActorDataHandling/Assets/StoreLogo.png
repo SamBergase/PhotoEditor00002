@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?><doc>
+  <assembly>
+    <name>System.Buffers</name>
+  </assembly>
+  <members>
+    <member name="T:System.Buffers.ArrayPool`1">
+      <summary>Provides a resource pool that enables reusing instances of type <see cref="T[]"></see>.</summary>
+      <typeparam name="T">The type of the objects that are in the resource pool.</typeparam>
+    </member>
+    <member name="M:System.Buffers.ArrayPool`1.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Buffers.ArrayPool`1"></see> class.</summary>
+    </member>
+    <member name="M:System.Buffers.ArrayPool`1.Create">
+      <summary>Creates a new instance of the <see cref="T:System.Buffers.ArrayPool`1"></see> class.</summary>
+      <returns>A new instance of the <see cref="System.Buffers.ArrayPool`1"></see> class.</returns>
+    </member>
+    <member name="M:System.Buffers.ArrayPool`1.Create(System.Int32,System.Int32)">
+      <summary>Creates a new instance of the <see cref="T:System.Buffers.ArrayPool`1"></see> class using the specifed configuration.</summary>
+      <param name="maxArrayLength">The maximum length of an array instance that may be stored in the pool.</param>
+      <param name="maxArraysPerBucket">The maximum number of array instances that may be stored in each bucket in the pool. The pool groups arrays of similar lengths into buckets for faster access.</param>
+      <returns>A new instance of t

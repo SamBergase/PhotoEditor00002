@@ -1,0 +1,9 @@
+userID : SoldWf
+Name   : Unknown
+SirNam : Unknown
+Birth  : 1900-01-01
+SocSec : 1234
+UsrRgt : 0
+Gender : Female
+Group  : Cocation
+-1

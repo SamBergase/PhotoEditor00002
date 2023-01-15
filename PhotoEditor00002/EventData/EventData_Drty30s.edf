@@ -1,0 +1,25 @@
+Identity : Drty30s
+Secrecy  : Secret
+StrtYear : 2007
+StrtMnth : 1
+StrtHour : 0
+StrtMin  : 0
+StopMnth : 1
+StopHour : 0
+StopMin  : 0
+Headline : Dirty 30s
+LatMin   : 0
+LatSec   : 0
+LatSemSc : 0
+LatDir   : Undefined
+LonMin   : 0
+LonSec   : 0
+LonSemSc : 0
+LonDir   : Undefined
+EvtAttdr : JezBond, Undefined
+EvtAttdr : AustKcd, Undefined
+EvtAttdr : RegnAnt, Undefined
+EvtAttdr : RynMdsn, Undefined
+EvtAttdr : KrstlSm, Undefined
+EvtAttdr : KlyMdsn, Undefined
+EvtAttdr : ShlaMre, Undefined

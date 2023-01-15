@@ -1,0 +1,14 @@
+userId : BlankA
+Name   : Amber
+SirNam : Blank
+Birth  : 1985-01-01
+SocSec : 1234
+UsrPwd : password
+UsrRgt : 0
+Gender : Female
+Group  : Cocation
+ActDsc : She is a cock loving slut, fucking around while her husband films her.
+Area   : 00, Kansas
+City   : 00, Fort Riley
+Cntry  : 00, UnitedStates
+-1
