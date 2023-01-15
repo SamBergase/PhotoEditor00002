@@ -704,6 +704,7 @@ namespace myLoginForm//PhotoEditor00001
             this.btnAddCurrency.TabIndex = 539;
             this.btnAddCurrency.Text = "ADD";
             this.btnAddCurrency.UseVisualStyleBackColor = false;
+            this.btnAddCurrency.Click += new System.EventHandler(this.btnAddCurrency_Click);
             // 
             // txtBxCurrencyToAdd
             // 
@@ -713,6 +714,7 @@ namespace myLoginForm//PhotoEditor00001
             this.txtBxCurrencyToAdd.Size = new System.Drawing.Size(275, 20);
             this.txtBxCurrencyToAdd.TabIndex = 536;
             this.txtBxCurrencyToAdd.Visible = false;
+            this.txtBxCurrencyToAdd.TextChanged += new System.EventHandler(this.txtBxCurrencyToAdd_TextChanged);
             // 
             // cmbBoxExistingCurrencies
             // 
@@ -723,6 +725,7 @@ namespace myLoginForm//PhotoEditor00001
             this.cmbBoxExistingCurrencies.Size = new System.Drawing.Size(194, 21);
             this.cmbBoxExistingCurrencies.TabIndex = 537;
             this.cmbBoxExistingCurrencies.Visible = false;
+            this.cmbBoxExistingCurrencies.SelectedIndexChanged += new System.EventHandler(this.cmbBoxExistingCurrencies_SelectedIndexChanged);
             // 
             // lblCurrency
             // 
@@ -744,6 +747,7 @@ namespace myLoginForm//PhotoEditor00001
             this.btnAddContactWay.TabIndex = 543;
             this.btnAddContactWay.Text = "ADD";
             this.btnAddContactWay.UseVisualStyleBackColor = false;
+            this.btnAddContactWay.Click += new System.EventHandler(this.btnAddContactWay_Click);
             // 
             // txtBxContactWaysToAdd
             // 
@@ -753,6 +757,7 @@ namespace myLoginForm//PhotoEditor00001
             this.txtBxContactWaysToAdd.Size = new System.Drawing.Size(275, 20);
             this.txtBxContactWaysToAdd.TabIndex = 540;
             this.txtBxContactWaysToAdd.Visible = false;
+            this.txtBxContactWaysToAdd.TextChanged += new System.EventHandler(this.txtBxContactWaysToAdd_TextChanged);
             // 
             // cmbBxExistingContactWays
             // 
@@ -763,6 +768,7 @@ namespace myLoginForm//PhotoEditor00001
             this.cmbBxExistingContactWays.Size = new System.Drawing.Size(194, 21);
             this.cmbBxExistingContactWays.TabIndex = 541;
             this.cmbBxExistingContactWays.Visible = false;
+            this.cmbBxExistingContactWays.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingContactWays_SelectedIndexChanged);
             // 
             // lblContactWays
             // 
@@ -784,6 +790,7 @@ namespace myLoginForm//PhotoEditor00001
             this.btnAddComplexion.TabIndex = 547;
             this.btnAddComplexion.Text = "ADD";
             this.btnAddComplexion.UseVisualStyleBackColor = false;
+            this.btnAddComplexion.Click += new System.EventHandler(this.btnAddComplexion_Click);
             // 
             // txtBxComplexionToAdd
             // 
@@ -793,6 +800,7 @@ namespace myLoginForm//PhotoEditor00001
             this.txtBxComplexionToAdd.Size = new System.Drawing.Size(275, 20);
             this.txtBxComplexionToAdd.TabIndex = 544;
             this.txtBxComplexionToAdd.Visible = false;
+            this.txtBxComplexionToAdd.TextChanged += new System.EventHandler(this.txtBxComplexionToAdd_TextChanged);
             // 
             // cmbBxExistingComplexions
             // 
@@ -803,6 +811,7 @@ namespace myLoginForm//PhotoEditor00001
             this.cmbBxExistingComplexions.Size = new System.Drawing.Size(194, 21);
             this.cmbBxExistingComplexions.TabIndex = 545;
             this.cmbBxExistingComplexions.Visible = false;
+            this.cmbBxExistingComplexions.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingComplexions_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -824,6 +833,7 @@ namespace myLoginForm//PhotoEditor00001
             this.btnAddHairColor.TabIndex = 551;
             this.btnAddHairColor.Text = "ADD";
             this.btnAddHairColor.UseVisualStyleBackColor = false;
+            this.btnAddHairColor.Click += new System.EventHandler(this.btnAddHairColor_Click);
             // 
             // txtBxHairColorToAdd
             // 
@@ -833,6 +843,7 @@ namespace myLoginForm//PhotoEditor00001
             this.txtBxHairColorToAdd.Size = new System.Drawing.Size(275, 20);
             this.txtBxHairColorToAdd.TabIndex = 548;
             this.txtBxHairColorToAdd.Visible = false;
+            this.txtBxHairColorToAdd.TextChanged += new System.EventHandler(this.txtBxHairColorToAdd_TextChanged);
             // 
             // cmbBxExistingHairColors
             // 
@@ -843,6 +854,7 @@ namespace myLoginForm//PhotoEditor00001
             this.cmbBxExistingHairColors.Size = new System.Drawing.Size(194, 21);
             this.cmbBxExistingHairColors.TabIndex = 549;
             this.cmbBxExistingHairColors.Visible = false;
+            this.cmbBxExistingHairColors.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingHairColors_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -864,6 +876,7 @@ namespace myLoginForm//PhotoEditor00001
             this.btnAddEyeColor.TabIndex = 555;
             this.btnAddEyeColor.Text = "ADD";
             this.btnAddEyeColor.UseVisualStyleBackColor = false;
+            this.btnAddEyeColor.Click += new System.EventHandler(this.btnAddEyeColor_Click);
             // 
             // txtBxEyeColorToAdd
             // 
@@ -873,6 +886,7 @@ namespace myLoginForm//PhotoEditor00001
             this.txtBxEyeColorToAdd.Size = new System.Drawing.Size(275, 20);
             this.txtBxEyeColorToAdd.TabIndex = 552;
             this.txtBxEyeColorToAdd.Visible = false;
+            this.txtBxEyeColorToAdd.TextChanged += new System.EventHandler(this.txtBxEyeColorToAdd_TextChanged);
             // 
             // cmbBxExistingEyeColors
             // 
@@ -883,6 +897,7 @@ namespace myLoginForm//PhotoEditor00001
             this.cmbBxExistingEyeColors.Size = new System.Drawing.Size(194, 21);
             this.cmbBxExistingEyeColors.TabIndex = 553;
             this.cmbBxExistingEyeColors.Visible = false;
+            this.cmbBxExistingEyeColors.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingEyeColors_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -904,6 +919,7 @@ namespace myLoginForm//PhotoEditor00001
             this.btnAddRole.TabIndex = 559;
             this.btnAddRole.Text = "ADD";
             this.btnAddRole.UseVisualStyleBackColor = false;
+            this.btnAddRole.Click += new System.EventHandler(this.btnAddRole_Click);
             // 
             // txtBxRoleToAdd
             // 
@@ -913,6 +929,7 @@ namespace myLoginForm//PhotoEditor00001
             this.txtBxRoleToAdd.Size = new System.Drawing.Size(275, 20);
             this.txtBxRoleToAdd.TabIndex = 556;
             this.txtBxRoleToAdd.Visible = false;
+            this.txtBxRoleToAdd.TextChanged += new System.EventHandler(this.txtBxRoleToAdd_TextChanged);
             // 
             // cmbBxExistingRoles
             // 
@@ -923,6 +940,7 @@ namespace myLoginForm//PhotoEditor00001
             this.cmbBxExistingRoles.Size = new System.Drawing.Size(194, 21);
             this.cmbBxExistingRoles.TabIndex = 557;
             this.cmbBxExistingRoles.Visible = false;
+            this.cmbBxExistingRoles.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingRoles_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -947,6 +965,7 @@ namespace myLoginForm//PhotoEditor00001
             this.comboBox1.Size = new System.Drawing.Size(182, 21);
             this.comboBox1.TabIndex = 516;
             this.comboBox1.Visible = false;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -970,6 +989,7 @@ namespace myLoginForm//PhotoEditor00001
             this.nudMainWinX.Size = new System.Drawing.Size(88, 20);
             this.nudMainWinX.TabIndex = 518;
             this.nudMainWinX.Visible = false;
+            this.nudMainWinX.ValueChanged += new System.EventHandler(this.nudMainWinX_ValueChanged);
             // 
             // lblMainWinPos
             // 
@@ -993,12 +1013,13 @@ namespace myLoginForm//PhotoEditor00001
             this.nudMainWinY.Size = new System.Drawing.Size(88, 20);
             this.nudMainWinY.TabIndex = 519;
             this.nudMainWinY.Visible = false;
+            this.nudMainWinY.ValueChanged += new System.EventHandler(this.nudMainWinY_ValueChanged);
             // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(669, 446);
+            this.ClientSize = new System.Drawing.Size(662, 446);
             this.Controls.Add(this.userDataTabControl);
             this.Controls.Add(this.btnEditUserData);
             this.Controls.Add(this.btnCheckCred);

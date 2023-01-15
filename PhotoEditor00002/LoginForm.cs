@@ -24,6 +24,7 @@ namespace myLoginForm
             public string tag;
             public string description;
             public int prefixNumber;
+            public float value;
             public rightsLevel catReqReq;
         }
         #endregion
@@ -35,6 +36,10 @@ namespace myLoginForm
         public string userId;
         public string userPassword;
         public rightsLevel userRightsLevel;
+        public int mainWinX;
+        public int mainWinY;
+        public int imageWinX;
+        public int imageWinY;
         public int mainProgTopSide;
         public int mainProgLeftSide;
         public int mainProgRightSide;
@@ -58,6 +63,24 @@ namespace myLoginForm
         public const int maxNoOfNationalities = 75;
         public int noOfNationalities;
         public categoryDefinition[] nationalityCategories = new categoryDefinition[maxNoOfNationalities];
+        public const int maxNoOfCurrencies = 75;
+        public int noOfCurrencies;
+        public categoryDefinition[] currencyCategories = new categoryDefinition[maxNoOfCurrencies];
+        public const int maxNoOfContactWays = 75;
+        public int noOfContactWays;
+        public categoryDefinition[] contactWays = new categoryDefinition[maxNoOfContactWays];
+        public const int maxNoOfComplexions = 75;
+        public int noOfComplexions;
+        public categoryDefinition[] complexionCategories = new categoryDefinition[maxNoOfComplexions];
+        public const int maxNoOfHairColors = 75;
+        public int noOfHairColors;
+        public categoryDefinition[] hairColorsDefined = new categoryDefinition[maxNoOfHairColors];
+        public const int maxNoOfEyeColors = 75;
+        public int eyeColors;
+        public categoryDefinition[] eyeColorsDefined = new categoryDefinition[maxNoOfEyeColors];
+        public const int maxNoOfRoles = 150;
+        public int noOfRoles;
+        public categoryDefinition[] rolesDefined = new categoryDefinition[maxNoOfRoles];
         #endregion
 
         public LoginForm()
@@ -490,8 +513,27 @@ namespace myLoginForm
                     string tsusrrgt = "UsrRight : " + this.userRightsLevel.ToString() + Environment.NewLine;
                     char[] cusrrgt = tsusrrgt.ToCharArray();
                     ufs.Write(Encoding.ASCII.GetBytes(cusrrgt), offs, cusrrgt.Length);
-                    // Write main window top side
+                    // Write main window x
                     offs += cusrrgt.Length;
+                    string setXPos = this.mainWinX.ToString();
+                    int iXPos = 0;
+                    if (int.TryParse(setXPos, out iXPos))
+                        this.mainWinX = iXPos;
+                    string sMainXPos = "MainXPos : " + setXPos + Environment.NewLine;
+                    char[] cmxp = sMainXPos.ToCharArray();
+                    ufs.Write(Encoding.ASCII.GetBytes(cmxp), offs, cmxp.Length);
+                    // Write main window y
+                    offs += cmxp.Length;
+                    string setYPos = this.mainWinY.ToString();
+                    int iYPos = 0;
+                    if (int.TryParse(setYPos, out iYPos))
+                        this.mainWinY = iYPos;
+                    string sMainYPos = "MainYPos : " + setYPos + Environment.NewLine;
+                    char[] smyp = sMainYPos.ToCharArray();
+                    ufs.Write(Encoding.ASCII.GetBytes(smyp), offs, smyp.Length);
+                    // Write main window top side
+                    offs += smyp.Length;
+                    offs += cmxp.Length;
                     string tstwp = "TopSide  : " + this.mainProgTopSide.ToString() + Environment.NewLine;
                     char[] ctwp = tstwp.ToCharArray();
                     ufs.Write(Encoding.ASCII.GetBytes(ctwp), offs, ctwp.Length);
@@ -506,14 +548,79 @@ namespace myLoginForm
                     char[] crwp = tsrwp.ToCharArray();
                     ufs.Write(Encoding.ASCII.GetBytes(crwp), offs, crwp.Length);
                     // Write "SmImgWdt : "
+                    offs += crwp.Length;
+                    string tssiw = "SmImgHgt : " + this.smallImageWidth.ToString() + Environment.NewLine;
+                    char[] csiw = tssiw.ToCharArray();
+                    ufs.Write(Encoding.ASCII.GetBytes(csiw), offs, csiw.Length);
                     // Write "SmImgHgt : "
+                    offs += csiw.Length;
+                    string tssih = "SmImgHgt : " + this.smallImageHeight.ToString() + Environment.NewLine;
+                    char[] csih = tssih.ToCharArray();
+                    ufs.Write(Encoding.ASCII.GetBytes(csih), offs, csih.Length);
                     // Write "LgImgWdt : "
+                    offs += csih.Length;
+                    string tsliw = "LgImgWdt : " + this.largeImageWidth.ToString() + Environment.NewLine;
+                    char[] cliw = tsliw.ToCharArray();
+                    ufs.Write(Encoding.ASCII.GetBytes(cliw), offs, cliw.Length);
                     // Write "LgImgHgt : "
+                    offs += cliw.Length;
+                    string tslih = "LgImgHgt : " + this.largeImageHeight.ToString() + Environment.NewLine;
+                    char[] clih = tslih.ToCharArray();
+                    ufs.Write(Encoding.ASCII.GetBytes(clih), offs, clih.Length);
                     // Write "ImgCateg : " loop of format <tag>; <description>; <level>
+                    offs += clih.Length;
+                    for (int i = 0; i < noOfImageCategories; i++)
+                    {
+                        string tsimc = "ImgCateg : " + this.imageCategories[i].tag + "; " + this.imageCategories[i].description + "; " + this.imageCategories[i].catReqReq.ToString() + Environment.NewLine;
+                        char[] cimc = tsimc.ToCharArray();
+                        ufs.Write(Encoding.ASCII.GetBytes(cimc), offs, cimc.Length);
+                        offs += cimc.Length;
+                    }
                     // Write "EvtCateg : " loop of format <tag>; <description>; <level>
+                    for (int i = 0; i < noOfEventCategories; i++)
+                    {
+                        string tsevc = "EvtCateg : " + this.eventCategories[i].tag + "; " + this.eventCategories[i].description + "; " + this.eventCategories[i].catReqReq.ToString() + Environment.NewLine;
+                        char[] cevc = tsevc.ToCharArray();
+                        ufs.Write(Encoding.ASCII.GetBytes(cevc), offs, cevc.Length);
+                        offs += cevc.Length;
+                    }
                     // Write "contcat  : " loop of rormat <tag>; <description>; <level>
+                    for (int i = 0; i < noOfContentCategories; i++)
+                    {
+                        string tscnc = "ContCat  : " + this.contentCategories[i].tag + "; " + this.contentCategories[i].description + "; " + this.contentCategories[i].catReqReq.ToString() + Environment.NewLine;
+                        char[] ccnc = tscnc.ToCharArray();
+                        ufs.Write(Encoding.ASCII.GetBytes(ccnc), offs, ccnc.Length);
+                        offs += ccnc.Length;
+                    }
                     // Write "RelCateg : " loop of format <tag>; <description>; <level>
+                    for (int i = 0; i < noOfRelationCategories; i++)
+                    {
+                        string tsrelc = "RelCateg : " + this.relationCategories[i].tag + "; " + this.relationCategories[i].description + "; " + this.relationCategories[i].catReqReq.ToString() + Environment.NewLine;
+                        char[] crelc = tsrelc.ToCharArray();
+                        ufs.Write(Encoding.ASCII.GetBytes(crelc), offs, crelc.Length);
+                        offs += crelc.Length;
+                    }
                     // Write "NatCateg : " loop of format <tag>; <description>; <prefix>
+                    for (int i = 0; i < noOfNationalities; i++)
+                    {
+                        string tsnat = "NatCateg : " + this.nationalityCategories[i].tag + ";" + this.nationalityCategories[i].description + "; " + this.nationalityCategories[i].prefixNumber.ToString() + Environment.NewLine;
+                        char[] cnat = tsnat.ToCharArray();
+                        ufs.Write(Encoding.ASCII.GetBytes(cnat), offs, cnat.Length);
+                        offs += cnat.Length;
+                    }
+                    // Write "Currency : " loop of format <tag>; <description>; <float value>
+                    for (int i = 0; i < noOfCurrencies; i++)
+                    {
+                        string tscurr = "Currency : " + this.currencyCategories[i].tag + "; " + this.currencyCategories[i].description + "; " + this.currencyCategories[i].value.ToString() + Environment.NewLine;
+                        char[] ccurr = tscurr.ToCharArray();
+                        ufs.Write(Encoding.ASCII.GetBytes(ccurr), offs, ccurr.Length);
+                        offs += ccurr.Length;
+                    }
+                    // Write "Contacts : " loop of format <tag>; <description>; <level>
+                    // Write "Complexn : " loop of format <tag>; <description>; <level>
+                    // Write "HairColr : " loop of format <tag>; <description>; <level>
+                    // Write "EyeColor : " loop of format <tag>; <description>; <level>
+                    // Write "Roles    : " loop of format <tag>; <description>; <level>
                 }
             }
             this.Hide();
@@ -661,6 +768,36 @@ namespace myLoginForm
             this.txtBxRelationTypeToAdd.Visible = true;
             this.txtBxNationalityTypeToAdd.Visible = true;
             // tänd allt som skall finnas!
+        }
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selImagePos = comboBox1.Text;
+            if (selImagePos == "Image to the left")
+            {
+                this.imageWinX = 9;
+                this.imageWinY = 26;
+            }
+            else if (selImagePos == "Image to the right")
+            {
+                this.imageWinX = 331;
+                this.imageWinY = 26;
+            }
+            else
+            {
+                this.imageWinX = 9;
+                this.imageWinY = 26;
+            }
+            valuesChanged = true;
+        }
+        private void nudMainWinX_ValueChanged(object sender, EventArgs e)
+        {
+            // TODO - Handle the X-position setting for the main window.
+            valuesChanged = true;
+        }
+        private void nudMainWinY_ValueChanged(object sender, EventArgs e)
+        {
+            // TODO - Handle the Y-position setting for the main window.
+            valuesChanged = true;
         }
         private void cmbbxUserRights_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1321,6 +1458,95 @@ namespace myLoginForm
                     MessageBox.Show("Expected format is \"<tag>[,|;] <explanation>[,|;] <level>", "Format info", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
+        }
+        private void cmbBoxExistingCurrencies_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtBxCurrencyToAdd_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAddCurrency_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbBxExistingContactWays_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtBxContactWaysToAdd_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAddContactWay_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbBxExistingComplexions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtBxComplexionToAdd_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAddComplexion_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbBxExistingHairColors_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtBxHairColorToAdd_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAddHairColor_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbBxExistingEyeColors_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtBxEyeColorToAdd_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAddEyeColor_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbBxExistingRoles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtBxRoleToAdd_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnAddRole_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
