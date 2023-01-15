@@ -579,7 +579,7 @@ namespace myLoginForm
             lblUserRights.Visible = true;
             cmbbxUserRights.Visible = true;
             cmbbxUserRights.Enabled = true;
-            lblPosition.Visible = true;
+            lblMainWinSize.Visible = true;
             nudTopBorder.Visible = true;
             nudTopBorder.Enabled = true;
             nudLeftBorder.Visible = true;

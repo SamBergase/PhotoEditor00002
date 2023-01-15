@@ -38,7 +38,7 @@ namespace myLoginForm//PhotoEditor00001
             this.btnEditUserData = new System.Windows.Forms.Button();
             this.lblUserRights = new System.Windows.Forms.Label();
             this.cmbbxUserRights = new System.Windows.Forms.ComboBox();
-            this.lblPosition = new System.Windows.Forms.Label();
+            this.lblMainWinSize = new System.Windows.Forms.Label();
             this.nudLeftBorder = new System.Windows.Forms.NumericUpDown();
             this.nudRightBorder = new System.Windows.Forms.NumericUpDown();
             this.nudTopBorder = new System.Windows.Forms.NumericUpDown();
@@ -71,6 +71,38 @@ namespace myLoginForm//PhotoEditor00001
             this.txtBxNationalityTypeToAdd = new System.Windows.Forms.TextBox();
             this.cmbBxExistingNationalityTypes = new System.Windows.Forms.ComboBox();
             this.lblNationalityType = new System.Windows.Forms.Label();
+            this.userDataTabControl = new System.Windows.Forms.TabControl();
+            this.tabPageGuiSetup = new System.Windows.Forms.TabPage();
+            this.tabPageUserMetadata = new System.Windows.Forms.TabPage();
+            this.btnAddCurrency = new System.Windows.Forms.Button();
+            this.txtBxCurrencyToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBoxExistingCurrencies = new System.Windows.Forms.ComboBox();
+            this.lblCurrency = new System.Windows.Forms.Label();
+            this.btnAddContactWay = new System.Windows.Forms.Button();
+            this.txtBxContactWaysToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBxExistingContactWays = new System.Windows.Forms.ComboBox();
+            this.lblContactWays = new System.Windows.Forms.Label();
+            this.btnAddComplexion = new System.Windows.Forms.Button();
+            this.txtBxComplexionToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBxExistingComplexions = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnAddHairColor = new System.Windows.Forms.Button();
+            this.txtBxHairColorToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBxExistingHairColors = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnAddEyeColor = new System.Windows.Forms.Button();
+            this.txtBxEyeColorToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBxExistingEyeColors = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.btnAddRole = new System.Windows.Forms.Button();
+            this.txtBxRoleToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBxExistingRoles = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.nudMainWinX = new System.Windows.Forms.NumericUpDown();
+            this.lblMainWinPos = new System.Windows.Forms.Label();
+            this.nudMainWinY = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLeftBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudRightBorder)).BeginInit();
@@ -80,6 +112,11 @@ namespace myLoginForm//PhotoEditor00001
             ((System.ComponentModel.ISupportInitialize)(this.nudSmallImageWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLargeImageHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLargeImageWidth)).BeginInit();
+            this.userDataTabControl.SuspendLayout();
+            this.tabPageGuiSetup.SuspendLayout();
+            this.tabPageUserMetadata.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMainWinX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMainWinY)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -158,7 +195,7 @@ namespace myLoginForm//PhotoEditor00001
             // lblUserRights
             // 
             this.lblUserRights.AutoSize = true;
-            this.lblUserRights.Location = new System.Drawing.Point(353, 10);
+            this.lblUserRights.Location = new System.Drawing.Point(7, 9);
             this.lblUserRights.Name = "lblUserRights";
             this.lblUserRights.Size = new System.Drawing.Size(77, 13);
             this.lblUserRights.TabIndex = 504;
@@ -177,26 +214,26 @@ namespace myLoginForm//PhotoEditor00001
             "Relative",
             "Secret",
             "QualifiedSecret"});
-            this.cmbbxUserRights.Location = new System.Drawing.Point(437, 7);
+            this.cmbbxUserRights.Location = new System.Drawing.Point(91, 6);
             this.cmbbxUserRights.Name = "cmbbxUserRights";
-            this.cmbbxUserRights.Size = new System.Drawing.Size(182, 21);
+            this.cmbbxUserRights.Size = new System.Drawing.Size(194, 21);
             this.cmbbxUserRights.TabIndex = 3;
             this.cmbbxUserRights.Visible = false;
             this.cmbbxUserRights.SelectedIndexChanged += new System.EventHandler(this.cmbbxUserRights_SelectedIndexChanged);
             // 
-            // lblPosition
+            // lblMainWinSize
             // 
-            this.lblPosition.AutoSize = true;
-            this.lblPosition.Location = new System.Drawing.Point(353, 62);
-            this.lblPosition.Name = "lblPosition";
-            this.lblPosition.Size = new System.Drawing.Size(77, 13);
-            this.lblPosition.TabIndex = 506;
-            this.lblPosition.Text = "Position          :";
-            this.lblPosition.Visible = false;
+            this.lblMainWinSize.AutoSize = true;
+            this.lblMainWinSize.Location = new System.Drawing.Point(8, 94);
+            this.lblMainWinSize.Name = "lblMainWinSize";
+            this.lblMainWinSize.Size = new System.Drawing.Size(102, 13);
+            this.lblMainWinSize.TabIndex = 506;
+            this.lblMainWinSize.Text = "Main window size   :";
+            this.lblMainWinSize.Visible = false;
             // 
             // nudLeftBorder
             // 
-            this.nudLeftBorder.Location = new System.Drawing.Point(437, 60);
+            this.nudLeftBorder.Location = new System.Drawing.Point(114, 92);
             this.nudLeftBorder.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -210,7 +247,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             // nudRightBorder
             // 
-            this.nudRightBorder.Location = new System.Drawing.Point(531, 60);
+            this.nudRightBorder.Location = new System.Drawing.Point(208, 92);
             this.nudRightBorder.Maximum = new decimal(new int[] {
             15000,
             0,
@@ -224,7 +261,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             // nudTopBorder
             // 
-            this.nudTopBorder.Location = new System.Drawing.Point(483, 34);
+            this.nudTopBorder.Location = new System.Drawing.Point(160, 66);
             this.nudTopBorder.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -238,7 +275,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             // nudBottomBorder
             // 
-            this.nudBottomBorder.Location = new System.Drawing.Point(483, 86);
+            this.nudBottomBorder.Location = new System.Drawing.Point(160, 118);
             this.nudBottomBorder.Maximum = new decimal(new int[] {
             15000,
             0,
@@ -253,7 +290,7 @@ namespace myLoginForm//PhotoEditor00001
             // lblImageDisplayDimensions
             // 
             this.lblImageDisplayDimensions.AutoSize = true;
-            this.lblImageDisplayDimensions.Location = new System.Drawing.Point(399, 109);
+            this.lblImageDisplayDimensions.Location = new System.Drawing.Point(76, 141);
             this.lblImageDisplayDimensions.Name = "lblImageDisplayDimensions";
             this.lblImageDisplayDimensions.Size = new System.Drawing.Size(172, 13);
             this.lblImageDisplayDimensions.TabIndex = 511;
@@ -263,16 +300,16 @@ namespace myLoginForm//PhotoEditor00001
             // lblSmallImage
             // 
             this.lblSmallImage.AutoSize = true;
-            this.lblSmallImage.Location = new System.Drawing.Point(353, 129);
+            this.lblSmallImage.Location = new System.Drawing.Point(8, 161);
             this.lblSmallImage.Name = "lblSmallImage";
-            this.lblSmallImage.Size = new System.Drawing.Size(73, 13);
+            this.lblSmallImage.Size = new System.Drawing.Size(99, 13);
             this.lblSmallImage.TabIndex = 512;
-            this.lblSmallImage.Text = "Small Image  :";
+            this.lblSmallImage.Text = "Small Image Size   :";
             this.lblSmallImage.Visible = false;
             // 
             // nudSmallImageHeight
             // 
-            this.nudSmallImageHeight.Location = new System.Drawing.Point(531, 127);
+            this.nudSmallImageHeight.Location = new System.Drawing.Point(208, 159);
             this.nudSmallImageHeight.Maximum = new decimal(new int[] {
             500,
             0,
@@ -286,7 +323,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             // nudSmallImageWidth
             // 
-            this.nudSmallImageWidth.Location = new System.Drawing.Point(437, 127);
+            this.nudSmallImageWidth.Location = new System.Drawing.Point(114, 159);
             this.nudSmallImageWidth.Maximum = new decimal(new int[] {
             500,
             0,
@@ -300,7 +337,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             // nudLargeImageHeight
             // 
-            this.nudLargeImageHeight.Location = new System.Drawing.Point(531, 150);
+            this.nudLargeImageHeight.Location = new System.Drawing.Point(208, 182);
             this.nudLargeImageHeight.Maximum = new decimal(new int[] {
             15000,
             0,
@@ -314,7 +351,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             // nudLargeImageWidth
             // 
-            this.nudLargeImageWidth.Location = new System.Drawing.Point(437, 150);
+            this.nudLargeImageWidth.Location = new System.Drawing.Point(114, 182);
             this.nudLargeImageWidth.Maximum = new decimal(new int[] {
             15000,
             0,
@@ -329,17 +366,17 @@ namespace myLoginForm//PhotoEditor00001
             // lblLargeImageDimensions
             // 
             this.lblLargeImageDimensions.AutoSize = true;
-            this.lblLargeImageDimensions.Location = new System.Drawing.Point(353, 152);
+            this.lblLargeImageDimensions.Location = new System.Drawing.Point(8, 184);
             this.lblLargeImageDimensions.Name = "lblLargeImageDimensions";
-            this.lblLargeImageDimensions.Size = new System.Drawing.Size(75, 13);
+            this.lblLargeImageDimensions.Size = new System.Drawing.Size(101, 13);
             this.lblLargeImageDimensions.TabIndex = 515;
-            this.lblLargeImageDimensions.Text = "Large Image  :";
+            this.lblLargeImageDimensions.Text = "Large Image Size   :";
             this.lblLargeImageDimensions.Visible = false;
             // 
             // lblCategoryDefs
             // 
             this.lblCategoryDefs.AutoSize = true;
-            this.lblCategoryDefs.Location = new System.Drawing.Point(415, 175);
+            this.lblCategoryDefs.Location = new System.Drawing.Point(69, 31);
             this.lblCategoryDefs.Name = "lblCategoryDefs";
             this.lblCategoryDefs.Size = new System.Drawing.Size(143, 13);
             this.lblCategoryDefs.TabIndex = 516;
@@ -349,7 +386,7 @@ namespace myLoginForm//PhotoEditor00001
             // lblMotifType
             // 
             this.lblMotifType.AutoSize = true;
-            this.lblMotifType.Location = new System.Drawing.Point(353, 196);
+            this.lblMotifType.Location = new System.Drawing.Point(7, 52);
             this.lblMotifType.Name = "lblMotifType";
             this.lblMotifType.Size = new System.Drawing.Size(72, 13);
             this.lblMotifType.TabIndex = 517;
@@ -360,9 +397,9 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.cmbBxExistingMotifTypes.BackColor = System.Drawing.SystemColors.Control;
             this.cmbBxExistingMotifTypes.FormattingEnabled = true;
-            this.cmbBxExistingMotifTypes.Location = new System.Drawing.Point(437, 192);
+            this.cmbBxExistingMotifTypes.Location = new System.Drawing.Point(91, 48);
             this.cmbBxExistingMotifTypes.Name = "cmbBxExistingMotifTypes";
-            this.cmbBxExistingMotifTypes.Size = new System.Drawing.Size(182, 21);
+            this.cmbBxExistingMotifTypes.Size = new System.Drawing.Size(194, 21);
             this.cmbBxExistingMotifTypes.TabIndex = 11;
             this.cmbBxExistingMotifTypes.Visible = false;
             this.cmbBxExistingMotifTypes.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingMotifTypes_SelectedIndexChanged);
@@ -370,9 +407,9 @@ namespace myLoginForm//PhotoEditor00001
             // txtBxMotifTypeAdding
             // 
             this.txtBxMotifTypeAdding.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBxMotifTypeAdding.Location = new System.Drawing.Point(356, 216);
+            this.txtBxMotifTypeAdding.Location = new System.Drawing.Point(10, 72);
             this.txtBxMotifTypeAdding.Name = "txtBxMotifTypeAdding";
-            this.txtBxMotifTypeAdding.Size = new System.Drawing.Size(263, 20);
+            this.txtBxMotifTypeAdding.Size = new System.Drawing.Size(275, 20);
             this.txtBxMotifTypeAdding.TabIndex = 518;
             this.txtBxMotifTypeAdding.Visible = false;
             this.txtBxMotifTypeAdding.TextChanged += new System.EventHandler(this.txtBxMotifTypeAdding_TextChanged);
@@ -381,7 +418,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.btnAddMotifType.BackColor = System.Drawing.SystemColors.Control;
             this.btnAddMotifType.Enabled = false;
-            this.btnAddMotifType.Location = new System.Drawing.Point(565, 216);
+            this.btnAddMotifType.Location = new System.Drawing.Point(231, 72);
             this.btnAddMotifType.Name = "btnAddMotifType";
             this.btnAddMotifType.Size = new System.Drawing.Size(54, 20);
             this.btnAddMotifType.TabIndex = 519;
@@ -393,7 +430,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.btnAddEventType.BackColor = System.Drawing.SystemColors.Control;
             this.btnAddEventType.Enabled = false;
-            this.btnAddEventType.Location = new System.Drawing.Point(565, 266);
+            this.btnAddEventType.Location = new System.Drawing.Point(219, 122);
             this.btnAddEventType.Name = "btnAddEventType";
             this.btnAddEventType.Size = new System.Drawing.Size(54, 20);
             this.btnAddEventType.TabIndex = 523;
@@ -404,9 +441,9 @@ namespace myLoginForm//PhotoEditor00001
             // txtbxEventTypeToAdd
             // 
             this.txtbxEventTypeToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtbxEventTypeToAdd.Location = new System.Drawing.Point(356, 266);
+            this.txtbxEventTypeToAdd.Location = new System.Drawing.Point(10, 122);
             this.txtbxEventTypeToAdd.Name = "txtbxEventTypeToAdd";
-            this.txtbxEventTypeToAdd.Size = new System.Drawing.Size(263, 20);
+            this.txtbxEventTypeToAdd.Size = new System.Drawing.Size(275, 20);
             this.txtbxEventTypeToAdd.TabIndex = 12;
             this.txtbxEventTypeToAdd.Visible = false;
             this.txtbxEventTypeToAdd.TextChanged += new System.EventHandler(this.txtbxEventTypeToAdd_TextChanged);
@@ -415,9 +452,9 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.cmbBxExistingEventTypes.BackColor = System.Drawing.SystemColors.Control;
             this.cmbBxExistingEventTypes.FormattingEnabled = true;
-            this.cmbBxExistingEventTypes.Location = new System.Drawing.Point(437, 242);
+            this.cmbBxExistingEventTypes.Location = new System.Drawing.Point(91, 98);
             this.cmbBxExistingEventTypes.Name = "cmbBxExistingEventTypes";
-            this.cmbBxExistingEventTypes.Size = new System.Drawing.Size(182, 21);
+            this.cmbBxExistingEventTypes.Size = new System.Drawing.Size(194, 21);
             this.cmbBxExistingEventTypes.TabIndex = 12;
             this.cmbBxExistingEventTypes.Visible = false;
             this.cmbBxExistingEventTypes.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingEventTypes_SelectedIndexChanged);
@@ -425,7 +462,7 @@ namespace myLoginForm//PhotoEditor00001
             // lblEventType
             // 
             this.lblEventType.AutoSize = true;
-            this.lblEventType.Location = new System.Drawing.Point(353, 246);
+            this.lblEventType.Location = new System.Drawing.Point(7, 102);
             this.lblEventType.Name = "lblEventType";
             this.lblEventType.Size = new System.Drawing.Size(74, 13);
             this.lblEventType.TabIndex = 521;
@@ -436,7 +473,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.btnAddContentType.BackColor = System.Drawing.SystemColors.Control;
             this.btnAddContentType.Enabled = false;
-            this.btnAddContentType.Location = new System.Drawing.Point(565, 316);
+            this.btnAddContentType.Location = new System.Drawing.Point(231, 172);
             this.btnAddContentType.Name = "btnAddContentType";
             this.btnAddContentType.Size = new System.Drawing.Size(54, 20);
             this.btnAddContentType.TabIndex = 527;
@@ -447,9 +484,9 @@ namespace myLoginForm//PhotoEditor00001
             // txtBxContentTypeToAdd
             // 
             this.txtBxContentTypeToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBxContentTypeToAdd.Location = new System.Drawing.Point(356, 316);
+            this.txtBxContentTypeToAdd.Location = new System.Drawing.Point(10, 172);
             this.txtBxContentTypeToAdd.Name = "txtBxContentTypeToAdd";
-            this.txtBxContentTypeToAdd.Size = new System.Drawing.Size(263, 20);
+            this.txtBxContentTypeToAdd.Size = new System.Drawing.Size(275, 20);
             this.txtBxContentTypeToAdd.TabIndex = 524;
             this.txtBxContentTypeToAdd.Visible = false;
             this.txtBxContentTypeToAdd.TextChanged += new System.EventHandler(this.txtBxContentTypeToAdd_TextChanged);
@@ -458,9 +495,9 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.cmbBxExistingContentTypes.BackColor = System.Drawing.SystemColors.Control;
             this.cmbBxExistingContentTypes.FormattingEnabled = true;
-            this.cmbBxExistingContentTypes.Location = new System.Drawing.Point(437, 292);
+            this.cmbBxExistingContentTypes.Location = new System.Drawing.Point(91, 148);
             this.cmbBxExistingContentTypes.Name = "cmbBxExistingContentTypes";
-            this.cmbBxExistingContentTypes.Size = new System.Drawing.Size(182, 21);
+            this.cmbBxExistingContentTypes.Size = new System.Drawing.Size(194, 21);
             this.cmbBxExistingContentTypes.TabIndex = 525;
             this.cmbBxExistingContentTypes.Visible = false;
             this.cmbBxExistingContentTypes.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingContentTypes_SelectedIndexChanged);
@@ -468,7 +505,7 @@ namespace myLoginForm//PhotoEditor00001
             // lblContentType
             // 
             this.lblContentType.AutoSize = true;
-            this.lblContentType.Location = new System.Drawing.Point(353, 296);
+            this.lblContentType.Location = new System.Drawing.Point(7, 152);
             this.lblContentType.Name = "lblContentType";
             this.lblContentType.Size = new System.Drawing.Size(80, 13);
             this.lblContentType.TabIndex = 526;
@@ -479,7 +516,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.btnAddRelationType.BackColor = System.Drawing.SystemColors.Control;
             this.btnAddRelationType.Enabled = false;
-            this.btnAddRelationType.Location = new System.Drawing.Point(565, 367);
+            this.btnAddRelationType.Location = new System.Drawing.Point(231, 223);
             this.btnAddRelationType.Name = "btnAddRelationType";
             this.btnAddRelationType.Size = new System.Drawing.Size(54, 20);
             this.btnAddRelationType.TabIndex = 531;
@@ -490,9 +527,9 @@ namespace myLoginForm//PhotoEditor00001
             // txtBxRelationTypeToAdd
             // 
             this.txtBxRelationTypeToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBxRelationTypeToAdd.Location = new System.Drawing.Point(356, 367);
+            this.txtBxRelationTypeToAdd.Location = new System.Drawing.Point(10, 223);
             this.txtBxRelationTypeToAdd.Name = "txtBxRelationTypeToAdd";
-            this.txtBxRelationTypeToAdd.Size = new System.Drawing.Size(263, 20);
+            this.txtBxRelationTypeToAdd.Size = new System.Drawing.Size(275, 20);
             this.txtBxRelationTypeToAdd.TabIndex = 528;
             this.txtBxRelationTypeToAdd.Visible = false;
             this.txtBxRelationTypeToAdd.TextChanged += new System.EventHandler(this.txtBxRelationTypeToAdd_TextChanged);
@@ -501,9 +538,9 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.cmbBxExistingRelationTypes.BackColor = System.Drawing.SystemColors.Control;
             this.cmbBxExistingRelationTypes.FormattingEnabled = true;
-            this.cmbBxExistingRelationTypes.Location = new System.Drawing.Point(437, 343);
+            this.cmbBxExistingRelationTypes.Location = new System.Drawing.Point(91, 199);
             this.cmbBxExistingRelationTypes.Name = "cmbBxExistingRelationTypes";
-            this.cmbBxExistingRelationTypes.Size = new System.Drawing.Size(182, 21);
+            this.cmbBxExistingRelationTypes.Size = new System.Drawing.Size(194, 21);
             this.cmbBxExistingRelationTypes.TabIndex = 529;
             this.cmbBxExistingRelationTypes.Visible = false;
             this.cmbBxExistingRelationTypes.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingRelationTypes_SelectedIndexChanged);
@@ -511,7 +548,7 @@ namespace myLoginForm//PhotoEditor00001
             // lblRelationType
             // 
             this.lblRelationType.AutoSize = true;
-            this.lblRelationType.Location = new System.Drawing.Point(353, 347);
+            this.lblRelationType.Location = new System.Drawing.Point(7, 203);
             this.lblRelationType.Name = "lblRelationType";
             this.lblRelationType.Size = new System.Drawing.Size(82, 13);
             this.lblRelationType.TabIndex = 530;
@@ -522,7 +559,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.btnAddNationalityType.BackColor = System.Drawing.SystemColors.Control;
             this.btnAddNationalityType.Enabled = false;
-            this.btnAddNationalityType.Location = new System.Drawing.Point(565, 417);
+            this.btnAddNationalityType.Location = new System.Drawing.Point(231, 273);
             this.btnAddNationalityType.Name = "btnAddNationalityType";
             this.btnAddNationalityType.Size = new System.Drawing.Size(54, 20);
             this.btnAddNationalityType.TabIndex = 535;
@@ -533,9 +570,9 @@ namespace myLoginForm//PhotoEditor00001
             // txtBxNationalityTypeToAdd
             // 
             this.txtBxNationalityTypeToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBxNationalityTypeToAdd.Location = new System.Drawing.Point(356, 417);
+            this.txtBxNationalityTypeToAdd.Location = new System.Drawing.Point(10, 273);
             this.txtBxNationalityTypeToAdd.Name = "txtBxNationalityTypeToAdd";
-            this.txtBxNationalityTypeToAdd.Size = new System.Drawing.Size(263, 20);
+            this.txtBxNationalityTypeToAdd.Size = new System.Drawing.Size(275, 20);
             this.txtBxNationalityTypeToAdd.TabIndex = 532;
             this.txtBxNationalityTypeToAdd.Visible = false;
             this.txtBxNationalityTypeToAdd.TextChanged += new System.EventHandler(this.txtBxNationalityTypeToAdd_TextChanged);
@@ -544,9 +581,9 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.cmbBxExistingNationalityTypes.BackColor = System.Drawing.SystemColors.Control;
             this.cmbBxExistingNationalityTypes.FormattingEnabled = true;
-            this.cmbBxExistingNationalityTypes.Location = new System.Drawing.Point(437, 393);
+            this.cmbBxExistingNationalityTypes.Location = new System.Drawing.Point(91, 249);
             this.cmbBxExistingNationalityTypes.Name = "cmbBxExistingNationalityTypes";
-            this.cmbBxExistingNationalityTypes.Size = new System.Drawing.Size(182, 21);
+            this.cmbBxExistingNationalityTypes.Size = new System.Drawing.Size(194, 21);
             this.cmbBxExistingNationalityTypes.TabIndex = 533;
             this.cmbBxExistingNationalityTypes.Visible = false;
             this.cmbBxExistingNationalityTypes.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingNationalityTypes_SelectedIndexChanged);
@@ -554,53 +591,415 @@ namespace myLoginForm//PhotoEditor00001
             // lblNationalityType
             // 
             this.lblNationalityType.AutoSize = true;
-            this.lblNationalityType.Location = new System.Drawing.Point(353, 397);
+            this.lblNationalityType.Location = new System.Drawing.Point(7, 253);
             this.lblNationalityType.Name = "lblNationalityType";
             this.lblNationalityType.Size = new System.Drawing.Size(81, 13);
             this.lblNationalityType.TabIndex = 534;
             this.lblNationalityType.Text = "Nationality Tpe:";
             this.lblNationalityType.Visible = false;
             // 
+            // userDataTabControl
+            // 
+            this.userDataTabControl.Controls.Add(this.tabPageGuiSetup);
+            this.userDataTabControl.Controls.Add(this.tabPageUserMetadata);
+            this.userDataTabControl.Location = new System.Drawing.Point(344, 7);
+            this.userDataTabControl.Name = "userDataTabControl";
+            this.userDataTabControl.SelectedIndex = 0;
+            this.userDataTabControl.Size = new System.Drawing.Size(313, 431);
+            this.userDataTabControl.TabIndex = 536;
+            // 
+            // tabPageGuiSetup
+            // 
+            this.tabPageGuiSetup.Controls.Add(this.nudMainWinX);
+            this.tabPageGuiSetup.Controls.Add(this.lblMainWinPos);
+            this.tabPageGuiSetup.Controls.Add(this.nudMainWinY);
+            this.tabPageGuiSetup.Controls.Add(this.comboBox1);
+            this.tabPageGuiSetup.Controls.Add(this.label5);
+            this.tabPageGuiSetup.Controls.Add(this.nudLargeImageWidth);
+            this.tabPageGuiSetup.Controls.Add(this.lblMainWinSize);
+            this.tabPageGuiSetup.Controls.Add(this.nudLeftBorder);
+            this.tabPageGuiSetup.Controls.Add(this.nudRightBorder);
+            this.tabPageGuiSetup.Controls.Add(this.nudTopBorder);
+            this.tabPageGuiSetup.Controls.Add(this.nudBottomBorder);
+            this.tabPageGuiSetup.Controls.Add(this.lblImageDisplayDimensions);
+            this.tabPageGuiSetup.Controls.Add(this.lblSmallImage);
+            this.tabPageGuiSetup.Controls.Add(this.nudSmallImageWidth);
+            this.tabPageGuiSetup.Controls.Add(this.nudSmallImageHeight);
+            this.tabPageGuiSetup.Controls.Add(this.lblLargeImageDimensions);
+            this.tabPageGuiSetup.Controls.Add(this.nudLargeImageHeight);
+            this.tabPageGuiSetup.Location = new System.Drawing.Point(4, 22);
+            this.tabPageGuiSetup.Name = "tabPageGuiSetup";
+            this.tabPageGuiSetup.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageGuiSetup.Size = new System.Drawing.Size(305, 405);
+            this.tabPageGuiSetup.TabIndex = 0;
+            this.tabPageGuiSetup.Text = "GUI Setup";
+            this.tabPageGuiSetup.UseVisualStyleBackColor = true;
+            // 
+            // tabPageUserMetadata
+            // 
+            this.tabPageUserMetadata.AutoScroll = true;
+            this.tabPageUserMetadata.AutoScrollMargin = new System.Drawing.Size(3, 3);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddRole);
+            this.tabPageUserMetadata.Controls.Add(this.txtBxRoleToAdd);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingRoles);
+            this.tabPageUserMetadata.Controls.Add(this.label4);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddEyeColor);
+            this.tabPageUserMetadata.Controls.Add(this.txtBxEyeColorToAdd);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingEyeColors);
+            this.tabPageUserMetadata.Controls.Add(this.label3);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddHairColor);
+            this.tabPageUserMetadata.Controls.Add(this.txtBxHairColorToAdd);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingHairColors);
+            this.tabPageUserMetadata.Controls.Add(this.label2);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddComplexion);
+            this.tabPageUserMetadata.Controls.Add(this.txtBxComplexionToAdd);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingComplexions);
+            this.tabPageUserMetadata.Controls.Add(this.label1);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddContactWay);
+            this.tabPageUserMetadata.Controls.Add(this.txtBxContactWaysToAdd);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingContactWays);
+            this.tabPageUserMetadata.Controls.Add(this.lblContactWays);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddCurrency);
+            this.tabPageUserMetadata.Controls.Add(this.txtBxCurrencyToAdd);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBoxExistingCurrencies);
+            this.tabPageUserMetadata.Controls.Add(this.lblCurrency);
+            this.tabPageUserMetadata.Controls.Add(this.cmbbxUserRights);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddNationalityType);
+            this.tabPageUserMetadata.Controls.Add(this.lblUserRights);
+            this.tabPageUserMetadata.Controls.Add(this.txtBxNationalityTypeToAdd);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingMotifTypes);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingNationalityTypes);
+            this.tabPageUserMetadata.Controls.Add(this.lblCategoryDefs);
+            this.tabPageUserMetadata.Controls.Add(this.lblNationalityType);
+            this.tabPageUserMetadata.Controls.Add(this.lblMotifType);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddRelationType);
+            this.tabPageUserMetadata.Controls.Add(this.txtBxRelationTypeToAdd);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddMotifType);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingRelationTypes);
+            this.tabPageUserMetadata.Controls.Add(this.lblEventType);
+            this.tabPageUserMetadata.Controls.Add(this.lblRelationType);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingEventTypes);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddContentType);
+            this.tabPageUserMetadata.Controls.Add(this.txtbxEventTypeToAdd);
+            this.tabPageUserMetadata.Controls.Add(this.txtBxContentTypeToAdd);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddEventType);
+            this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingContentTypes);
+            this.tabPageUserMetadata.Controls.Add(this.lblContentType);
+            this.tabPageUserMetadata.Controls.Add(this.txtBxMotifTypeAdding);
+            this.tabPageUserMetadata.Location = new System.Drawing.Point(4, 22);
+            this.tabPageUserMetadata.Name = "tabPageUserMetadata";
+            this.tabPageUserMetadata.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageUserMetadata.Size = new System.Drawing.Size(305, 405);
+            this.tabPageUserMetadata.TabIndex = 1;
+            this.tabPageUserMetadata.Text = "User Metadata";
+            this.tabPageUserMetadata.UseVisualStyleBackColor = true;
+            // 
+            // btnAddCurrency
+            // 
+            this.btnAddCurrency.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddCurrency.Enabled = false;
+            this.btnAddCurrency.Location = new System.Drawing.Point(231, 323);
+            this.btnAddCurrency.Name = "btnAddCurrency";
+            this.btnAddCurrency.Size = new System.Drawing.Size(54, 20);
+            this.btnAddCurrency.TabIndex = 539;
+            this.btnAddCurrency.Text = "ADD";
+            this.btnAddCurrency.UseVisualStyleBackColor = false;
+            // 
+            // txtBxCurrencyToAdd
+            // 
+            this.txtBxCurrencyToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxCurrencyToAdd.Location = new System.Drawing.Point(10, 323);
+            this.txtBxCurrencyToAdd.Name = "txtBxCurrencyToAdd";
+            this.txtBxCurrencyToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxCurrencyToAdd.TabIndex = 536;
+            this.txtBxCurrencyToAdd.Visible = false;
+            // 
+            // cmbBoxExistingCurrencies
+            // 
+            this.cmbBoxExistingCurrencies.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBoxExistingCurrencies.FormattingEnabled = true;
+            this.cmbBoxExistingCurrencies.Location = new System.Drawing.Point(91, 299);
+            this.cmbBoxExistingCurrencies.Name = "cmbBoxExistingCurrencies";
+            this.cmbBoxExistingCurrencies.Size = new System.Drawing.Size(194, 21);
+            this.cmbBoxExistingCurrencies.TabIndex = 537;
+            this.cmbBoxExistingCurrencies.Visible = false;
+            // 
+            // lblCurrency
+            // 
+            this.lblCurrency.AutoSize = true;
+            this.lblCurrency.Location = new System.Drawing.Point(7, 303);
+            this.lblCurrency.Name = "lblCurrency";
+            this.lblCurrency.Size = new System.Drawing.Size(82, 13);
+            this.lblCurrency.TabIndex = 538;
+            this.lblCurrency.Text = "Currency          :";
+            this.lblCurrency.Visible = false;
+            // 
+            // btnAddContactWay
+            // 
+            this.btnAddContactWay.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddContactWay.Enabled = false;
+            this.btnAddContactWay.Location = new System.Drawing.Point(231, 373);
+            this.btnAddContactWay.Name = "btnAddContactWay";
+            this.btnAddContactWay.Size = new System.Drawing.Size(54, 20);
+            this.btnAddContactWay.TabIndex = 543;
+            this.btnAddContactWay.Text = "ADD";
+            this.btnAddContactWay.UseVisualStyleBackColor = false;
+            // 
+            // txtBxContactWaysToAdd
+            // 
+            this.txtBxContactWaysToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxContactWaysToAdd.Location = new System.Drawing.Point(10, 373);
+            this.txtBxContactWaysToAdd.Name = "txtBxContactWaysToAdd";
+            this.txtBxContactWaysToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxContactWaysToAdd.TabIndex = 540;
+            this.txtBxContactWaysToAdd.Visible = false;
+            // 
+            // cmbBxExistingContactWays
+            // 
+            this.cmbBxExistingContactWays.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBxExistingContactWays.FormattingEnabled = true;
+            this.cmbBxExistingContactWays.Location = new System.Drawing.Point(91, 349);
+            this.cmbBxExistingContactWays.Name = "cmbBxExistingContactWays";
+            this.cmbBxExistingContactWays.Size = new System.Drawing.Size(194, 21);
+            this.cmbBxExistingContactWays.TabIndex = 541;
+            this.cmbBxExistingContactWays.Visible = false;
+            // 
+            // lblContactWays
+            // 
+            this.lblContactWays.AutoSize = true;
+            this.lblContactWays.Location = new System.Drawing.Point(7, 353);
+            this.lblContactWays.Name = "lblContactWays";
+            this.lblContactWays.Size = new System.Drawing.Size(80, 13);
+            this.lblContactWays.TabIndex = 542;
+            this.lblContactWays.Text = "Contact ways  :";
+            this.lblContactWays.Visible = false;
+            // 
+            // btnAddComplexion
+            // 
+            this.btnAddComplexion.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddComplexion.Enabled = false;
+            this.btnAddComplexion.Location = new System.Drawing.Point(230, 425);
+            this.btnAddComplexion.Name = "btnAddComplexion";
+            this.btnAddComplexion.Size = new System.Drawing.Size(54, 20);
+            this.btnAddComplexion.TabIndex = 547;
+            this.btnAddComplexion.Text = "ADD";
+            this.btnAddComplexion.UseVisualStyleBackColor = false;
+            // 
+            // txtBxComplexionToAdd
+            // 
+            this.txtBxComplexionToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxComplexionToAdd.Location = new System.Drawing.Point(9, 425);
+            this.txtBxComplexionToAdd.Name = "txtBxComplexionToAdd";
+            this.txtBxComplexionToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxComplexionToAdd.TabIndex = 544;
+            this.txtBxComplexionToAdd.Visible = false;
+            // 
+            // cmbBxExistingComplexions
+            // 
+            this.cmbBxExistingComplexions.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBxExistingComplexions.FormattingEnabled = true;
+            this.cmbBxExistingComplexions.Location = new System.Drawing.Point(90, 401);
+            this.cmbBxExistingComplexions.Name = "cmbBxExistingComplexions";
+            this.cmbBxExistingComplexions.Size = new System.Drawing.Size(194, 21);
+            this.cmbBxExistingComplexions.TabIndex = 545;
+            this.cmbBxExistingComplexions.Visible = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 405);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(81, 13);
+            this.label1.TabIndex = 546;
+            this.label1.Text = "Complexions    :";
+            this.label1.Visible = false;
+            // 
+            // btnAddHairColor
+            // 
+            this.btnAddHairColor.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddHairColor.Enabled = false;
+            this.btnAddHairColor.Location = new System.Drawing.Point(231, 475);
+            this.btnAddHairColor.Name = "btnAddHairColor";
+            this.btnAddHairColor.Size = new System.Drawing.Size(54, 20);
+            this.btnAddHairColor.TabIndex = 551;
+            this.btnAddHairColor.Text = "ADD";
+            this.btnAddHairColor.UseVisualStyleBackColor = false;
+            // 
+            // txtBxHairColorToAdd
+            // 
+            this.txtBxHairColorToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxHairColorToAdd.Location = new System.Drawing.Point(10, 475);
+            this.txtBxHairColorToAdd.Name = "txtBxHairColorToAdd";
+            this.txtBxHairColorToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxHairColorToAdd.TabIndex = 548;
+            this.txtBxHairColorToAdd.Visible = false;
+            // 
+            // cmbBxExistingHairColors
+            // 
+            this.cmbBxExistingHairColors.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBxExistingHairColors.FormattingEnabled = true;
+            this.cmbBxExistingHairColors.Location = new System.Drawing.Point(91, 451);
+            this.cmbBxExistingHairColors.Name = "cmbBxExistingHairColors";
+            this.cmbBxExistingHairColors.Size = new System.Drawing.Size(194, 21);
+            this.cmbBxExistingHairColors.TabIndex = 549;
+            this.cmbBxExistingHairColors.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 455);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(79, 13);
+            this.label2.TabIndex = 550;
+            this.label2.Text = "Hair Colors      :";
+            this.label2.Visible = false;
+            // 
+            // btnAddEyeColor
+            // 
+            this.btnAddEyeColor.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddEyeColor.Enabled = false;
+            this.btnAddEyeColor.Location = new System.Drawing.Point(231, 525);
+            this.btnAddEyeColor.Name = "btnAddEyeColor";
+            this.btnAddEyeColor.Size = new System.Drawing.Size(54, 20);
+            this.btnAddEyeColor.TabIndex = 555;
+            this.btnAddEyeColor.Text = "ADD";
+            this.btnAddEyeColor.UseVisualStyleBackColor = false;
+            // 
+            // txtBxEyeColorToAdd
+            // 
+            this.txtBxEyeColorToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxEyeColorToAdd.Location = new System.Drawing.Point(10, 525);
+            this.txtBxEyeColorToAdd.Name = "txtBxEyeColorToAdd";
+            this.txtBxEyeColorToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxEyeColorToAdd.TabIndex = 552;
+            this.txtBxEyeColorToAdd.Visible = false;
+            // 
+            // cmbBxExistingEyeColors
+            // 
+            this.cmbBxExistingEyeColors.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBxExistingEyeColors.FormattingEnabled = true;
+            this.cmbBxExistingEyeColors.Location = new System.Drawing.Point(91, 501);
+            this.cmbBxExistingEyeColors.Name = "cmbBxExistingEyeColors";
+            this.cmbBxExistingEyeColors.Size = new System.Drawing.Size(194, 21);
+            this.cmbBxExistingEyeColors.TabIndex = 553;
+            this.cmbBxExistingEyeColors.Visible = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 505);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(81, 13);
+            this.label3.TabIndex = 554;
+            this.label3.Text = "Eye Colors       :";
+            this.label3.Visible = false;
+            // 
+            // btnAddRole
+            // 
+            this.btnAddRole.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddRole.Enabled = false;
+            this.btnAddRole.Location = new System.Drawing.Point(231, 575);
+            this.btnAddRole.Name = "btnAddRole";
+            this.btnAddRole.Size = new System.Drawing.Size(54, 20);
+            this.btnAddRole.TabIndex = 559;
+            this.btnAddRole.Text = "ADD";
+            this.btnAddRole.UseVisualStyleBackColor = false;
+            // 
+            // txtBxRoleToAdd
+            // 
+            this.txtBxRoleToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxRoleToAdd.Location = new System.Drawing.Point(10, 575);
+            this.txtBxRoleToAdd.Name = "txtBxRoleToAdd";
+            this.txtBxRoleToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxRoleToAdd.TabIndex = 556;
+            this.txtBxRoleToAdd.Visible = false;
+            // 
+            // cmbBxExistingRoles
+            // 
+            this.cmbBxExistingRoles.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBxExistingRoles.FormattingEnabled = true;
+            this.cmbBxExistingRoles.Location = new System.Drawing.Point(91, 551);
+            this.cmbBxExistingRoles.Name = "cmbBxExistingRoles";
+            this.cmbBxExistingRoles.Size = new System.Drawing.Size(194, 21);
+            this.cmbBxExistingRoles.TabIndex = 557;
+            this.cmbBxExistingRoles.Visible = false;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 555);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(82, 13);
+            this.label4.TabIndex = 558;
+            this.label4.Text = "Roles               :";
+            this.label4.Visible = false;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Select...",
+            "Image to the left",
+            "Image to the right"});
+            this.comboBox1.Location = new System.Drawing.Point(115, 6);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(182, 21);
+            this.comboBox1.TabIndex = 516;
+            this.comboBox1.Visible = false;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(107, 13);
+            this.label5.TabIndex = 517;
+            this.label5.Text = "Metadata placement:";
+            this.label5.Visible = false;
+            // 
+            // nudMainWinX
+            // 
+            this.nudMainWinX.Location = new System.Drawing.Point(114, 40);
+            this.nudMainWinX.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.nudMainWinX.Name = "nudMainWinX";
+            this.nudMainWinX.Size = new System.Drawing.Size(88, 20);
+            this.nudMainWinX.TabIndex = 518;
+            this.nudMainWinX.Visible = false;
+            // 
+            // lblMainWinPos
+            // 
+            this.lblMainWinPos.AutoSize = true;
+            this.lblMainWinPos.Location = new System.Drawing.Point(8, 42);
+            this.lblMainWinPos.Name = "lblMainWinPos";
+            this.lblMainWinPos.Size = new System.Drawing.Size(101, 13);
+            this.lblMainWinPos.TabIndex = 520;
+            this.lblMainWinPos.Text = "Main window pos.  :";
+            this.lblMainWinPos.Visible = false;
+            // 
+            // nudMainWinY
+            // 
+            this.nudMainWinY.Location = new System.Drawing.Point(208, 40);
+            this.nudMainWinY.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.nudMainWinY.Name = "nudMainWinY";
+            this.nudMainWinY.Size = new System.Drawing.Size(88, 20);
+            this.nudMainWinY.TabIndex = 519;
+            this.nudMainWinY.Visible = false;
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(627, 446);
-            this.Controls.Add(this.btnAddNationalityType);
-            this.Controls.Add(this.txtBxNationalityTypeToAdd);
-            this.Controls.Add(this.cmbBxExistingNationalityTypes);
-            this.Controls.Add(this.lblNationalityType);
-            this.Controls.Add(this.btnAddRelationType);
-            this.Controls.Add(this.txtBxRelationTypeToAdd);
-            this.Controls.Add(this.cmbBxExistingRelationTypes);
-            this.Controls.Add(this.lblRelationType);
-            this.Controls.Add(this.btnAddContentType);
-            this.Controls.Add(this.txtBxContentTypeToAdd);
-            this.Controls.Add(this.cmbBxExistingContentTypes);
-            this.Controls.Add(this.lblContentType);
-            this.Controls.Add(this.btnAddEventType);
-            this.Controls.Add(this.txtbxEventTypeToAdd);
-            this.Controls.Add(this.cmbBxExistingEventTypes);
-            this.Controls.Add(this.lblEventType);
-            this.Controls.Add(this.btnAddMotifType);
-            this.Controls.Add(this.txtBxMotifTypeAdding);
-            this.Controls.Add(this.cmbBxExistingMotifTypes);
-            this.Controls.Add(this.lblMotifType);
-            this.Controls.Add(this.lblCategoryDefs);
-            this.Controls.Add(this.nudLargeImageHeight);
-            this.Controls.Add(this.nudLargeImageWidth);
-            this.Controls.Add(this.lblLargeImageDimensions);
-            this.Controls.Add(this.nudSmallImageHeight);
-            this.Controls.Add(this.nudSmallImageWidth);
-            this.Controls.Add(this.lblSmallImage);
-            this.Controls.Add(this.lblImageDisplayDimensions);
-            this.Controls.Add(this.nudBottomBorder);
-            this.Controls.Add(this.nudTopBorder);
-            this.Controls.Add(this.nudRightBorder);
-            this.Controls.Add(this.nudLeftBorder);
-            this.Controls.Add(this.lblPosition);
-            this.Controls.Add(this.cmbbxUserRights);
-            this.Controls.Add(this.lblUserRights);
+            this.ClientSize = new System.Drawing.Size(669, 446);
+            this.Controls.Add(this.userDataTabControl);
             this.Controls.Add(this.btnEditUserData);
             this.Controls.Add(this.btnCheckCred);
             this.Controls.Add(this.txtBxUserPassword);
@@ -619,6 +1018,13 @@ namespace myLoginForm//PhotoEditor00001
             ((System.ComponentModel.ISupportInitialize)(this.nudSmallImageWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLargeImageHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLargeImageWidth)).EndInit();
+            this.userDataTabControl.ResumeLayout(false);
+            this.tabPageGuiSetup.ResumeLayout(false);
+            this.tabPageGuiSetup.PerformLayout();
+            this.tabPageUserMetadata.ResumeLayout(false);
+            this.tabPageUserMetadata.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMainWinX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMainWinY)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -635,7 +1041,7 @@ namespace myLoginForm//PhotoEditor00001
         private System.Windows.Forms.Button btnEditUserData;
         private System.Windows.Forms.Label lblUserRights;
         private System.Windows.Forms.ComboBox cmbbxUserRights;
-        private System.Windows.Forms.Label lblPosition;
+        private System.Windows.Forms.Label lblMainWinSize;
         private System.Windows.Forms.NumericUpDown nudLeftBorder;
         private System.Windows.Forms.NumericUpDown nudRightBorder;
         private System.Windows.Forms.NumericUpDown nudTopBorder;
@@ -668,5 +1074,37 @@ namespace myLoginForm//PhotoEditor00001
         private System.Windows.Forms.TextBox txtBxNationalityTypeToAdd;
         private System.Windows.Forms.ComboBox cmbBxExistingNationalityTypes;
         private System.Windows.Forms.Label lblNationalityType;
+        private System.Windows.Forms.TabControl userDataTabControl;
+        private System.Windows.Forms.TabPage tabPageGuiSetup;
+        private System.Windows.Forms.NumericUpDown nudMainWinX;
+        private System.Windows.Forms.Label lblMainWinPos;
+        private System.Windows.Forms.NumericUpDown nudMainWinY;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TabPage tabPageUserMetadata;
+        private System.Windows.Forms.Button btnAddRole;
+        private System.Windows.Forms.TextBox txtBxRoleToAdd;
+        private System.Windows.Forms.ComboBox cmbBxExistingRoles;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnAddEyeColor;
+        private System.Windows.Forms.TextBox txtBxEyeColorToAdd;
+        private System.Windows.Forms.ComboBox cmbBxExistingEyeColors;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnAddHairColor;
+        private System.Windows.Forms.TextBox txtBxHairColorToAdd;
+        private System.Windows.Forms.ComboBox cmbBxExistingHairColors;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnAddComplexion;
+        private System.Windows.Forms.TextBox txtBxComplexionToAdd;
+        private System.Windows.Forms.ComboBox cmbBxExistingComplexions;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnAddContactWay;
+        private System.Windows.Forms.TextBox txtBxContactWaysToAdd;
+        private System.Windows.Forms.ComboBox cmbBxExistingContactWays;
+        private System.Windows.Forms.Label lblContactWays;
+        private System.Windows.Forms.Button btnAddCurrency;
+        private System.Windows.Forms.TextBox txtBxCurrencyToAdd;
+        private System.Windows.Forms.ComboBox cmbBoxExistingCurrencies;
+        private System.Windows.Forms.Label lblCurrency;
     }
 }
