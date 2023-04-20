@@ -1,17 +1,18 @@
-Identity : 
-Secrecy  : Unefined
-StrtMnth : 1
-StrtHour : 0
-StrtMin  : 0
-EvntTime : 1:17 time
-StopMnth : 1
-StopHour : 0
-StopMin  : 0
-LatMin   : 0
-LatSec   : 0
-LatSemSc : 0
-LatDir   : Undefined
-LonMin   : 0
-LonSec   : 0
-LonSemSc : 0
-LonDir   : Undefined
+Identity : <name>
+Secrecy  : Undefined
+EvtOwner : <identity of event owner>
+Started  : <year>-<month>-<day>; <hour>:<minute>; [time|duration]
+Ended    : <year>-<month>-<day>; <hour>:<minute>
+Latitude : <degrees>; <minutes>; <seconds>.<semiseconds>; [North|South]
+Longitud : <degrees>; <minutes>; <seconds>.<semiseconds>; [East|West]
+EvtStrt	 : <streetname>; <number>[; <addon>]
+EvtCity  : <cityname>
+EvtAreaN : <Areaname>
+EvtAreaC : <Areacode>
+EvtCntry : <Countryname>
+EvtType  : <type of event>
+Headline : <Descriptive event headline>
+{EvtAttdr : <Attender Id>; <level>}
+{EvtImage : <Image path and name>; <type of content>; <level>}
+Content  : {<Content tags>}
+Descrptn : <Description of the event>

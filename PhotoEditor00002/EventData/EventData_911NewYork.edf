@@ -1,30 +1,14 @@
 Identity : 911NewYork
 Secrecy  : Open
 EvtOwner : al-Quaida
-StrtYear : 2001
-StrtMnth : 11
-StrtDay  : 9
-StrtHour : 14
-StrtMin  : 46
-StopYear : 2001
-StopMnth : 11
-StopDay  : 10
-StopHour : 11
-StopMin  : 00
-LatDegr  : 40
-LatMin   : 71
-LatSec   : 17
-LatSemSc : 30
-LatDir   : N
-LonDegr  : 74
-LonMin   : 01
-LonSec   : 32
-LonSemSc : 0
-LonDir   : W
+Strted   : 2001-11-09; 14:46
+StopYear : 2001-11-10; 11:00
+Latitude : 40; 71; 17.30; North
+Longitud : 74; 01; 32.00; West
 EvtStrt  : West 7th Street
-EvtArNam : New York
-EvtAreaC : Elmira
-EvtZipCd : NY-14901
+EvtCity  : New York
+EvtAreaN : Elmira
+EvtAreaC : NY-14901
 EvtCntry : United States
 EvtType  : Terror attack
 Headline : al-Quaida terror attack on New York.

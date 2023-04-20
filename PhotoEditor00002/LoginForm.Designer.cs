@@ -29,6 +29,7 @@ namespace myLoginForm//PhotoEditor00001
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblUserIdentity = new System.Windows.Forms.Label();
             this.txtBxUserIdentity = new System.Windows.Forms.TextBox();
@@ -73,36 +74,42 @@ namespace myLoginForm//PhotoEditor00001
             this.lblNationalityType = new System.Windows.Forms.Label();
             this.userDataTabControl = new System.Windows.Forms.TabControl();
             this.tabPageGuiSetup = new System.Windows.Forms.TabPage();
+            this.txtBoxSetEventStorage = new System.Windows.Forms.TextBox();
+            this.btnEventStorage = new System.Windows.Forms.Button();
+            this.txtBoxSetActorStorage = new System.Windows.Forms.TextBox();
+            this.btnActorStorage = new System.Windows.Forms.Button();
+            this.nudMainWinX = new System.Windows.Forms.NumericUpDown();
+            this.lblMainWinPos = new System.Windows.Forms.Label();
+            this.nudMainWinY = new System.Windows.Forms.NumericUpDown();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.tabPageUserMetadata = new System.Windows.Forms.TabPage();
-            this.btnAddCurrency = new System.Windows.Forms.Button();
-            this.txtBxCurrencyToAdd = new System.Windows.Forms.TextBox();
-            this.cmbBoxExistingCurrencies = new System.Windows.Forms.ComboBox();
-            this.lblCurrency = new System.Windows.Forms.Label();
+            this.btnAddRole = new System.Windows.Forms.Button();
+            this.txtBxRoleToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBxExistingRoles = new System.Windows.Forms.ComboBox();
+            this.lblRoles = new System.Windows.Forms.Label();
+            this.btnAddEyeColor = new System.Windows.Forms.Button();
+            this.txtBxEyeColorToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBxExistingEyeColors = new System.Windows.Forms.ComboBox();
+            this.lblEyeColor = new System.Windows.Forms.Label();
+            this.btnAddHairColor = new System.Windows.Forms.Button();
+            this.txtBxHairColorToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBxExistingHairColors = new System.Windows.Forms.ComboBox();
+            this.lblHairColor = new System.Windows.Forms.Label();
+            this.btnAddComplexion = new System.Windows.Forms.Button();
+            this.txtBxComplexionToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBxExistingComplexions = new System.Windows.Forms.ComboBox();
+            this.lblComplexion = new System.Windows.Forms.Label();
             this.btnAddContactWay = new System.Windows.Forms.Button();
             this.txtBxContactWaysToAdd = new System.Windows.Forms.TextBox();
             this.cmbBxExistingContactWays = new System.Windows.Forms.ComboBox();
             this.lblContactWays = new System.Windows.Forms.Label();
-            this.btnAddComplexion = new System.Windows.Forms.Button();
-            this.txtBxComplexionToAdd = new System.Windows.Forms.TextBox();
-            this.cmbBxExistingComplexions = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnAddHairColor = new System.Windows.Forms.Button();
-            this.txtBxHairColorToAdd = new System.Windows.Forms.TextBox();
-            this.cmbBxExistingHairColors = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.btnAddEyeColor = new System.Windows.Forms.Button();
-            this.txtBxEyeColorToAdd = new System.Windows.Forms.TextBox();
-            this.cmbBxExistingEyeColors = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.btnAddRole = new System.Windows.Forms.Button();
-            this.txtBxRoleToAdd = new System.Windows.Forms.TextBox();
-            this.cmbBxExistingRoles = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.nudMainWinX = new System.Windows.Forms.NumericUpDown();
-            this.lblMainWinPos = new System.Windows.Forms.Label();
-            this.nudMainWinY = new System.Windows.Forms.NumericUpDown();
+            this.btnAddCurrency = new System.Windows.Forms.Button();
+            this.txtBxCurrencyToAdd = new System.Windows.Forms.TextBox();
+            this.cmbBoxExistingCurrencies = new System.Windows.Forms.ComboBox();
+            this.lblCurrency = new System.Windows.Forms.Label();
+            this.folderBrowserDialogActorStorage = new System.Windows.Forms.FolderBrowserDialog();
+            this.folderBrowserDialogEventStorage = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLeftBorder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudRightBorder)).BeginInit();
@@ -114,15 +121,19 @@ namespace myLoginForm//PhotoEditor00001
             ((System.ComponentModel.ISupportInitialize)(this.nudLargeImageWidth)).BeginInit();
             this.userDataTabControl.SuspendLayout();
             this.tabPageGuiSetup.SuspendLayout();
-            this.tabPageUserMetadata.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudMainWinX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMainWinY)).BeginInit();
+            this.tabPageUserMetadata.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.Window;
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.No;
+            this.pictureBox1.Enabled = false;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
             this.pictureBox1.Location = new System.Drawing.Point(6, 7);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(333, 346);
@@ -610,6 +621,10 @@ namespace myLoginForm//PhotoEditor00001
             // 
             // tabPageGuiSetup
             // 
+            this.tabPageGuiSetup.Controls.Add(this.txtBoxSetEventStorage);
+            this.tabPageGuiSetup.Controls.Add(this.btnEventStorage);
+            this.tabPageGuiSetup.Controls.Add(this.txtBoxSetActorStorage);
+            this.tabPageGuiSetup.Controls.Add(this.btnActorStorage);
             this.tabPageGuiSetup.Controls.Add(this.nudMainWinX);
             this.tabPageGuiSetup.Controls.Add(this.lblMainWinPos);
             this.tabPageGuiSetup.Controls.Add(this.nudMainWinY);
@@ -635,6 +650,111 @@ namespace myLoginForm//PhotoEditor00001
             this.tabPageGuiSetup.Text = "GUI Setup";
             this.tabPageGuiSetup.UseVisualStyleBackColor = true;
             // 
+            // txtBoxSetEventStorage
+            // 
+            this.txtBoxSetEventStorage.Location = new System.Drawing.Point(107, 240);
+            this.txtBoxSetEventStorage.Name = "txtBoxSetEventStorage";
+            this.txtBoxSetEventStorage.ReadOnly = true;
+            this.txtBoxSetEventStorage.Size = new System.Drawing.Size(188, 20);
+            this.txtBoxSetEventStorage.TabIndex = 524;
+            this.txtBoxSetEventStorage.Visible = false;
+            // 
+            // btnEventStorage
+            // 
+            this.btnEventStorage.Enabled = false;
+            this.btnEventStorage.Location = new System.Drawing.Point(5, 238);
+            this.btnEventStorage.Name = "btnEventStorage";
+            this.btnEventStorage.Size = new System.Drawing.Size(101, 25);
+            this.btnEventStorage.TabIndex = 523;
+            this.btnEventStorage.Text = "Event storage";
+            this.btnEventStorage.UseVisualStyleBackColor = true;
+            this.btnEventStorage.Visible = false;
+            this.btnEventStorage.Click += new System.EventHandler(this.btnEventStorage_Click);
+            // 
+            // txtBoxSetActorStorage
+            // 
+            this.txtBoxSetActorStorage.Location = new System.Drawing.Point(107, 209);
+            this.txtBoxSetActorStorage.Name = "txtBoxSetActorStorage";
+            this.txtBoxSetActorStorage.ReadOnly = true;
+            this.txtBoxSetActorStorage.Size = new System.Drawing.Size(188, 20);
+            this.txtBoxSetActorStorage.TabIndex = 522;
+            this.txtBoxSetActorStorage.Visible = false;
+            // 
+            // btnActorStorage
+            // 
+            this.btnActorStorage.Enabled = false;
+            this.btnActorStorage.Location = new System.Drawing.Point(5, 207);
+            this.btnActorStorage.Name = "btnActorStorage";
+            this.btnActorStorage.Size = new System.Drawing.Size(101, 25);
+            this.btnActorStorage.TabIndex = 521;
+            this.btnActorStorage.Text = "Actor storage";
+            this.btnActorStorage.UseVisualStyleBackColor = true;
+            this.btnActorStorage.Visible = false;
+            this.btnActorStorage.Click += new System.EventHandler(this.btnActorStorage_Click);
+            // 
+            // nudMainWinX
+            // 
+            this.nudMainWinX.Location = new System.Drawing.Point(114, 40);
+            this.nudMainWinX.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.nudMainWinX.Name = "nudMainWinX";
+            this.nudMainWinX.Size = new System.Drawing.Size(88, 20);
+            this.nudMainWinX.TabIndex = 518;
+            this.nudMainWinX.Visible = false;
+            this.nudMainWinX.ValueChanged += new System.EventHandler(this.nudMainWinX_ValueChanged);
+            // 
+            // lblMainWinPos
+            // 
+            this.lblMainWinPos.AutoSize = true;
+            this.lblMainWinPos.Location = new System.Drawing.Point(8, 42);
+            this.lblMainWinPos.Name = "lblMainWinPos";
+            this.lblMainWinPos.Size = new System.Drawing.Size(101, 13);
+            this.lblMainWinPos.TabIndex = 520;
+            this.lblMainWinPos.Text = "Main window pos.  :";
+            this.lblMainWinPos.Visible = false;
+            // 
+            // nudMainWinY
+            // 
+            this.nudMainWinY.Location = new System.Drawing.Point(208, 40);
+            this.nudMainWinY.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.nudMainWinY.Name = "nudMainWinY";
+            this.nudMainWinY.Size = new System.Drawing.Size(88, 20);
+            this.nudMainWinY.TabIndex = 519;
+            this.nudMainWinY.Visible = false;
+            this.nudMainWinY.ValueChanged += new System.EventHandler(this.nudMainWinY_ValueChanged);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Select...",
+            "Image to the left",
+            "Image to the right"});
+            this.comboBox1.Location = new System.Drawing.Point(115, 6);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(182, 21);
+            this.comboBox1.TabIndex = 516;
+            this.comboBox1.Visible = false;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(107, 13);
+            this.label5.TabIndex = 517;
+            this.label5.Text = "Metadata placement:";
+            this.label5.Visible = false;
+            // 
             // tabPageUserMetadata
             // 
             this.tabPageUserMetadata.AutoScroll = true;
@@ -642,19 +762,19 @@ namespace myLoginForm//PhotoEditor00001
             this.tabPageUserMetadata.Controls.Add(this.btnAddRole);
             this.tabPageUserMetadata.Controls.Add(this.txtBxRoleToAdd);
             this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingRoles);
-            this.tabPageUserMetadata.Controls.Add(this.label4);
+            this.tabPageUserMetadata.Controls.Add(this.lblRoles);
             this.tabPageUserMetadata.Controls.Add(this.btnAddEyeColor);
             this.tabPageUserMetadata.Controls.Add(this.txtBxEyeColorToAdd);
             this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingEyeColors);
-            this.tabPageUserMetadata.Controls.Add(this.label3);
+            this.tabPageUserMetadata.Controls.Add(this.lblEyeColor);
             this.tabPageUserMetadata.Controls.Add(this.btnAddHairColor);
             this.tabPageUserMetadata.Controls.Add(this.txtBxHairColorToAdd);
             this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingHairColors);
-            this.tabPageUserMetadata.Controls.Add(this.label2);
+            this.tabPageUserMetadata.Controls.Add(this.lblHairColor);
             this.tabPageUserMetadata.Controls.Add(this.btnAddComplexion);
             this.tabPageUserMetadata.Controls.Add(this.txtBxComplexionToAdd);
             this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingComplexions);
-            this.tabPageUserMetadata.Controls.Add(this.label1);
+            this.tabPageUserMetadata.Controls.Add(this.lblComplexion);
             this.tabPageUserMetadata.Controls.Add(this.btnAddContactWay);
             this.tabPageUserMetadata.Controls.Add(this.txtBxContactWaysToAdd);
             this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingContactWays);
@@ -694,48 +814,177 @@ namespace myLoginForm//PhotoEditor00001
             this.tabPageUserMetadata.Text = "User Metadata";
             this.tabPageUserMetadata.UseVisualStyleBackColor = true;
             // 
-            // btnAddCurrency
+            // btnAddRole
             // 
-            this.btnAddCurrency.BackColor = System.Drawing.SystemColors.Control;
-            this.btnAddCurrency.Enabled = false;
-            this.btnAddCurrency.Location = new System.Drawing.Point(231, 323);
-            this.btnAddCurrency.Name = "btnAddCurrency";
-            this.btnAddCurrency.Size = new System.Drawing.Size(54, 20);
-            this.btnAddCurrency.TabIndex = 539;
-            this.btnAddCurrency.Text = "ADD";
-            this.btnAddCurrency.UseVisualStyleBackColor = false;
-            this.btnAddCurrency.Click += new System.EventHandler(this.btnAddCurrency_Click);
+            this.btnAddRole.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddRole.Enabled = false;
+            this.btnAddRole.Location = new System.Drawing.Point(231, 575);
+            this.btnAddRole.Name = "btnAddRole";
+            this.btnAddRole.Size = new System.Drawing.Size(54, 20);
+            this.btnAddRole.TabIndex = 559;
+            this.btnAddRole.Text = "ADD";
+            this.btnAddRole.UseVisualStyleBackColor = false;
+            this.btnAddRole.Click += new System.EventHandler(this.btnAddRole_Click);
             // 
-            // txtBxCurrencyToAdd
+            // txtBxRoleToAdd
             // 
-            this.txtBxCurrencyToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBxCurrencyToAdd.Location = new System.Drawing.Point(10, 323);
-            this.txtBxCurrencyToAdd.Name = "txtBxCurrencyToAdd";
-            this.txtBxCurrencyToAdd.Size = new System.Drawing.Size(275, 20);
-            this.txtBxCurrencyToAdd.TabIndex = 536;
-            this.txtBxCurrencyToAdd.Visible = false;
-            this.txtBxCurrencyToAdd.TextChanged += new System.EventHandler(this.txtBxCurrencyToAdd_TextChanged);
+            this.txtBxRoleToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxRoleToAdd.Location = new System.Drawing.Point(10, 575);
+            this.txtBxRoleToAdd.Name = "txtBxRoleToAdd";
+            this.txtBxRoleToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxRoleToAdd.TabIndex = 556;
+            this.txtBxRoleToAdd.Visible = false;
+            this.txtBxRoleToAdd.TextChanged += new System.EventHandler(this.txtBxRoleToAdd_TextChanged);
             // 
-            // cmbBoxExistingCurrencies
+            // cmbBxExistingRoles
             // 
-            this.cmbBoxExistingCurrencies.BackColor = System.Drawing.SystemColors.Control;
-            this.cmbBoxExistingCurrencies.FormattingEnabled = true;
-            this.cmbBoxExistingCurrencies.Location = new System.Drawing.Point(91, 299);
-            this.cmbBoxExistingCurrencies.Name = "cmbBoxExistingCurrencies";
-            this.cmbBoxExistingCurrencies.Size = new System.Drawing.Size(194, 21);
-            this.cmbBoxExistingCurrencies.TabIndex = 537;
-            this.cmbBoxExistingCurrencies.Visible = false;
-            this.cmbBoxExistingCurrencies.SelectedIndexChanged += new System.EventHandler(this.cmbBoxExistingCurrencies_SelectedIndexChanged);
+            this.cmbBxExistingRoles.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBxExistingRoles.FormattingEnabled = true;
+            this.cmbBxExistingRoles.Location = new System.Drawing.Point(91, 551);
+            this.cmbBxExistingRoles.Name = "cmbBxExistingRoles";
+            this.cmbBxExistingRoles.Size = new System.Drawing.Size(194, 21);
+            this.cmbBxExistingRoles.TabIndex = 557;
+            this.cmbBxExistingRoles.Visible = false;
+            this.cmbBxExistingRoles.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingRoles_SelectedIndexChanged);
             // 
-            // lblCurrency
+            // lblRoles
             // 
-            this.lblCurrency.AutoSize = true;
-            this.lblCurrency.Location = new System.Drawing.Point(7, 303);
-            this.lblCurrency.Name = "lblCurrency";
-            this.lblCurrency.Size = new System.Drawing.Size(82, 13);
-            this.lblCurrency.TabIndex = 538;
-            this.lblCurrency.Text = "Currency          :";
-            this.lblCurrency.Visible = false;
+            this.lblRoles.AutoSize = true;
+            this.lblRoles.Location = new System.Drawing.Point(7, 555);
+            this.lblRoles.Name = "lblRoles";
+            this.lblRoles.Size = new System.Drawing.Size(82, 13);
+            this.lblRoles.TabIndex = 558;
+            this.lblRoles.Text = "Roles               :";
+            this.lblRoles.Visible = false;
+            // 
+            // btnAddEyeColor
+            // 
+            this.btnAddEyeColor.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddEyeColor.Enabled = false;
+            this.btnAddEyeColor.Location = new System.Drawing.Point(231, 525);
+            this.btnAddEyeColor.Name = "btnAddEyeColor";
+            this.btnAddEyeColor.Size = new System.Drawing.Size(54, 20);
+            this.btnAddEyeColor.TabIndex = 555;
+            this.btnAddEyeColor.Text = "ADD";
+            this.btnAddEyeColor.UseVisualStyleBackColor = false;
+            this.btnAddEyeColor.Click += new System.EventHandler(this.btnAddEyeColor_Click);
+            // 
+            // txtBxEyeColorToAdd
+            // 
+            this.txtBxEyeColorToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxEyeColorToAdd.Location = new System.Drawing.Point(10, 525);
+            this.txtBxEyeColorToAdd.Name = "txtBxEyeColorToAdd";
+            this.txtBxEyeColorToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxEyeColorToAdd.TabIndex = 552;
+            this.txtBxEyeColorToAdd.Visible = false;
+            this.txtBxEyeColorToAdd.TextChanged += new System.EventHandler(this.txtBxEyeColorToAdd_TextChanged);
+            // 
+            // cmbBxExistingEyeColors
+            // 
+            this.cmbBxExistingEyeColors.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBxExistingEyeColors.FormattingEnabled = true;
+            this.cmbBxExistingEyeColors.Location = new System.Drawing.Point(91, 501);
+            this.cmbBxExistingEyeColors.Name = "cmbBxExistingEyeColors";
+            this.cmbBxExistingEyeColors.Size = new System.Drawing.Size(194, 21);
+            this.cmbBxExistingEyeColors.TabIndex = 553;
+            this.cmbBxExistingEyeColors.Visible = false;
+            this.cmbBxExistingEyeColors.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingEyeColors_SelectedIndexChanged);
+            // 
+            // lblEyeColor
+            // 
+            this.lblEyeColor.AutoSize = true;
+            this.lblEyeColor.Location = new System.Drawing.Point(7, 505);
+            this.lblEyeColor.Name = "lblEyeColor";
+            this.lblEyeColor.Size = new System.Drawing.Size(81, 13);
+            this.lblEyeColor.TabIndex = 554;
+            this.lblEyeColor.Text = "Eye Colors       :";
+            this.lblEyeColor.Visible = false;
+            // 
+            // btnAddHairColor
+            // 
+            this.btnAddHairColor.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddHairColor.Enabled = false;
+            this.btnAddHairColor.Location = new System.Drawing.Point(231, 475);
+            this.btnAddHairColor.Name = "btnAddHairColor";
+            this.btnAddHairColor.Size = new System.Drawing.Size(54, 20);
+            this.btnAddHairColor.TabIndex = 551;
+            this.btnAddHairColor.Text = "ADD";
+            this.btnAddHairColor.UseVisualStyleBackColor = false;
+            this.btnAddHairColor.Click += new System.EventHandler(this.btnAddHairColor_Click);
+            // 
+            // txtBxHairColorToAdd
+            // 
+            this.txtBxHairColorToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxHairColorToAdd.Location = new System.Drawing.Point(10, 475);
+            this.txtBxHairColorToAdd.Name = "txtBxHairColorToAdd";
+            this.txtBxHairColorToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxHairColorToAdd.TabIndex = 548;
+            this.txtBxHairColorToAdd.Visible = false;
+            this.txtBxHairColorToAdd.TextChanged += new System.EventHandler(this.txtBxHairColorToAdd_TextChanged);
+            // 
+            // cmbBxExistingHairColors
+            // 
+            this.cmbBxExistingHairColors.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBxExistingHairColors.FormattingEnabled = true;
+            this.cmbBxExistingHairColors.Location = new System.Drawing.Point(91, 451);
+            this.cmbBxExistingHairColors.Name = "cmbBxExistingHairColors";
+            this.cmbBxExistingHairColors.Size = new System.Drawing.Size(194, 21);
+            this.cmbBxExistingHairColors.TabIndex = 549;
+            this.cmbBxExistingHairColors.Visible = false;
+            this.cmbBxExistingHairColors.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingHairColors_SelectedIndexChanged);
+            // 
+            // lblHairColor
+            // 
+            this.lblHairColor.AutoSize = true;
+            this.lblHairColor.Location = new System.Drawing.Point(7, 455);
+            this.lblHairColor.Name = "lblHairColor";
+            this.lblHairColor.Size = new System.Drawing.Size(79, 13);
+            this.lblHairColor.TabIndex = 550;
+            this.lblHairColor.Text = "Hair Colors      :";
+            this.lblHairColor.Visible = false;
+            // 
+            // btnAddComplexion
+            // 
+            this.btnAddComplexion.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddComplexion.Enabled = false;
+            this.btnAddComplexion.Location = new System.Drawing.Point(230, 425);
+            this.btnAddComplexion.Name = "btnAddComplexion";
+            this.btnAddComplexion.Size = new System.Drawing.Size(54, 20);
+            this.btnAddComplexion.TabIndex = 547;
+            this.btnAddComplexion.Text = "ADD";
+            this.btnAddComplexion.UseVisualStyleBackColor = false;
+            this.btnAddComplexion.Click += new System.EventHandler(this.btnAddComplexion_Click);
+            // 
+            // txtBxComplexionToAdd
+            // 
+            this.txtBxComplexionToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxComplexionToAdd.Location = new System.Drawing.Point(10, 425);
+            this.txtBxComplexionToAdd.Name = "txtBxComplexionToAdd";
+            this.txtBxComplexionToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxComplexionToAdd.TabIndex = 544;
+            this.txtBxComplexionToAdd.Visible = false;
+            this.txtBxComplexionToAdd.TextChanged += new System.EventHandler(this.txtBxComplexionToAdd_TextChanged);
+            // 
+            // cmbBxExistingComplexions
+            // 
+            this.cmbBxExistingComplexions.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBxExistingComplexions.FormattingEnabled = true;
+            this.cmbBxExistingComplexions.Location = new System.Drawing.Point(90, 401);
+            this.cmbBxExistingComplexions.Name = "cmbBxExistingComplexions";
+            this.cmbBxExistingComplexions.Size = new System.Drawing.Size(194, 21);
+            this.cmbBxExistingComplexions.TabIndex = 545;
+            this.cmbBxExistingComplexions.Visible = false;
+            this.cmbBxExistingComplexions.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingComplexions_SelectedIndexChanged);
+            // 
+            // lblComplexion
+            // 
+            this.lblComplexion.AutoSize = true;
+            this.lblComplexion.Location = new System.Drawing.Point(6, 405);
+            this.lblComplexion.Name = "lblComplexion";
+            this.lblComplexion.Size = new System.Drawing.Size(81, 13);
+            this.lblComplexion.TabIndex = 546;
+            this.lblComplexion.Text = "Complexions    :";
+            this.lblComplexion.Visible = false;
             // 
             // btnAddContactWay
             // 
@@ -780,240 +1029,48 @@ namespace myLoginForm//PhotoEditor00001
             this.lblContactWays.Text = "Contact ways  :";
             this.lblContactWays.Visible = false;
             // 
-            // btnAddComplexion
+            // btnAddCurrency
             // 
-            this.btnAddComplexion.BackColor = System.Drawing.SystemColors.Control;
-            this.btnAddComplexion.Enabled = false;
-            this.btnAddComplexion.Location = new System.Drawing.Point(230, 425);
-            this.btnAddComplexion.Name = "btnAddComplexion";
-            this.btnAddComplexion.Size = new System.Drawing.Size(54, 20);
-            this.btnAddComplexion.TabIndex = 547;
-            this.btnAddComplexion.Text = "ADD";
-            this.btnAddComplexion.UseVisualStyleBackColor = false;
-            this.btnAddComplexion.Click += new System.EventHandler(this.btnAddComplexion_Click);
+            this.btnAddCurrency.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddCurrency.Enabled = false;
+            this.btnAddCurrency.Location = new System.Drawing.Point(231, 323);
+            this.btnAddCurrency.Name = "btnAddCurrency";
+            this.btnAddCurrency.Size = new System.Drawing.Size(54, 20);
+            this.btnAddCurrency.TabIndex = 539;
+            this.btnAddCurrency.Text = "ADD";
+            this.btnAddCurrency.UseVisualStyleBackColor = false;
+            this.btnAddCurrency.Click += new System.EventHandler(this.btnAddCurrency_Click);
             // 
-            // txtBxComplexionToAdd
+            // txtBxCurrencyToAdd
             // 
-            this.txtBxComplexionToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBxComplexionToAdd.Location = new System.Drawing.Point(9, 425);
-            this.txtBxComplexionToAdd.Name = "txtBxComplexionToAdd";
-            this.txtBxComplexionToAdd.Size = new System.Drawing.Size(275, 20);
-            this.txtBxComplexionToAdd.TabIndex = 544;
-            this.txtBxComplexionToAdd.Visible = false;
-            this.txtBxComplexionToAdd.TextChanged += new System.EventHandler(this.txtBxComplexionToAdd_TextChanged);
+            this.txtBxCurrencyToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBxCurrencyToAdd.Location = new System.Drawing.Point(10, 323);
+            this.txtBxCurrencyToAdd.Name = "txtBxCurrencyToAdd";
+            this.txtBxCurrencyToAdd.Size = new System.Drawing.Size(275, 20);
+            this.txtBxCurrencyToAdd.TabIndex = 536;
+            this.txtBxCurrencyToAdd.Visible = false;
+            this.txtBxCurrencyToAdd.TextChanged += new System.EventHandler(this.txtBxCurrencyToAdd_TextChanged);
             // 
-            // cmbBxExistingComplexions
+            // cmbBoxExistingCurrencies
             // 
-            this.cmbBxExistingComplexions.BackColor = System.Drawing.SystemColors.Control;
-            this.cmbBxExistingComplexions.FormattingEnabled = true;
-            this.cmbBxExistingComplexions.Location = new System.Drawing.Point(90, 401);
-            this.cmbBxExistingComplexions.Name = "cmbBxExistingComplexions";
-            this.cmbBxExistingComplexions.Size = new System.Drawing.Size(194, 21);
-            this.cmbBxExistingComplexions.TabIndex = 545;
-            this.cmbBxExistingComplexions.Visible = false;
-            this.cmbBxExistingComplexions.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingComplexions_SelectedIndexChanged);
+            this.cmbBoxExistingCurrencies.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbBoxExistingCurrencies.FormattingEnabled = true;
+            this.cmbBoxExistingCurrencies.Location = new System.Drawing.Point(91, 299);
+            this.cmbBoxExistingCurrencies.Name = "cmbBoxExistingCurrencies";
+            this.cmbBoxExistingCurrencies.Size = new System.Drawing.Size(194, 21);
+            this.cmbBoxExistingCurrencies.TabIndex = 537;
+            this.cmbBoxExistingCurrencies.Visible = false;
+            this.cmbBoxExistingCurrencies.SelectedIndexChanged += new System.EventHandler(this.cmbBoxExistingCurrencies_SelectedIndexChanged);
             // 
-            // label1
+            // lblCurrency
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 405);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 13);
-            this.label1.TabIndex = 546;
-            this.label1.Text = "Complexions    :";
-            this.label1.Visible = false;
-            // 
-            // btnAddHairColor
-            // 
-            this.btnAddHairColor.BackColor = System.Drawing.SystemColors.Control;
-            this.btnAddHairColor.Enabled = false;
-            this.btnAddHairColor.Location = new System.Drawing.Point(231, 475);
-            this.btnAddHairColor.Name = "btnAddHairColor";
-            this.btnAddHairColor.Size = new System.Drawing.Size(54, 20);
-            this.btnAddHairColor.TabIndex = 551;
-            this.btnAddHairColor.Text = "ADD";
-            this.btnAddHairColor.UseVisualStyleBackColor = false;
-            this.btnAddHairColor.Click += new System.EventHandler(this.btnAddHairColor_Click);
-            // 
-            // txtBxHairColorToAdd
-            // 
-            this.txtBxHairColorToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBxHairColorToAdd.Location = new System.Drawing.Point(10, 475);
-            this.txtBxHairColorToAdd.Name = "txtBxHairColorToAdd";
-            this.txtBxHairColorToAdd.Size = new System.Drawing.Size(275, 20);
-            this.txtBxHairColorToAdd.TabIndex = 548;
-            this.txtBxHairColorToAdd.Visible = false;
-            this.txtBxHairColorToAdd.TextChanged += new System.EventHandler(this.txtBxHairColorToAdd_TextChanged);
-            // 
-            // cmbBxExistingHairColors
-            // 
-            this.cmbBxExistingHairColors.BackColor = System.Drawing.SystemColors.Control;
-            this.cmbBxExistingHairColors.FormattingEnabled = true;
-            this.cmbBxExistingHairColors.Location = new System.Drawing.Point(91, 451);
-            this.cmbBxExistingHairColors.Name = "cmbBxExistingHairColors";
-            this.cmbBxExistingHairColors.Size = new System.Drawing.Size(194, 21);
-            this.cmbBxExistingHairColors.TabIndex = 549;
-            this.cmbBxExistingHairColors.Visible = false;
-            this.cmbBxExistingHairColors.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingHairColors_SelectedIndexChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 455);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 13);
-            this.label2.TabIndex = 550;
-            this.label2.Text = "Hair Colors      :";
-            this.label2.Visible = false;
-            // 
-            // btnAddEyeColor
-            // 
-            this.btnAddEyeColor.BackColor = System.Drawing.SystemColors.Control;
-            this.btnAddEyeColor.Enabled = false;
-            this.btnAddEyeColor.Location = new System.Drawing.Point(231, 525);
-            this.btnAddEyeColor.Name = "btnAddEyeColor";
-            this.btnAddEyeColor.Size = new System.Drawing.Size(54, 20);
-            this.btnAddEyeColor.TabIndex = 555;
-            this.btnAddEyeColor.Text = "ADD";
-            this.btnAddEyeColor.UseVisualStyleBackColor = false;
-            this.btnAddEyeColor.Click += new System.EventHandler(this.btnAddEyeColor_Click);
-            // 
-            // txtBxEyeColorToAdd
-            // 
-            this.txtBxEyeColorToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBxEyeColorToAdd.Location = new System.Drawing.Point(10, 525);
-            this.txtBxEyeColorToAdd.Name = "txtBxEyeColorToAdd";
-            this.txtBxEyeColorToAdd.Size = new System.Drawing.Size(275, 20);
-            this.txtBxEyeColorToAdd.TabIndex = 552;
-            this.txtBxEyeColorToAdd.Visible = false;
-            this.txtBxEyeColorToAdd.TextChanged += new System.EventHandler(this.txtBxEyeColorToAdd_TextChanged);
-            // 
-            // cmbBxExistingEyeColors
-            // 
-            this.cmbBxExistingEyeColors.BackColor = System.Drawing.SystemColors.Control;
-            this.cmbBxExistingEyeColors.FormattingEnabled = true;
-            this.cmbBxExistingEyeColors.Location = new System.Drawing.Point(91, 501);
-            this.cmbBxExistingEyeColors.Name = "cmbBxExistingEyeColors";
-            this.cmbBxExistingEyeColors.Size = new System.Drawing.Size(194, 21);
-            this.cmbBxExistingEyeColors.TabIndex = 553;
-            this.cmbBxExistingEyeColors.Visible = false;
-            this.cmbBxExistingEyeColors.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingEyeColors_SelectedIndexChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 505);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(81, 13);
-            this.label3.TabIndex = 554;
-            this.label3.Text = "Eye Colors       :";
-            this.label3.Visible = false;
-            // 
-            // btnAddRole
-            // 
-            this.btnAddRole.BackColor = System.Drawing.SystemColors.Control;
-            this.btnAddRole.Enabled = false;
-            this.btnAddRole.Location = new System.Drawing.Point(231, 575);
-            this.btnAddRole.Name = "btnAddRole";
-            this.btnAddRole.Size = new System.Drawing.Size(54, 20);
-            this.btnAddRole.TabIndex = 559;
-            this.btnAddRole.Text = "ADD";
-            this.btnAddRole.UseVisualStyleBackColor = false;
-            this.btnAddRole.Click += new System.EventHandler(this.btnAddRole_Click);
-            // 
-            // txtBxRoleToAdd
-            // 
-            this.txtBxRoleToAdd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBxRoleToAdd.Location = new System.Drawing.Point(10, 575);
-            this.txtBxRoleToAdd.Name = "txtBxRoleToAdd";
-            this.txtBxRoleToAdd.Size = new System.Drawing.Size(275, 20);
-            this.txtBxRoleToAdd.TabIndex = 556;
-            this.txtBxRoleToAdd.Visible = false;
-            this.txtBxRoleToAdd.TextChanged += new System.EventHandler(this.txtBxRoleToAdd_TextChanged);
-            // 
-            // cmbBxExistingRoles
-            // 
-            this.cmbBxExistingRoles.BackColor = System.Drawing.SystemColors.Control;
-            this.cmbBxExistingRoles.FormattingEnabled = true;
-            this.cmbBxExistingRoles.Location = new System.Drawing.Point(91, 551);
-            this.cmbBxExistingRoles.Name = "cmbBxExistingRoles";
-            this.cmbBxExistingRoles.Size = new System.Drawing.Size(194, 21);
-            this.cmbBxExistingRoles.TabIndex = 557;
-            this.cmbBxExistingRoles.Visible = false;
-            this.cmbBxExistingRoles.SelectedIndexChanged += new System.EventHandler(this.cmbBxExistingRoles_SelectedIndexChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 555);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(82, 13);
-            this.label4.TabIndex = 558;
-            this.label4.Text = "Roles               :";
-            this.label4.Visible = false;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Select...",
-            "Image to the left",
-            "Image to the right"});
-            this.comboBox1.Location = new System.Drawing.Point(115, 6);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(182, 21);
-            this.comboBox1.TabIndex = 516;
-            this.comboBox1.Visible = false;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 9);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(107, 13);
-            this.label5.TabIndex = 517;
-            this.label5.Text = "Metadata placement:";
-            this.label5.Visible = false;
-            // 
-            // nudMainWinX
-            // 
-            this.nudMainWinX.Location = new System.Drawing.Point(114, 40);
-            this.nudMainWinX.Maximum = new decimal(new int[] {
-            15000,
-            0,
-            0,
-            0});
-            this.nudMainWinX.Name = "nudMainWinX";
-            this.nudMainWinX.Size = new System.Drawing.Size(88, 20);
-            this.nudMainWinX.TabIndex = 518;
-            this.nudMainWinX.Visible = false;
-            this.nudMainWinX.ValueChanged += new System.EventHandler(this.nudMainWinX_ValueChanged);
-            // 
-            // lblMainWinPos
-            // 
-            this.lblMainWinPos.AutoSize = true;
-            this.lblMainWinPos.Location = new System.Drawing.Point(8, 42);
-            this.lblMainWinPos.Name = "lblMainWinPos";
-            this.lblMainWinPos.Size = new System.Drawing.Size(101, 13);
-            this.lblMainWinPos.TabIndex = 520;
-            this.lblMainWinPos.Text = "Main window pos.  :";
-            this.lblMainWinPos.Visible = false;
-            // 
-            // nudMainWinY
-            // 
-            this.nudMainWinY.Location = new System.Drawing.Point(208, 40);
-            this.nudMainWinY.Maximum = new decimal(new int[] {
-            15000,
-            0,
-            0,
-            0});
-            this.nudMainWinY.Name = "nudMainWinY";
-            this.nudMainWinY.Size = new System.Drawing.Size(88, 20);
-            this.nudMainWinY.TabIndex = 519;
-            this.nudMainWinY.Visible = false;
-            this.nudMainWinY.ValueChanged += new System.EventHandler(this.nudMainWinY_ValueChanged);
+            this.lblCurrency.AutoSize = true;
+            this.lblCurrency.Location = new System.Drawing.Point(7, 303);
+            this.lblCurrency.Name = "lblCurrency";
+            this.lblCurrency.Size = new System.Drawing.Size(82, 13);
+            this.lblCurrency.TabIndex = 538;
+            this.lblCurrency.Text = "Currency          :";
+            this.lblCurrency.Visible = false;
             // 
             // LoginForm
             // 
@@ -1030,6 +1087,7 @@ namespace myLoginForm//PhotoEditor00001
             this.Controls.Add(this.pictureBox1);
             this.Name = "LoginForm";
             this.Text = "LoginForm";
+            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudLeftBorder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudRightBorder)).EndInit();
@@ -1042,10 +1100,10 @@ namespace myLoginForm//PhotoEditor00001
             this.userDataTabControl.ResumeLayout(false);
             this.tabPageGuiSetup.ResumeLayout(false);
             this.tabPageGuiSetup.PerformLayout();
-            this.tabPageUserMetadata.ResumeLayout(false);
-            this.tabPageUserMetadata.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudMainWinX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMainWinY)).EndInit();
+            this.tabPageUserMetadata.ResumeLayout(false);
+            this.tabPageUserMetadata.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1106,19 +1164,19 @@ namespace myLoginForm//PhotoEditor00001
         private System.Windows.Forms.Button btnAddRole;
         private System.Windows.Forms.TextBox txtBxRoleToAdd;
         private System.Windows.Forms.ComboBox cmbBxExistingRoles;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblRoles;
         private System.Windows.Forms.Button btnAddEyeColor;
         private System.Windows.Forms.TextBox txtBxEyeColorToAdd;
         private System.Windows.Forms.ComboBox cmbBxExistingEyeColors;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblEyeColor;
         private System.Windows.Forms.Button btnAddHairColor;
         private System.Windows.Forms.TextBox txtBxHairColorToAdd;
         private System.Windows.Forms.ComboBox cmbBxExistingHairColors;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblHairColor;
         private System.Windows.Forms.Button btnAddComplexion;
         private System.Windows.Forms.TextBox txtBxComplexionToAdd;
         private System.Windows.Forms.ComboBox cmbBxExistingComplexions;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblComplexion;
         private System.Windows.Forms.Button btnAddContactWay;
         private System.Windows.Forms.TextBox txtBxContactWaysToAdd;
         private System.Windows.Forms.ComboBox cmbBxExistingContactWays;
@@ -1127,5 +1185,11 @@ namespace myLoginForm//PhotoEditor00001
         private System.Windows.Forms.TextBox txtBxCurrencyToAdd;
         private System.Windows.Forms.ComboBox cmbBoxExistingCurrencies;
         private System.Windows.Forms.Label lblCurrency;
+        private System.Windows.Forms.TextBox txtBoxSetEventStorage;
+        private System.Windows.Forms.Button btnEventStorage;
+        private System.Windows.Forms.TextBox txtBoxSetActorStorage;
+        private System.Windows.Forms.Button btnActorStorage;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogActorStorage;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogEventStorage;
     }
 }

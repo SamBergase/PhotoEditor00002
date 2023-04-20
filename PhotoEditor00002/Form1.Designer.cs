@@ -54,6 +54,10 @@ namespace PhotoEditor00002
             this.flipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xdirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ydirectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.histogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.graphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.grayImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureCanvas = new System.Windows.Forms.PictureBox();
             this.pictureName = new System.Windows.Forms.TextBox();
             this.informationTextBox = new System.Windows.Forms.TextBox();
@@ -224,6 +228,7 @@ namespace PhotoEditor00002
             this.GPSVersionLabel = new System.Windows.Forms.Label();
             this.GPSVersionTextBox = new System.Windows.Forms.TextBox();
             this.ActorData = new System.Windows.Forms.TabPage();
+            this.MarkingMotifTextBox = new System.Windows.Forms.TextBox();
             this.SkinToneDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.ArtistIdentityEnterTextBox = new System.Windows.Forms.TextBox();
             this.AddHairInfoButton = new System.Windows.Forms.Button();
@@ -275,7 +280,6 @@ namespace PhotoEditor00002
             this.OccupTitleTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.MarkingDateTextBox = new System.Windows.Forms.TextBox();
-            this.MarkingMotifTextBox = new System.Windows.Forms.TextBox();
             this.MarkingPosTextBox = new System.Windows.Forms.TextBox();
             this.MarkingsLabel = new System.Windows.Forms.Label();
             this.HairLengthTextBox = new System.Windows.Forms.TextBox();
@@ -321,14 +325,14 @@ namespace PhotoEditor00002
             this.SaveActorDataChangesButton = new System.Windows.Forms.Button();
             this.ArtistLabel = new System.Windows.Forms.Label();
             this.EventData = new System.Windows.Forms.TabPage();
+            this.EventImageNameComboBox = new System.Windows.Forms.ComboBox();
+            this.EventAttenderIDComboBox1 = new System.Windows.Forms.ComboBox();
             this.activeEventComboBox = new System.Windows.Forms.ComboBox();
             this.EventDescriptionTextBox = new System.Windows.Forms.TextBox();
             this.ViewSelEventImageButton = new System.Windows.Forms.Button();
             this.EventImageLevelTextBox = new System.Windows.Forms.TextBox();
-            this.EventImageNameListBox = new System.Windows.Forms.ListBox();
             this.ViewAttenderAsActorButton = new System.Windows.Forms.Button();
             this.EventAttenderNaneTextBox = new System.Windows.Forms.TextBox();
-            this.EventAttenderIDListBox = new System.Windows.Forms.ListBox();
             this.EventCountrynameTextBox = new System.Windows.Forms.TextBox();
             this.EventCitynameTextBox = new System.Windows.Forms.TextBox();
             this.EventAreanameTextBox = new System.Windows.Forms.TextBox();
@@ -353,6 +357,8 @@ namespace PhotoEditor00002
             this.DiscardEventDataChangesButton = new System.Windows.Forms.Button();
             this.SaveEventDataChangesButton = new System.Windows.Forms.Button();
             this.sortingTabPage = new System.Windows.Forms.TabPage();
+            this.sortingButton22 = new System.Windows.Forms.Button();
+            this.sortingButton21 = new System.Windows.Forms.Button();
             this.sortingButton20 = new System.Windows.Forms.Button();
             this.sortingButton19 = new System.Windows.Forms.Button();
             this.sortingButton18 = new System.Windows.Forms.Button();
@@ -373,11 +379,19 @@ namespace PhotoEditor00002
             this.sortingButton3 = new System.Windows.Forms.Button();
             this.sortingButton2 = new System.Windows.Forms.Button();
             this.sortingButton1 = new System.Windows.Forms.Button();
+            this.recoverTab = new System.Windows.Forms.TabPage();
+            this.RetToListBtn = new System.Windows.Forms.Button();
+            this.searchPhraseLbl = new System.Windows.Forms.Label();
+            this.searchPhraseTxtBx = new System.Windows.Forms.TextBox();
+            this.startRecoveryBtn = new System.Windows.Forms.Button();
+            this.recoverTypeLbl = new System.Windows.Forms.Label();
+            this.recoverTypecmbBx = new System.Windows.Forms.ComboBox();
+            this.recLvlLbl = new System.Windows.Forms.Label();
+            this.recoverSelCmbBx = new System.Windows.Forms.ComboBox();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.listView = new System.Windows.Forms.ListView();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.sortingButton21 = new System.Windows.Forms.Button();
-            this.sortingButton22 = new System.Windows.Forms.Button();
+            this.searchFolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureCanvas)).BeginInit();
             this.tabControl.SuspendLayout();
@@ -388,6 +402,7 @@ namespace PhotoEditor00002
             this.ActorData.SuspendLayout();
             this.EventData.SuspendLayout();
             this.sortingTabPage.SuspendLayout();
+            this.recoverTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -532,7 +547,9 @@ namespace PhotoEditor00002
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.rotateToolStripMenuItem,
-            this.flipToolStripMenuItem});
+            this.flipToolStripMenuItem,
+            this.histogramToolStripMenuItem,
+            this.grayImageToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -544,7 +561,7 @@ namespace PhotoEditor00002
             this.degLeftToolStripMenuItem,
             this.degToolStripMenuItem});
             this.rotateToolStripMenuItem.Name = "rotateToolStripMenuItem";
-            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.rotateToolStripMenuItem.Text = "Rotate";
             // 
             // degRightToolStripMenuItem
@@ -574,7 +591,7 @@ namespace PhotoEditor00002
             this.xdirectionToolStripMenuItem,
             this.ydirectionToolStripMenuItem});
             this.flipToolStripMenuItem.Name = "flipToolStripMenuItem";
-            this.flipToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.flipToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.flipToolStripMenuItem.Text = "Flip";
             // 
             // xdirectionToolStripMenuItem
@@ -591,29 +608,62 @@ namespace PhotoEditor00002
             this.ydirectionToolStripMenuItem.Text = "Y-direction";
             this.ydirectionToolStripMenuItem.Click += new System.EventHandler(this.ydirectionToolStripMenuItem_Click);
             // 
+            // histogramToolStripMenuItem
+            // 
+            this.histogramToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.graphToolStripMenuItem,
+            this.filterToolStripMenuItem});
+            this.histogramToolStripMenuItem.Name = "histogramToolStripMenuItem";
+            this.histogramToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.histogramToolStripMenuItem.Text = "Histogram";
+            // 
+            // graphToolStripMenuItem
+            // 
+            this.graphToolStripMenuItem.Name = "graphToolStripMenuItem";
+            this.graphToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.graphToolStripMenuItem.Text = "Graph";
+            this.graphToolStripMenuItem.Click += new System.EventHandler(this.graphToolStripMenuItem_Click);
+            // 
+            // filterToolStripMenuItem
+            // 
+            this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.filterToolStripMenuItem.Text = "Auto Filter";
+            this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
+            // 
+            // grayImageToolStripMenuItem
+            // 
+            this.grayImageToolStripMenuItem.Name = "grayImageToolStripMenuItem";
+            this.grayImageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.grayImageToolStripMenuItem.Text = "Gray Image";
+            this.grayImageToolStripMenuItem.Click += new System.EventHandler(this.grayImageToolStripMenuItem_Click);
+            // 
             // pictureCanvas
             // 
-            this.pictureCanvas.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureCanvas.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureCanvas.Location = new System.Drawing.Point(9, 26);
             this.pictureCanvas.Name = "pictureCanvas";
-            this.pictureCanvas.Size = new System.Drawing.Size(837, 704);
+            this.pictureCanvas.Size = new System.Drawing.Size(837, 694);
             this.pictureCanvas.TabIndex = 1;
             this.pictureCanvas.TabStop = false;
+            this.pictureCanvas.Click += new System.EventHandler(this.pictureCanvas_Click);
             // 
             // pictureName
             // 
-            this.pictureName.Location = new System.Drawing.Point(850, 26);
+            this.pictureName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureName.Location = new System.Drawing.Point(853, 26);
             this.pictureName.Name = "pictureName";
             this.pictureName.ReadOnly = true;
-            this.pictureName.Size = new System.Drawing.Size(335, 20);
+            this.pictureName.Size = new System.Drawing.Size(330, 20);
             this.pictureName.TabIndex = 2;
             // 
             // informationTextBox
             // 
-            this.informationTextBox.Location = new System.Drawing.Point(10, 737);
+            this.informationTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.informationTextBox.Location = new System.Drawing.Point(8, 729);
             this.informationTextBox.Name = "informationTextBox";
             this.informationTextBox.ReadOnly = true;
-            this.informationTextBox.Size = new System.Drawing.Size(1174, 20);
+            this.informationTextBox.Size = new System.Drawing.Size(1171, 20);
             this.informationTextBox.TabIndex = 3;
             // 
             // tabControl
@@ -625,6 +675,7 @@ namespace PhotoEditor00002
             this.tabControl.Controls.Add(this.ActorData);
             this.tabControl.Controls.Add(this.EventData);
             this.tabControl.Controls.Add(this.sortingTabPage);
+            this.tabControl.Controls.Add(this.recoverTab);
             this.tabControl.Location = new System.Drawing.Point(853, 53);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -724,6 +775,7 @@ namespace PhotoEditor00002
             this.DiscardGenDataChangesButton.TabIndex = 42;
             this.DiscardGenDataChangesButton.Text = "Discard Changes";
             this.DiscardGenDataChangesButton.UseVisualStyleBackColor = false;
+            this.DiscardGenDataChangesButton.Click += new System.EventHandler(this.DiscardGenDataChangesButton_Click);
             // 
             // SaveGenDataChangesButton
             // 
@@ -744,6 +796,7 @@ namespace PhotoEditor00002
             this.SaturationTextBox.Name = "SaturationTextBox";
             this.SaturationTextBox.Size = new System.Drawing.Size(116, 20);
             this.SaturationTextBox.TabIndex = 40;
+            this.SaturationTextBox.TextChanged += new System.EventHandler(this.SaturationTextBox_TextChanged);
             // 
             // ContrastAndSaturationLabel
             // 
@@ -761,6 +814,7 @@ namespace PhotoEditor00002
             this.ContrastTextBox.Name = "ContrastTextBox";
             this.ContrastTextBox.Size = new System.Drawing.Size(105, 20);
             this.ContrastTextBox.TabIndex = 38;
+            this.ContrastTextBox.TextChanged += new System.EventHandler(this.ContrastTextBox_TextChanged);
             // 
             // ImageSzLabel
             // 
@@ -951,6 +1005,7 @@ namespace PhotoEditor00002
             this.ImageYResTextBox.Name = "ImageYResTextBox";
             this.ImageYResTextBox.Size = new System.Drawing.Size(116, 20);
             this.ImageYResTextBox.TabIndex = 17;
+            this.ImageYResTextBox.TextChanged += new System.EventHandler(this.ImageYResTextBox_TextChanged);
             // 
             // ImageResolutionLabel
             // 
@@ -968,6 +1023,7 @@ namespace PhotoEditor00002
             this.ImageXResTextBox.Name = "ImageXResTextBox";
             this.ImageXResTextBox.Size = new System.Drawing.Size(105, 20);
             this.ImageXResTextBox.TabIndex = 15;
+            this.ImageXResTextBox.TextChanged += new System.EventHandler(this.ImageXResTextBox_TextChanged);
             // 
             // ImageOrientationLabel
             // 
@@ -985,6 +1041,7 @@ namespace PhotoEditor00002
             this.ImageOrientationTextBox.Name = "ImageOrientationTextBox";
             this.ImageOrientationTextBox.Size = new System.Drawing.Size(219, 20);
             this.ImageOrientationTextBox.TabIndex = 13;
+            this.ImageOrientationTextBox.TextChanged += new System.EventHandler(this.ImageOrientationTextBox_TextChanged);
             // 
             // DataPresicionLabel
             // 
@@ -2305,6 +2362,7 @@ namespace PhotoEditor00002
             // ActorData
             // 
             this.ActorData.AutoScroll = true;
+            this.ActorData.Controls.Add(this.MarkingMotifTextBox);
             this.ActorData.Controls.Add(this.SkinToneDateTimePicker);
             this.ActorData.Controls.Add(this.ArtistIdentityEnterTextBox);
             this.ActorData.Controls.Add(this.AddHairInfoButton);
@@ -2356,7 +2414,6 @@ namespace PhotoEditor00002
             this.ActorData.Controls.Add(this.OccupTitleTextBox);
             this.ActorData.Controls.Add(this.label4);
             this.ActorData.Controls.Add(this.MarkingDateTextBox);
-            this.ActorData.Controls.Add(this.MarkingMotifTextBox);
             this.ActorData.Controls.Add(this.MarkingPosTextBox);
             this.ActorData.Controls.Add(this.MarkingsLabel);
             this.ActorData.Controls.Add(this.HairLengthTextBox);
@@ -2409,6 +2466,16 @@ namespace PhotoEditor00002
             this.ActorData.Text = "Actor Data";
             this.ActorData.UseVisualStyleBackColor = true;
             // 
+            // MarkingMotifTextBox
+            // 
+            this.MarkingMotifTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MarkingMotifTextBox.Enabled = false;
+            this.MarkingMotifTextBox.Location = new System.Drawing.Point(103, 550);
+            this.MarkingMotifTextBox.Name = "MarkingMotifTextBox";
+            this.MarkingMotifTextBox.Size = new System.Drawing.Size(116, 20);
+            this.MarkingMotifTextBox.TabIndex = 144;
+            this.MarkingMotifTextBox.TextChanged += new System.EventHandler(this.MarkingMotifTextBox_TextChanged);
+            // 
             // SkinToneDateTimePicker
             // 
             this.SkinToneDateTimePicker.CalendarMonthBackground = System.Drawing.SystemColors.ScrollBar;
@@ -2419,16 +2486,18 @@ namespace PhotoEditor00002
             this.SkinToneDateTimePicker.Size = new System.Drawing.Size(84, 20);
             this.SkinToneDateTimePicker.TabIndex = 203;
             this.SkinToneDateTimePicker.Visible = false;
+            this.SkinToneDateTimePicker.ValueChanged += new System.EventHandler(this.SkinToneDateTimePicker_ValueChanged);
             // 
             // ArtistIdentityEnterTextBox
             // 
             this.ArtistIdentityEnterTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ArtistIdentityEnterTextBox.Enabled = false;
-            this.ArtistIdentityEnterTextBox.Location = new System.Drawing.Point(102, 29);
+            this.ArtistIdentityEnterTextBox.Location = new System.Drawing.Point(102, 28);
             this.ArtistIdentityEnterTextBox.Name = "ArtistIdentityEnterTextBox";
             this.ArtistIdentityEnterTextBox.Size = new System.Drawing.Size(200, 20);
             this.ArtistIdentityEnterTextBox.TabIndex = 202;
             this.ArtistIdentityEnterTextBox.Visible = false;
+            this.ArtistIdentityEnterTextBox.TextChanged += new System.EventHandler(this.ArtistIdentityEnterTextBox_TextChanged);
             // 
             // AddHairInfoButton
             // 
@@ -2442,6 +2511,7 @@ namespace PhotoEditor00002
             this.AddHairInfoButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddHairInfoButton.UseVisualStyleBackColor = false;
             this.AddHairInfoButton.Visible = false;
+            this.AddHairInfoButton.Click += new System.EventHandler(this.AddHairInfoButton_Click);
             // 
             // AddChestInfoButton
             // 
@@ -2455,6 +2525,7 @@ namespace PhotoEditor00002
             this.AddChestInfoButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddChestInfoButton.UseVisualStyleBackColor = false;
             this.AddChestInfoButton.Visible = false;
+            this.AddChestInfoButton.Click += new System.EventHandler(this.AddChestInfoButton_Click);
             // 
             // AddWeightInfoButton
             // 
@@ -2468,6 +2539,7 @@ namespace PhotoEditor00002
             this.AddWeightInfoButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddWeightInfoButton.UseVisualStyleBackColor = false;
             this.AddWeightInfoButton.Visible = false;
+            this.AddWeightInfoButton.Click += new System.EventHandler(this.AddWeightInfoButton_Click);
             // 
             // AddLengthInfoButton
             // 
@@ -2481,6 +2553,7 @@ namespace PhotoEditor00002
             this.AddLengthInfoButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddLengthInfoButton.UseVisualStyleBackColor = false;
             this.AddLengthInfoButton.Visible = false;
+            this.AddLengthInfoButton.Click += new System.EventHandler(this.AddLengthInfoButton_Click);
             // 
             // AddGenderInfoButton
             // 
@@ -2494,6 +2567,7 @@ namespace PhotoEditor00002
             this.AddGenderInfoButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddGenderInfoButton.UseVisualStyleBackColor = false;
             this.AddGenderInfoButton.Visible = false;
+            this.AddGenderInfoButton.Click += new System.EventHandler(this.AddGenderInfoButton_Click);
             // 
             // AddEyeColorButton
             // 
@@ -2507,6 +2581,7 @@ namespace PhotoEditor00002
             this.AddEyeColorButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddEyeColorButton.UseVisualStyleBackColor = false;
             this.AddEyeColorButton.Visible = false;
+            this.AddEyeColorButton.Click += new System.EventHandler(this.AddEyeColorButton_Click);
             // 
             // AddSkinToneButton
             // 
@@ -2520,6 +2595,7 @@ namespace PhotoEditor00002
             this.AddSkinToneButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddSkinToneButton.UseVisualStyleBackColor = false;
             this.AddSkinToneButton.Visible = false;
+            this.AddSkinToneButton.Click += new System.EventHandler(this.AddSkinToneButton_Click);
             // 
             // AddMarkingDataButton
             // 
@@ -2532,6 +2608,7 @@ namespace PhotoEditor00002
             this.AddMarkingDataButton.Text = "Add";
             this.AddMarkingDataButton.UseVisualStyleBackColor = false;
             this.AddMarkingDataButton.Visible = false;
+            this.AddMarkingDataButton.Click += new System.EventHandler(this.AddMarkingDataButton_Click);
             // 
             // AddResidenceButton
             // 
@@ -2544,6 +2621,7 @@ namespace PhotoEditor00002
             this.AddResidenceButton.Text = "Add";
             this.AddResidenceButton.UseVisualStyleBackColor = false;
             this.AddResidenceButton.Visible = false;
+            this.AddResidenceButton.Click += new System.EventHandler(this.AddResidenceButton_Click);
             // 
             // AddOccupationDataButton
             // 
@@ -2556,6 +2634,7 @@ namespace PhotoEditor00002
             this.AddOccupationDataButton.Text = "Add";
             this.AddOccupationDataButton.UseVisualStyleBackColor = false;
             this.AddOccupationDataButton.Visible = false;
+            this.AddOccupationDataButton.Click += new System.EventHandler(this.AddOccupationDataButton_Click);
             // 
             // MarkingsValidDateComboBox
             // 
@@ -2568,6 +2647,7 @@ namespace PhotoEditor00002
             this.MarkingsValidDateComboBox.TabIndex = 191;
             this.MarkingsValidDateComboBox.Text = "Select...";
             this.MarkingsValidDateComboBox.Visible = false;
+            this.MarkingsValidDateComboBox.SelectedIndexChanged += new System.EventHandler(this.MarkingsValidDateComboBox_SelectedIndexChanged);
             // 
             // ActorRelImageComboBox
             // 
@@ -2578,6 +2658,7 @@ namespace PhotoEditor00002
             this.ActorRelImageComboBox.Size = new System.Drawing.Size(116, 21);
             this.ActorRelImageComboBox.TabIndex = 190;
             this.ActorRelImageComboBox.Text = "Select...";
+            this.ActorRelImageComboBox.SelectedIndexChanged += new System.EventHandler(this.ActorRelImageComboBox_SelectedIndexChanged);
             // 
             // AttdEventsDateComboBox
             // 
@@ -2588,6 +2669,7 @@ namespace PhotoEditor00002
             this.AttdEventsDateComboBox.Size = new System.Drawing.Size(85, 21);
             this.AttdEventsDateComboBox.TabIndex = 189;
             this.AttdEventsDateComboBox.Text = "Select...";
+            this.AttdEventsDateComboBox.SelectedIndexChanged += new System.EventHandler(this.AttdEventsDateComboBox_SelectedIndexChanged);
             // 
             // ResidEndDateComboBox
             // 
@@ -2598,6 +2680,7 @@ namespace PhotoEditor00002
             this.ResidEndDateComboBox.Size = new System.Drawing.Size(102, 21);
             this.ResidEndDateComboBox.TabIndex = 188;
             this.ResidEndDateComboBox.Text = "Select...";
+            this.ResidEndDateComboBox.SelectedIndexChanged += new System.EventHandler(this.ResidEndDateComboBox_SelectedIndexChanged);
             // 
             // ResidStartDateComboBox
             // 
@@ -2608,6 +2691,7 @@ namespace PhotoEditor00002
             this.ResidStartDateComboBox.Size = new System.Drawing.Size(102, 21);
             this.ResidStartDateComboBox.TabIndex = 187;
             this.ResidStartDateComboBox.Text = "Select...";
+            this.ResidStartDateComboBox.SelectedIndexChanged += new System.EventHandler(this.ResidStartDateComboBox_SelectedIndexChanged);
             // 
             // ActorOccupationEndDaeComboBox
             // 
@@ -2618,6 +2702,7 @@ namespace PhotoEditor00002
             this.ActorOccupationEndDaeComboBox.Size = new System.Drawing.Size(102, 21);
             this.ActorOccupationEndDaeComboBox.TabIndex = 186;
             this.ActorOccupationEndDaeComboBox.Text = "Select...";
+            this.ActorOccupationEndDaeComboBox.SelectedIndexChanged += new System.EventHandler(this.ActorOccupationEndDaeComboBox_SelectedIndexChanged);
             // 
             // ActorOccupationStartDateComboBox
             // 
@@ -2628,6 +2713,7 @@ namespace PhotoEditor00002
             this.ActorOccupationStartDateComboBox.Size = new System.Drawing.Size(102, 21);
             this.ActorOccupationStartDateComboBox.TabIndex = 185;
             this.ActorOccupationStartDateComboBox.Text = "Select...";
+            this.ActorOccupationStartDateComboBox.SelectedIndexChanged += new System.EventHandler(this.ActorOccupationStartDateComboBox_SelectedIndexChanged);
             // 
             // MarkingTypeComboBox
             // 
@@ -2638,6 +2724,7 @@ namespace PhotoEditor00002
             this.MarkingTypeComboBox.Size = new System.Drawing.Size(102, 21);
             this.MarkingTypeComboBox.TabIndex = 184;
             this.MarkingTypeComboBox.Text = "Select...";
+            this.MarkingTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.MarkingTypeComboBox_SelectedIndexChanged);
             // 
             // HairDataValidDateComboBox
             // 
@@ -2648,6 +2735,7 @@ namespace PhotoEditor00002
             this.HairDataValidDateComboBox.Size = new System.Drawing.Size(85, 21);
             this.HairDataValidDateComboBox.TabIndex = 183;
             this.HairDataValidDateComboBox.Text = "Select...";
+            this.HairDataValidDateComboBox.SelectedIndexChanged += new System.EventHandler(this.HairDataValidDateComboBox_SelectedIndexChanged);
             // 
             // ChestValidDateComboBox
             // 
@@ -2658,6 +2746,7 @@ namespace PhotoEditor00002
             this.ChestValidDateComboBox.Size = new System.Drawing.Size(85, 21);
             this.ChestValidDateComboBox.TabIndex = 182;
             this.ChestValidDateComboBox.Text = "Select...";
+            this.ChestValidDateComboBox.SelectedIndexChanged += new System.EventHandler(this.ChestValidDateComboBox_SelectedIndexChanged);
             // 
             // WeightValidDateComboBox
             // 
@@ -2668,6 +2757,7 @@ namespace PhotoEditor00002
             this.WeightValidDateComboBox.Size = new System.Drawing.Size(85, 21);
             this.WeightValidDateComboBox.TabIndex = 181;
             this.WeightValidDateComboBox.Text = "Select...";
+            this.WeightValidDateComboBox.SelectedIndexChanged += new System.EventHandler(this.WeightValidDateComboBox_SelectedIndexChanged);
             // 
             // LengthValidDateComboBox
             // 
@@ -2678,6 +2768,7 @@ namespace PhotoEditor00002
             this.LengthValidDateComboBox.Size = new System.Drawing.Size(85, 21);
             this.LengthValidDateComboBox.TabIndex = 180;
             this.LengthValidDateComboBox.Text = "Select...";
+            this.LengthValidDateComboBox.SelectedIndexChanged += new System.EventHandler(this.LengthValidDateComboBox_SelectedIndexChanged);
             // 
             // GenderInfoValidDateComboBox
             // 
@@ -2688,6 +2779,7 @@ namespace PhotoEditor00002
             this.GenderInfoValidDateComboBox.Size = new System.Drawing.Size(85, 21);
             this.GenderInfoValidDateComboBox.TabIndex = 179;
             this.GenderInfoValidDateComboBox.Text = "Select...";
+            this.GenderInfoValidDateComboBox.SelectedIndexChanged += new System.EventHandler(this.GenderInfoValidDateComboBox_SelectedIndexChanged);
             // 
             // EyeColorValidDateComboBox
             // 
@@ -2698,6 +2790,7 @@ namespace PhotoEditor00002
             this.EyeColorValidDateComboBox.Size = new System.Drawing.Size(85, 21);
             this.EyeColorValidDateComboBox.TabIndex = 178;
             this.EyeColorValidDateComboBox.Text = "Select...";
+            this.EyeColorValidDateComboBox.SelectedIndexChanged += new System.EventHandler(this.EyeColorValidDateComboBox_SelectedIndexChanged);
             // 
             // SkinToneValidDateComboBox
             // 
@@ -2720,6 +2813,7 @@ namespace PhotoEditor00002
             this.AddContactButton.Text = "Add";
             this.AddContactButton.UseVisualStyleBackColor = false;
             this.AddContactButton.Visible = false;
+            this.AddContactButton.Click += new System.EventHandler(this.AddContactButton_Click);
             // 
             // AddNewNameButton
             // 
@@ -2732,6 +2826,7 @@ namespace PhotoEditor00002
             this.AddNewNameButton.Text = "Add";
             this.AddNewNameButton.UseVisualStyleBackColor = false;
             this.AddNewNameButton.Visible = false;
+            this.AddNewNameButton.Click += new System.EventHandler(this.AddNewNameButton_Click);
             // 
             // ActorContactTypeComboBox
             // 
@@ -2742,6 +2837,7 @@ namespace PhotoEditor00002
             this.ActorContactTypeComboBox.Size = new System.Drawing.Size(102, 21);
             this.ActorContactTypeComboBox.TabIndex = 174;
             this.ActorContactTypeComboBox.Text = "Select...";
+            this.ActorContactTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.ActorContactTypeComboBox_SelectedIndexChanged);
             // 
             // NameTypeComboBox
             // 
@@ -2752,6 +2848,7 @@ namespace PhotoEditor00002
             this.NameTypeComboBox.Size = new System.Drawing.Size(102, 21);
             this.NameTypeComboBox.TabIndex = 173;
             this.NameTypeComboBox.Text = "Select...";
+            this.NameTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.NameTypeComboBox_SelectedIndexChanged);
             // 
             // ActiveArtistsComboBox
             // 
@@ -2771,6 +2868,7 @@ namespace PhotoEditor00002
             this.ActorEmployCountryTextBox.Name = "ActorEmployCountryTextBox";
             this.ActorEmployCountryTextBox.Size = new System.Drawing.Size(200, 20);
             this.ActorEmployCountryTextBox.TabIndex = 169;
+            this.ActorEmployCountryTextBox.TextChanged += new System.EventHandler(this.ActorEmployCountryTextBox_TextChanged);
             // 
             // ActorEmployCitynameTextBox
             // 
@@ -2780,6 +2878,7 @@ namespace PhotoEditor00002
             this.ActorEmployCitynameTextBox.Name = "ActorEmployCitynameTextBox";
             this.ActorEmployCitynameTextBox.Size = new System.Drawing.Size(200, 20);
             this.ActorEmployCitynameTextBox.TabIndex = 168;
+            this.ActorEmployCitynameTextBox.TextChanged += new System.EventHandler(this.ActorEmployCitynameTextBox_TextChanged);
             // 
             // ActorEmpoyAreanameTextBox
             // 
@@ -2789,6 +2888,7 @@ namespace PhotoEditor00002
             this.ActorEmpoyAreanameTextBox.Name = "ActorEmpoyAreanameTextBox";
             this.ActorEmpoyAreanameTextBox.Size = new System.Drawing.Size(125, 20);
             this.ActorEmpoyAreanameTextBox.TabIndex = 167;
+            this.ActorEmpoyAreanameTextBox.TextChanged += new System.EventHandler(this.ActorEmpoyAreanameTextBox_TextChanged);
             // 
             // ActorEmployZipCodeTextBox
             // 
@@ -2798,6 +2898,7 @@ namespace PhotoEditor00002
             this.ActorEmployZipCodeTextBox.Name = "ActorEmployZipCodeTextBox";
             this.ActorEmployZipCodeTextBox.Size = new System.Drawing.Size(76, 20);
             this.ActorEmployZipCodeTextBox.TabIndex = 166;
+            this.ActorEmployZipCodeTextBox.TextChanged += new System.EventHandler(this.ActorEmployZipCodeTextBox_TextChanged);
             // 
             // ActorEmployAddressTextBox
             // 
@@ -2807,6 +2908,7 @@ namespace PhotoEditor00002
             this.ActorEmployAddressTextBox.Name = "ActorEmployAddressTextBox";
             this.ActorEmployAddressTextBox.Size = new System.Drawing.Size(200, 20);
             this.ActorEmployAddressTextBox.TabIndex = 165;
+            this.ActorEmployAddressTextBox.TextChanged += new System.EventHandler(this.ActorEmployAddressTextBox_TextChanged);
             // 
             // ActorOccupationCompanyTextBox
             // 
@@ -2816,6 +2918,7 @@ namespace PhotoEditor00002
             this.ActorOccupationCompanyTextBox.Name = "ActorOccupationCompanyTextBox";
             this.ActorOccupationCompanyTextBox.Size = new System.Drawing.Size(200, 20);
             this.ActorOccupationCompanyTextBox.TabIndex = 163;
+            this.ActorOccupationCompanyTextBox.TextChanged += new System.EventHandler(this.ActorOccupationCompanyTextBox_TextChanged);
             // 
             // ViewSelActorRelImageButton
             // 
@@ -2827,6 +2930,7 @@ namespace PhotoEditor00002
             this.ViewSelActorRelImageButton.TabIndex = 162;
             this.ViewSelActorRelImageButton.Text = "View";
             this.ViewSelActorRelImageButton.UseVisualStyleBackColor = false;
+            this.ViewSelActorRelImageButton.Click += new System.EventHandler(this.ViewSelActorRelImageButton_Click);
             // 
             // ActorRelImagesLabel
             // 
@@ -2845,6 +2949,7 @@ namespace PhotoEditor00002
             this.ResidCountryTextBox.Name = "ResidCountryTextBox";
             this.ResidCountryTextBox.Size = new System.Drawing.Size(200, 20);
             this.ResidCountryTextBox.TabIndex = 157;
+            this.ResidCountryTextBox.TextChanged += new System.EventHandler(this.ResidCountryTextBox_TextChanged);
             // 
             // ResidCitynameTextBox
             // 
@@ -2854,6 +2959,7 @@ namespace PhotoEditor00002
             this.ResidCitynameTextBox.Name = "ResidCitynameTextBox";
             this.ResidCitynameTextBox.Size = new System.Drawing.Size(200, 20);
             this.ResidCitynameTextBox.TabIndex = 156;
+            this.ResidCitynameTextBox.TextChanged += new System.EventHandler(this.ResidCitynameTextBox_TextChanged);
             // 
             // ResidAreanameTextBox
             // 
@@ -2863,6 +2969,7 @@ namespace PhotoEditor00002
             this.ResidAreanameTextBox.Name = "ResidAreanameTextBox";
             this.ResidAreanameTextBox.Size = new System.Drawing.Size(125, 20);
             this.ResidAreanameTextBox.TabIndex = 155;
+            this.ResidAreanameTextBox.TextChanged += new System.EventHandler(this.ResidAreanameTextBox_TextChanged);
             // 
             // ResidZipCodeTextBox
             // 
@@ -2872,6 +2979,7 @@ namespace PhotoEditor00002
             this.ResidZipCodeTextBox.Name = "ResidZipCodeTextBox";
             this.ResidZipCodeTextBox.Size = new System.Drawing.Size(76, 20);
             this.ResidZipCodeTextBox.TabIndex = 154;
+            this.ResidZipCodeTextBox.TextChanged += new System.EventHandler(this.ResidZipCodeTextBox_TextChanged);
             // 
             // ResidAddressTextBox
             // 
@@ -2881,6 +2989,7 @@ namespace PhotoEditor00002
             this.ResidAddressTextBox.Name = "ResidAddressTextBox";
             this.ResidAddressTextBox.Size = new System.Drawing.Size(200, 20);
             this.ResidAddressTextBox.TabIndex = 153;
+            this.ResidAddressTextBox.TextChanged += new System.EventHandler(this.ResidAddressTextBox_TextChanged);
             // 
             // ResidenceLabel
             // 
@@ -2899,6 +3008,7 @@ namespace PhotoEditor00002
             this.EventIdTextBox.Name = "EventIdTextBox";
             this.EventIdTextBox.Size = new System.Drawing.Size(116, 20);
             this.EventIdTextBox.TabIndex = 150;
+            this.EventIdTextBox.TextChanged += new System.EventHandler(this.EventIdTextBox_TextChanged);
             // 
             // AttEventLabel
             // 
@@ -2917,6 +3027,7 @@ namespace PhotoEditor00002
             this.OccupTitleTextBox.Name = "OccupTitleTextBox";
             this.OccupTitleTextBox.Size = new System.Drawing.Size(200, 20);
             this.OccupTitleTextBox.TabIndex = 147;
+            this.OccupTitleTextBox.TextChanged += new System.EventHandler(this.OccupTitleTextBox_TextChanged);
             // 
             // label4
             // 
@@ -2935,15 +3046,6 @@ namespace PhotoEditor00002
             this.MarkingDateTextBox.Size = new System.Drawing.Size(85, 20);
             this.MarkingDateTextBox.TabIndex = 145;
             // 
-            // MarkingMotifTextBox
-            // 
-            this.MarkingMotifTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.MarkingMotifTextBox.Enabled = false;
-            this.MarkingMotifTextBox.Location = new System.Drawing.Point(103, 550);
-            this.MarkingMotifTextBox.Name = "MarkingMotifTextBox";
-            this.MarkingMotifTextBox.Size = new System.Drawing.Size(116, 20);
-            this.MarkingMotifTextBox.TabIndex = 144;
-            // 
             // MarkingPosTextBox
             // 
             this.MarkingPosTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -2952,6 +3054,7 @@ namespace PhotoEditor00002
             this.MarkingPosTextBox.Name = "MarkingPosTextBox";
             this.MarkingPosTextBox.Size = new System.Drawing.Size(99, 20);
             this.MarkingPosTextBox.TabIndex = 142;
+            this.MarkingPosTextBox.TextChanged += new System.EventHandler(this.MarkingPosTextBox_TextChanged);
             // 
             // MarkingsLabel
             // 
@@ -2970,6 +3073,7 @@ namespace PhotoEditor00002
             this.HairLengthTextBox.Name = "HairLengthTextBox";
             this.HairLengthTextBox.Size = new System.Drawing.Size(99, 20);
             this.HairLengthTextBox.TabIndex = 140;
+            this.HairLengthTextBox.TextChanged += new System.EventHandler(this.HairLengthTextBox_TextChanged);
             // 
             // HairTextureTypeTextBox
             // 
@@ -2979,6 +3083,7 @@ namespace PhotoEditor00002
             this.HairTextureTypeTextBox.Name = "HairTextureTypeTextBox";
             this.HairTextureTypeTextBox.Size = new System.Drawing.Size(102, 20);
             this.HairTextureTypeTextBox.TabIndex = 139;
+            this.HairTextureTypeTextBox.TextChanged += new System.EventHandler(this.HairTextureTypeTextBox_TextChanged);
             // 
             // HairColorTextBox
             // 
@@ -2988,6 +3093,7 @@ namespace PhotoEditor00002
             this.HairColorTextBox.Name = "HairColorTextBox";
             this.HairColorTextBox.Size = new System.Drawing.Size(116, 20);
             this.HairColorTextBox.TabIndex = 137;
+            this.HairColorTextBox.TextChanged += new System.EventHandler(this.HairColorTextBox_TextChanged);
             // 
             // HairDataLabel
             // 
@@ -3006,6 +3112,7 @@ namespace PhotoEditor00002
             this.ChestSizeTextBox.Name = "ChestSizeTextBox";
             this.ChestSizeTextBox.Size = new System.Drawing.Size(99, 20);
             this.ChestSizeTextBox.TabIndex = 135;
+            this.ChestSizeTextBox.TextChanged += new System.EventHandler(this.ChestSizeTextBox_TextChanged);
             // 
             // ChestCircTextBox
             // 
@@ -3015,6 +3122,7 @@ namespace PhotoEditor00002
             this.ChestCircTextBox.Name = "ChestCircTextBox";
             this.ChestCircTextBox.Size = new System.Drawing.Size(102, 20);
             this.ChestCircTextBox.TabIndex = 134;
+            this.ChestCircTextBox.TextChanged += new System.EventHandler(this.ChestCircTextBox_TextChanged);
             // 
             // ChestTypeTextBox
             // 
@@ -3024,6 +3132,7 @@ namespace PhotoEditor00002
             this.ChestTypeTextBox.Name = "ChestTypeTextBox";
             this.ChestTypeTextBox.Size = new System.Drawing.Size(116, 20);
             this.ChestTypeTextBox.TabIndex = 132;
+            this.ChestTypeTextBox.TextChanged += new System.EventHandler(this.ChestTypeTextBox_TextChanged);
             // 
             // ChestDataLabel
             // 
@@ -3042,6 +3151,7 @@ namespace PhotoEditor00002
             this.WeightTextBox.Name = "WeightTextBox";
             this.WeightTextBox.Size = new System.Drawing.Size(116, 20);
             this.WeightTextBox.TabIndex = 129;
+            this.WeightTextBox.TextChanged += new System.EventHandler(this.WeightTextBox_TextChanged);
             // 
             // WeightLabel
             // 
@@ -3060,6 +3170,7 @@ namespace PhotoEditor00002
             this.LengthTextBox.Name = "LengthTextBox";
             this.LengthTextBox.Size = new System.Drawing.Size(116, 20);
             this.LengthTextBox.TabIndex = 126;
+            this.LengthTextBox.TextChanged += new System.EventHandler(this.LengthTextBox_TextChanged);
             // 
             // LengthLabel
             // 
@@ -3078,6 +3189,7 @@ namespace PhotoEditor00002
             this.GdrPresentTextBox.Name = "GdrPresentTextBox";
             this.GdrPresentTextBox.Size = new System.Drawing.Size(200, 20);
             this.GdrPresentTextBox.TabIndex = 124;
+            this.GdrPresentTextBox.TextChanged += new System.EventHandler(this.GdrPresentTextBox_TextChanged);
             // 
             // GdrBehaveTypeTextBox
             // 
@@ -3087,6 +3199,7 @@ namespace PhotoEditor00002
             this.GdrBehaveTypeTextBox.Name = "GdrBehaveTypeTextBox";
             this.GdrBehaveTypeTextBox.Size = new System.Drawing.Size(99, 20);
             this.GdrBehaveTypeTextBox.TabIndex = 123;
+            this.GdrBehaveTypeTextBox.TextChanged += new System.EventHandler(this.GdrBehaveTypeTextBox_TextChanged);
             // 
             // GdrLookTypeTextBox
             // 
@@ -3096,6 +3209,7 @@ namespace PhotoEditor00002
             this.GdrLookTypeTextBox.Name = "GdrLookTypeTextBox";
             this.GdrLookTypeTextBox.Size = new System.Drawing.Size(102, 20);
             this.GdrLookTypeTextBox.TabIndex = 122;
+            this.GdrLookTypeTextBox.TextChanged += new System.EventHandler(this.GdrLookTypeTextBox_TextChanged);
             // 
             // GenderTypeTextBox
             // 
@@ -3105,6 +3219,7 @@ namespace PhotoEditor00002
             this.GenderTypeTextBox.Name = "GenderTypeTextBox";
             this.GenderTypeTextBox.Size = new System.Drawing.Size(116, 20);
             this.GenderTypeTextBox.TabIndex = 120;
+            this.GenderTypeTextBox.TextChanged += new System.EventHandler(this.GenderTypeTextBox_TextChanged);
             // 
             // GenderInfoLabel
             // 
@@ -3123,6 +3238,7 @@ namespace PhotoEditor00002
             this.SelEyeColorTextBox.Name = "SelEyeColorTextBox";
             this.SelEyeColorTextBox.Size = new System.Drawing.Size(116, 20);
             this.SelEyeColorTextBox.TabIndex = 117;
+            this.SelEyeColorTextBox.TextChanged += new System.EventHandler(this.SelEyeColorTextBox_TextChanged);
             // 
             // EyeColorLabel
             // 
@@ -3141,6 +3257,7 @@ namespace PhotoEditor00002
             this.SkinToneTagTextBox.Name = "SkinToneTagTextBox";
             this.SkinToneTagTextBox.Size = new System.Drawing.Size(116, 20);
             this.SkinToneTagTextBox.TabIndex = 114;
+            this.SkinToneTagTextBox.TextChanged += new System.EventHandler(this.SkinToneTagTextBox_TextChanged);
             // 
             // SkinToneLabel
             // 
@@ -3161,6 +3278,7 @@ namespace PhotoEditor00002
             this.ViewGeoPosButton.TabIndex = 112;
             this.ViewGeoPosButton.Text = "View Position";
             this.ViewGeoPosButton.UseVisualStyleBackColor = false;
+            this.ViewGeoPosButton.Click += new System.EventHandler(this.ViewGeoPosButton_Click);
             // 
             // GdrCircumfTextBox
             // 
@@ -3170,6 +3288,7 @@ namespace PhotoEditor00002
             this.GdrCircumfTextBox.Name = "GdrCircumfTextBox";
             this.GdrCircumfTextBox.Size = new System.Drawing.Size(99, 20);
             this.GdrCircumfTextBox.TabIndex = 111;
+            this.GdrCircumfTextBox.TextChanged += new System.EventHandler(this.GdrCircumfTextBox_TextChanged);
             // 
             // BirthLongitudeTextBox
             // 
@@ -3179,6 +3298,7 @@ namespace PhotoEditor00002
             this.BirthLongitudeTextBox.Name = "BirthLongitudeTextBox";
             this.BirthLongitudeTextBox.Size = new System.Drawing.Size(99, 20);
             this.BirthLongitudeTextBox.TabIndex = 111;
+            this.BirthLongitudeTextBox.TextChanged += new System.EventHandler(this.BirthLongitudeTextBox_TextChanged);
             // 
             // GdrLengthTextBox
             // 
@@ -3188,6 +3308,7 @@ namespace PhotoEditor00002
             this.GdrLengthTextBox.Name = "GdrLengthTextBox";
             this.GdrLengthTextBox.Size = new System.Drawing.Size(102, 20);
             this.GdrLengthTextBox.TabIndex = 110;
+            this.GdrLengthTextBox.TextChanged += new System.EventHandler(this.GdrLengthTextBox_TextChanged);
             // 
             // BirthLatitudeTextBox
             // 
@@ -3197,6 +3318,7 @@ namespace PhotoEditor00002
             this.BirthLatitudeTextBox.Name = "BirthLatitudeTextBox";
             this.BirthLatitudeTextBox.Size = new System.Drawing.Size(102, 20);
             this.BirthLatitudeTextBox.TabIndex = 110;
+            this.BirthLatitudeTextBox.TextChanged += new System.EventHandler(this.BirthLatitudeTextBox_TextChanged);
             // 
             // label2
             // 
@@ -3215,6 +3337,7 @@ namespace PhotoEditor00002
             this.SocSecNumberTextBox.Name = "SocSecNumberTextBox";
             this.SocSecNumberTextBox.Size = new System.Drawing.Size(78, 20);
             this.SocSecNumberTextBox.TabIndex = 108;
+            this.SocSecNumberTextBox.TextChanged += new System.EventHandler(this.SocSecNumberTextBox_TextChanged);
             // 
             // BirthDateTextBox
             // 
@@ -3224,6 +3347,7 @@ namespace PhotoEditor00002
             this.BirthDateTextBox.Name = "BirthDateTextBox";
             this.BirthDateTextBox.Size = new System.Drawing.Size(123, 20);
             this.BirthDateTextBox.TabIndex = 107;
+            this.BirthDateTextBox.TextChanged += new System.EventHandler(this.BirthDateTextBox_TextChanged);
             // 
             // label1
             // 
@@ -3242,6 +3366,7 @@ namespace PhotoEditor00002
             this.BirthCountryTextBox.Name = "BirthCountryTextBox";
             this.BirthCountryTextBox.Size = new System.Drawing.Size(200, 20);
             this.BirthCountryTextBox.TabIndex = 105;
+            this.BirthCountryTextBox.TextChanged += new System.EventHandler(this.BirthCountryTextBox_TextChanged);
             // 
             // BirthCitynameTextBox
             // 
@@ -3251,6 +3376,7 @@ namespace PhotoEditor00002
             this.BirthCitynameTextBox.Name = "BirthCitynameTextBox";
             this.BirthCitynameTextBox.Size = new System.Drawing.Size(200, 20);
             this.BirthCitynameTextBox.TabIndex = 104;
+            this.BirthCitynameTextBox.TextChanged += new System.EventHandler(this.BirthCitynameTextBox_TextChanged);
             // 
             // BirthAreaNameTextBox
             // 
@@ -3260,6 +3386,7 @@ namespace PhotoEditor00002
             this.BirthAreaNameTextBox.Name = "BirthAreaNameTextBox";
             this.BirthAreaNameTextBox.Size = new System.Drawing.Size(125, 20);
             this.BirthAreaNameTextBox.TabIndex = 103;
+            this.BirthAreaNameTextBox.TextChanged += new System.EventHandler(this.BirthAreaNameTextBox_TextChanged);
             // 
             // BirthZipCodeTextBox
             // 
@@ -3269,6 +3396,7 @@ namespace PhotoEditor00002
             this.BirthZipCodeTextBox.Name = "BirthZipCodeTextBox";
             this.BirthZipCodeTextBox.Size = new System.Drawing.Size(76, 20);
             this.BirthZipCodeTextBox.TabIndex = 102;
+            this.BirthZipCodeTextBox.TextChanged += new System.EventHandler(this.BirthZipCodeTextBox_TextChanged);
             // 
             // BirthStreetAddrTextBox
             // 
@@ -3278,6 +3406,7 @@ namespace PhotoEditor00002
             this.BirthStreetAddrTextBox.Name = "BirthStreetAddrTextBox";
             this.BirthStreetAddrTextBox.Size = new System.Drawing.Size(200, 20);
             this.BirthStreetAddrTextBox.TabIndex = 101;
+            this.BirthStreetAddrTextBox.TextChanged += new System.EventHandler(this.BirthStreetAddrTextBox_TextChanged);
             // 
             // BirthDataLabel
             // 
@@ -3296,6 +3425,7 @@ namespace PhotoEditor00002
             this.SelContactTypeTextBox.Name = "SelContactTypeTextBox";
             this.SelContactTypeTextBox.Size = new System.Drawing.Size(200, 20);
             this.SelContactTypeTextBox.TabIndex = 99;
+            this.SelContactTypeTextBox.TextChanged += new System.EventHandler(this.SelContactTypeTextBox_TextChanged);
             // 
             // SelNameTypeTextBox
             // 
@@ -3305,6 +3435,7 @@ namespace PhotoEditor00002
             this.SelNameTypeTextBox.Name = "SelNameTypeTextBox";
             this.SelNameTypeTextBox.Size = new System.Drawing.Size(200, 20);
             this.SelNameTypeTextBox.TabIndex = 97;
+            this.SelNameTypeTextBox.TextChanged += new System.EventHandler(this.SelNameTypeTextBox_TextChanged);
             // 
             // ViewSelArtistDataButton
             // 
@@ -3352,14 +3483,14 @@ namespace PhotoEditor00002
             // 
             // EventData
             // 
+            this.EventData.Controls.Add(this.EventImageNameComboBox);
+            this.EventData.Controls.Add(this.EventAttenderIDComboBox1);
             this.EventData.Controls.Add(this.activeEventComboBox);
             this.EventData.Controls.Add(this.EventDescriptionTextBox);
             this.EventData.Controls.Add(this.ViewSelEventImageButton);
             this.EventData.Controls.Add(this.EventImageLevelTextBox);
-            this.EventData.Controls.Add(this.EventImageNameListBox);
             this.EventData.Controls.Add(this.ViewAttenderAsActorButton);
             this.EventData.Controls.Add(this.EventAttenderNaneTextBox);
-            this.EventData.Controls.Add(this.EventAttenderIDListBox);
             this.EventData.Controls.Add(this.EventCountrynameTextBox);
             this.EventData.Controls.Add(this.EventCitynameTextBox);
             this.EventData.Controls.Add(this.EventAreanameTextBox);
@@ -3390,6 +3521,30 @@ namespace PhotoEditor00002
             this.EventData.Text = "Event Data";
             this.EventData.UseVisualStyleBackColor = true;
             // 
+            // EventImageNameComboBox
+            // 
+            this.EventImageNameComboBox.Enabled = false;
+            this.EventImageNameComboBox.FormattingEnabled = true;
+            this.EventImageNameComboBox.Location = new System.Drawing.Point(1, 338);
+            this.EventImageNameComboBox.Name = "EventImageNameComboBox";
+            this.EventImageNameComboBox.Size = new System.Drawing.Size(101, 21);
+            this.EventImageNameComboBox.TabIndex = 175;
+            this.EventImageNameComboBox.Text = "Select...";
+            this.EventImageNameComboBox.Visible = false;
+            this.EventImageNameComboBox.SelectedIndexChanged += new System.EventHandler(this.EventImageNameComboBox_SelectedIndexChanged);
+            // 
+            // EventAttenderIDComboBox1
+            // 
+            this.EventAttenderIDComboBox1.Enabled = false;
+            this.EventAttenderIDComboBox1.FormattingEnabled = true;
+            this.EventAttenderIDComboBox1.Location = new System.Drawing.Point(1, 295);
+            this.EventAttenderIDComboBox1.Name = "EventAttenderIDComboBox1";
+            this.EventAttenderIDComboBox1.Size = new System.Drawing.Size(101, 21);
+            this.EventAttenderIDComboBox1.TabIndex = 174;
+            this.EventAttenderIDComboBox1.Text = "Select...";
+            this.EventAttenderIDComboBox1.Visible = false;
+            this.EventAttenderIDComboBox1.SelectedIndexChanged += new System.EventHandler(this.EventAttenderIDComboBox1_SelectedIndexChanged);
+            // 
             // activeEventComboBox
             // 
             this.activeEventComboBox.FormattingEnabled = true;
@@ -3411,6 +3566,7 @@ namespace PhotoEditor00002
             this.EventDescriptionTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.EventDescriptionTextBox.Size = new System.Drawing.Size(318, 122);
             this.EventDescriptionTextBox.TabIndex = 167;
+            this.EventDescriptionTextBox.TextChanged += new System.EventHandler(this.EventDescriptionTextBox_TextChanged);
             // 
             // ViewSelEventImageButton
             // 
@@ -3422,6 +3578,7 @@ namespace PhotoEditor00002
             this.ViewSelEventImageButton.TabIndex = 166;
             this.ViewSelEventImageButton.Text = "View Image";
             this.ViewSelEventImageButton.UseVisualStyleBackColor = false;
+            this.ViewSelEventImageButton.Click += new System.EventHandler(this.ViewSelEventImageButton_Click);
             // 
             // EventImageLevelTextBox
             // 
@@ -3431,19 +3588,7 @@ namespace PhotoEditor00002
             this.EventImageLevelTextBox.Name = "EventImageLevelTextBox";
             this.EventImageLevelTextBox.Size = new System.Drawing.Size(110, 20);
             this.EventImageLevelTextBox.TabIndex = 165;
-            // 
-            // EventImageNameListBox
-            // 
-            this.EventImageNameListBox.AllowDrop = true;
-            this.EventImageNameListBox.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.EventImageNameListBox.Enabled = false;
-            this.EventImageNameListBox.FormattingEnabled = true;
-            this.EventImageNameListBox.Location = new System.Drawing.Point(0, 341);
-            this.EventImageNameListBox.Name = "EventImageNameListBox";
-            this.EventImageNameListBox.ScrollAlwaysVisible = true;
-            this.EventImageNameListBox.Size = new System.Drawing.Size(102, 17);
-            this.EventImageNameListBox.TabIndex = 164;
-            this.EventImageNameListBox.Visible = false;
+            this.EventImageLevelTextBox.TextChanged += new System.EventHandler(this.EventImageLevelTextBox_TextChanged);
             // 
             // ViewAttenderAsActorButton
             // 
@@ -3455,6 +3600,7 @@ namespace PhotoEditor00002
             this.ViewAttenderAsActorButton.TabIndex = 163;
             this.ViewAttenderAsActorButton.Text = "View Attender as Actor";
             this.ViewAttenderAsActorButton.UseVisualStyleBackColor = false;
+            this.ViewAttenderAsActorButton.Click += new System.EventHandler(this.ViewAttenderAsActorButton_Click);
             // 
             // EventAttenderNaneTextBox
             // 
@@ -3464,19 +3610,7 @@ namespace PhotoEditor00002
             this.EventAttenderNaneTextBox.Name = "EventAttenderNaneTextBox";
             this.EventAttenderNaneTextBox.Size = new System.Drawing.Size(219, 20);
             this.EventAttenderNaneTextBox.TabIndex = 118;
-            // 
-            // EventAttenderIDListBox
-            // 
-            this.EventAttenderIDListBox.AllowDrop = true;
-            this.EventAttenderIDListBox.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.EventAttenderIDListBox.Enabled = false;
-            this.EventAttenderIDListBox.FormattingEnabled = true;
-            this.EventAttenderIDListBox.Location = new System.Drawing.Point(0, 297);
-            this.EventAttenderIDListBox.Name = "EventAttenderIDListBox";
-            this.EventAttenderIDListBox.ScrollAlwaysVisible = true;
-            this.EventAttenderIDListBox.Size = new System.Drawing.Size(102, 17);
-            this.EventAttenderIDListBox.TabIndex = 117;
-            this.EventAttenderIDListBox.Visible = false;
+            this.EventAttenderNaneTextBox.TextChanged += new System.EventHandler(this.EventAttenderNaneTextBox_TextChanged);
             // 
             // EventCountrynameTextBox
             // 
@@ -3485,6 +3619,7 @@ namespace PhotoEditor00002
             this.EventCountrynameTextBox.Name = "EventCountrynameTextBox";
             this.EventCountrynameTextBox.Size = new System.Drawing.Size(219, 20);
             this.EventCountrynameTextBox.TabIndex = 116;
+            this.EventCountrynameTextBox.TextChanged += new System.EventHandler(this.EventCountrynameTextBox_TextChanged);
             // 
             // EventCitynameTextBox
             // 
@@ -3493,6 +3628,7 @@ namespace PhotoEditor00002
             this.EventCitynameTextBox.Name = "EventCitynameTextBox";
             this.EventCitynameTextBox.Size = new System.Drawing.Size(219, 20);
             this.EventCitynameTextBox.TabIndex = 115;
+            this.EventCitynameTextBox.TextChanged += new System.EventHandler(this.EventCitynameTextBox_TextChanged);
             // 
             // EventAreanameTextBox
             // 
@@ -3501,6 +3637,7 @@ namespace PhotoEditor00002
             this.EventAreanameTextBox.Name = "EventAreanameTextBox";
             this.EventAreanameTextBox.Size = new System.Drawing.Size(109, 20);
             this.EventAreanameTextBox.TabIndex = 114;
+            this.EventAreanameTextBox.TextChanged += new System.EventHandler(this.EventAreanameTextBox_TextChanged);
             // 
             // EventZipCodeTextBox
             // 
@@ -3509,6 +3646,7 @@ namespace PhotoEditor00002
             this.EventZipCodeTextBox.Name = "EventZipCodeTextBox";
             this.EventZipCodeTextBox.Size = new System.Drawing.Size(110, 20);
             this.EventZipCodeTextBox.TabIndex = 113;
+            this.EventZipCodeTextBox.TextChanged += new System.EventHandler(this.EventZipCodeTextBox_TextChanged);
             // 
             // EventAddressLabel
             // 
@@ -3526,6 +3664,7 @@ namespace PhotoEditor00002
             this.EventStreetnameNumberTextBox.Name = "EventStreetnameNumberTextBox";
             this.EventStreetnameNumberTextBox.Size = new System.Drawing.Size(219, 20);
             this.EventStreetnameNumberTextBox.TabIndex = 111;
+            this.EventStreetnameNumberTextBox.TextChanged += new System.EventHandler(this.EventStreetnameNumberTextBox_TextChanged);
             // 
             // GeoNameLabel
             // 
@@ -3543,6 +3682,7 @@ namespace PhotoEditor00002
             this.EventGeographNameTextBox.Name = "EventGeographNameTextBox";
             this.EventGeographNameTextBox.Size = new System.Drawing.Size(219, 20);
             this.EventGeographNameTextBox.TabIndex = 109;
+            this.EventGeographNameTextBox.TextChanged += new System.EventHandler(this.EventGeographNameTextBox_TextChanged);
             // 
             // EventLongitudeTextBox
             // 
@@ -3551,6 +3691,7 @@ namespace PhotoEditor00002
             this.EventLongitudeTextBox.Name = "EventLongitudeTextBox";
             this.EventLongitudeTextBox.Size = new System.Drawing.Size(109, 20);
             this.EventLongitudeTextBox.TabIndex = 108;
+            this.EventLongitudeTextBox.TextChanged += new System.EventHandler(this.EventLongitudeTextBox_TextChanged);
             // 
             // EventGeoPosLabel
             // 
@@ -3568,6 +3709,7 @@ namespace PhotoEditor00002
             this.EventLatitudeTextBox.Name = "EventLatitudeTextBox";
             this.EventLatitudeTextBox.Size = new System.Drawing.Size(110, 20);
             this.EventLatitudeTextBox.TabIndex = 106;
+            this.EventLatitudeTextBox.TextChanged += new System.EventHandler(this.EventLatitudeTextBox_TextChanged);
             // 
             // EventHeadlineTextBox
             // 
@@ -3580,6 +3722,7 @@ namespace PhotoEditor00002
             this.EventHeadlineTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.EventHeadlineTextBox.Size = new System.Drawing.Size(219, 64);
             this.EventHeadlineTextBox.TabIndex = 105;
+            this.EventHeadlineTextBox.TextChanged += new System.EventHandler(this.EventHeadlineTextBox_TextChanged);
             // 
             // EventHeadlineLabel
             // 
@@ -3597,6 +3740,7 @@ namespace PhotoEditor00002
             this.EventEndTextBox.Name = "EventEndTextBox";
             this.EventEndTextBox.Size = new System.Drawing.Size(109, 20);
             this.EventEndTextBox.TabIndex = 102;
+            this.EventEndTextBox.TextChanged += new System.EventHandler(this.EventEndTextBox_TextChanged);
             // 
             // EventStartEndLabel
             // 
@@ -3614,6 +3758,7 @@ namespace PhotoEditor00002
             this.EventStartTextBox.Name = "EventStartTextBox";
             this.EventStartTextBox.Size = new System.Drawing.Size(110, 20);
             this.EventStartTextBox.TabIndex = 100;
+            this.EventStartTextBox.TextChanged += new System.EventHandler(this.EventStartTextBox_TextChanged);
             // 
             // EventSecrLevelLabel
             // 
@@ -3631,6 +3776,7 @@ namespace PhotoEditor00002
             this.EventSecrecyLevelTextBox.Name = "EventSecrecyLevelTextBox";
             this.EventSecrecyLevelTextBox.Size = new System.Drawing.Size(219, 20);
             this.EventSecrecyLevelTextBox.TabIndex = 98;
+            this.EventSecrecyLevelTextBox.TextChanged += new System.EventHandler(this.EventSecrecyLevelTextBox_TextChanged);
             // 
             // EventIdLabel
             // 
@@ -3657,6 +3803,7 @@ namespace PhotoEditor00002
             this.CopyrightTextBox.Name = "CopyrightTextBox";
             this.CopyrightTextBox.Size = new System.Drawing.Size(219, 20);
             this.CopyrightTextBox.TabIndex = 94;
+            this.CopyrightTextBox.TextChanged += new System.EventHandler(this.CopyrightTextBox_TextChanged);
             // 
             // DiscardEventDataChangesButton
             // 
@@ -3668,6 +3815,7 @@ namespace PhotoEditor00002
             this.DiscardEventDataChangesButton.TabIndex = 93;
             this.DiscardEventDataChangesButton.Text = "Discard Changes";
             this.DiscardEventDataChangesButton.UseVisualStyleBackColor = false;
+            this.DiscardEventDataChangesButton.Click += new System.EventHandler(this.DiscardEventDataChangesButton_Click);
             // 
             // SaveEventDataChangesButton
             // 
@@ -3679,6 +3827,7 @@ namespace PhotoEditor00002
             this.SaveEventDataChangesButton.TabIndex = 92;
             this.SaveEventDataChangesButton.Text = "Save Data Changes";
             this.SaveEventDataChangesButton.UseVisualStyleBackColor = false;
+            this.SaveEventDataChangesButton.Click += new System.EventHandler(this.SaveEventDataChangesButton_Click);
             // 
             // sortingTabPage
             // 
@@ -3711,6 +3860,30 @@ namespace PhotoEditor00002
             this.sortingTabPage.TabIndex = 6;
             this.sortingTabPage.Text = "Sorting";
             this.sortingTabPage.UseVisualStyleBackColor = true;
+            // 
+            // sortingButton22
+            // 
+            this.sortingButton22.BackColor = System.Drawing.Color.Silver;
+            this.sortingButton22.Location = new System.Drawing.Point(6, 616);
+            this.sortingButton22.Name = "sortingButton22";
+            this.sortingButton22.Size = new System.Drawing.Size(310, 23);
+            this.sortingButton22.TabIndex = 21;
+            this.sortingButton22.Text = "Sorting Button 22";
+            this.sortingButton22.UseVisualStyleBackColor = false;
+            this.sortingButton22.Visible = false;
+            this.sortingButton22.Click += new System.EventHandler(this.sortingButton22_Click);
+            // 
+            // sortingButton21
+            // 
+            this.sortingButton21.BackColor = System.Drawing.Color.Silver;
+            this.sortingButton21.Location = new System.Drawing.Point(6, 587);
+            this.sortingButton21.Name = "sortingButton21";
+            this.sortingButton21.Size = new System.Drawing.Size(310, 23);
+            this.sortingButton21.TabIndex = 20;
+            this.sortingButton21.Text = "Sorting Button 21";
+            this.sortingButton21.UseVisualStyleBackColor = false;
+            this.sortingButton21.Visible = false;
+            this.sortingButton21.Click += new System.EventHandler(this.sortingButton21_Click);
             // 
             // sortingButton20
             // 
@@ -3952,20 +4125,135 @@ namespace PhotoEditor00002
             this.sortingButton1.Visible = false;
             this.sortingButton1.Click += new System.EventHandler(this.sortingButton1_Click);
             // 
+            // recoverTab
+            // 
+            this.recoverTab.Controls.Add(this.RetToListBtn);
+            this.recoverTab.Controls.Add(this.searchPhraseLbl);
+            this.recoverTab.Controls.Add(this.searchPhraseTxtBx);
+            this.recoverTab.Controls.Add(this.startRecoveryBtn);
+            this.recoverTab.Controls.Add(this.recoverTypeLbl);
+            this.recoverTab.Controls.Add(this.recoverTypecmbBx);
+            this.recoverTab.Controls.Add(this.recLvlLbl);
+            this.recoverTab.Controls.Add(this.recoverSelCmbBx);
+            this.recoverTab.Location = new System.Drawing.Point(4, 22);
+            this.recoverTab.Name = "recoverTab";
+            this.recoverTab.Size = new System.Drawing.Size(322, 650);
+            this.recoverTab.TabIndex = 7;
+            this.recoverTab.Text = "Recover Tab";
+            this.recoverTab.UseVisualStyleBackColor = true;
+            // 
+            // RetToListBtn
+            // 
+            this.RetToListBtn.BackColor = System.Drawing.Color.LightGray;
+            this.RetToListBtn.Enabled = false;
+            this.RetToListBtn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.RetToListBtn.Location = new System.Drawing.Point(6, 126);
+            this.RetToListBtn.Name = "RetToListBtn";
+            this.RetToListBtn.Size = new System.Drawing.Size(312, 22);
+            this.RetToListBtn.TabIndex = 7;
+            this.RetToListBtn.Text = "To recovery listing";
+            this.RetToListBtn.UseVisualStyleBackColor = false;
+            this.RetToListBtn.Visible = false;
+            this.RetToListBtn.Click += new System.EventHandler(this.RetToListBtn_Click);
+            // 
+            // searchPhraseLbl
+            // 
+            this.searchPhraseLbl.AutoSize = true;
+            this.searchPhraseLbl.Location = new System.Drawing.Point(3, 58);
+            this.searchPhraseLbl.Name = "searchPhraseLbl";
+            this.searchPhraseLbl.Size = new System.Drawing.Size(76, 13);
+            this.searchPhraseLbl.TabIndex = 6;
+            this.searchPhraseLbl.Text = "Search phrase";
+            // 
+            // searchPhraseTxtBx
+            // 
+            this.searchPhraseTxtBx.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.searchPhraseTxtBx.Enabled = false;
+            this.searchPhraseTxtBx.Location = new System.Drawing.Point(94, 56);
+            this.searchPhraseTxtBx.Name = "searchPhraseTxtBx";
+            this.searchPhraseTxtBx.Size = new System.Drawing.Size(223, 20);
+            this.searchPhraseTxtBx.TabIndex = 5;
+            this.searchPhraseTxtBx.TextChanged += new System.EventHandler(this.searchPhraseTxtBx_TextChanged);
+            // 
+            // startRecoveryBtn
+            // 
+            this.startRecoveryBtn.BackColor = System.Drawing.Color.LightGray;
+            this.startRecoveryBtn.Enabled = false;
+            this.startRecoveryBtn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.startRecoveryBtn.Location = new System.Drawing.Point(6, 81);
+            this.startRecoveryBtn.Name = "startRecoveryBtn";
+            this.startRecoveryBtn.Size = new System.Drawing.Size(312, 22);
+            this.startRecoveryBtn.TabIndex = 4;
+            this.startRecoveryBtn.Text = "Start selected recovery";
+            this.startRecoveryBtn.UseVisualStyleBackColor = false;
+            this.startRecoveryBtn.Click += new System.EventHandler(this.startRecoveryBtn_Click);
+            // 
+            // recoverTypeLbl
+            // 
+            this.recoverTypeLbl.AutoSize = true;
+            this.recoverTypeLbl.Location = new System.Drawing.Point(3, 33);
+            this.recoverTypeLbl.Name = "recoverTypeLbl";
+            this.recoverTypeLbl.Size = new System.Drawing.Size(71, 13);
+            this.recoverTypeLbl.TabIndex = 3;
+            this.recoverTypeLbl.Text = "Recover type";
+            // 
+            // recoverTypecmbBx
+            // 
+            this.recoverTypecmbBx.FormattingEnabled = true;
+            this.recoverTypecmbBx.Items.AddRange(new object[] {
+            "Images",
+            "Document",
+            "Code",
+            "Anything"});
+            this.recoverTypecmbBx.Location = new System.Drawing.Point(93, 30);
+            this.recoverTypecmbBx.Name = "recoverTypecmbBx";
+            this.recoverTypecmbBx.Size = new System.Drawing.Size(226, 21);
+            this.recoverTypecmbBx.TabIndex = 2;
+            this.recoverTypecmbBx.Text = "Select...";
+            this.recoverTypecmbBx.SelectedIndexChanged += new System.EventHandler(this.recoverTypecmbBx_SelectedIndexChanged);
+            // 
+            // recLvlLbl
+            // 
+            this.recLvlLbl.AutoSize = true;
+            this.recLvlLbl.Location = new System.Drawing.Point(3, 6);
+            this.recLvlLbl.Name = "recLvlLbl";
+            this.recLvlLbl.Size = new System.Drawing.Size(78, 13);
+            this.recLvlLbl.TabIndex = 1;
+            this.recLvlLbl.Text = "Recovery level";
+            // 
+            // recoverSelCmbBx
+            // 
+            this.recoverSelCmbBx.FormattingEnabled = true;
+            this.recoverSelCmbBx.Items.AddRange(new object[] {
+            "Deleted files",
+            "Shallow detection",
+            "Deep detection",
+            "File search"});
+            this.recoverSelCmbBx.Location = new System.Drawing.Point(93, 3);
+            this.recoverSelCmbBx.Name = "recoverSelCmbBx";
+            this.recoverSelCmbBx.Size = new System.Drawing.Size(226, 21);
+            this.recoverSelCmbBx.TabIndex = 0;
+            this.recoverSelCmbBx.Text = "Select...";
+            this.recoverSelCmbBx.SelectedIndexChanged += new System.EventHandler(this.recoverSelCmbBx_SelectedIndexChanged);
+            // 
             // folderBrowserDialog
             // 
             this.folderBrowserDialog.HelpRequest += new System.EventHandler(this.folderBrowserDialog_HelpRequest);
             // 
             // listView
             // 
+            this.listView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listView.Cursor = System.Windows.Forms.Cursors.Hand;
             this.listView.HideSelection = false;
             this.listView.Location = new System.Drawing.Point(9, 26);
             this.listView.Margin = new System.Windows.Forms.Padding(2);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(837, 680);
+            this.listView.Size = new System.Drawing.Size(837, 699);
             this.listView.TabIndex = 5;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.Visible = false;
+            this.listView.SelectedIndexChanged += new System.EventHandler(this.listView_SelectedIndexChanged);
+            this.listView.Click += new System.EventHandler(this.listView_Click);
             // 
             // imageList
             // 
@@ -3973,29 +4261,11 @@ namespace PhotoEditor00002
             this.imageList.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // sortingButton21
+            // searchFolderBrowserDialog
             // 
-            this.sortingButton21.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton21.Location = new System.Drawing.Point(6, 587);
-            this.sortingButton21.Name = "sortingButton21";
-            this.sortingButton21.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton21.TabIndex = 20;
-            this.sortingButton21.Text = "Sorting Button 21";
-            this.sortingButton21.UseVisualStyleBackColor = false;
-            this.sortingButton21.Visible = false;
-            this.sortingButton21.Click += new System.EventHandler(this.sortingButton21_Click);
-            // 
-            // sortingButton22
-            // 
-            this.sortingButton22.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton22.Location = new System.Drawing.Point(6, 616);
-            this.sortingButton22.Name = "sortingButton22";
-            this.sortingButton22.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton22.TabIndex = 21;
-            this.sortingButton22.Text = "Sorting Button 22";
-            this.sortingButton22.UseVisualStyleBackColor = false;
-            this.sortingButton22.Visible = false;
-            this.sortingButton22.Click += new System.EventHandler(this.sortingButton22_Click);
+            this.searchFolderBrowserDialog.Description = "Select search root.";
+            this.searchFolderBrowserDialog.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            this.searchFolderBrowserDialog.SelectedPath = "MyComputer";
             // 
             // Form1
             // 
@@ -4003,7 +4273,7 @@ namespace PhotoEditor00002
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1199, 721);
+            this.ClientSize = new System.Drawing.Size(1199, 751);
             this.Controls.Add(this.listView);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.informationTextBox);
@@ -4013,8 +4283,6 @@ namespace PhotoEditor00002
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Photo Editor";
-//            this.Closed += new System.EventHandler(this.Login_Win_Closing);
-//            this.Load += new System.EventHandler(this.Login_Win_Open);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureCanvas)).EndInit();
@@ -4032,11 +4300,12 @@ namespace PhotoEditor00002
             this.EventData.ResumeLayout(false);
             this.EventData.PerformLayout();
             this.sortingTabPage.ResumeLayout(false);
+            this.recoverTab.ResumeLayout(false);
+            this.recoverTab.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
-
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
@@ -4224,10 +4493,8 @@ namespace PhotoEditor00002
         private System.Windows.Forms.TextBox EventDescriptionTextBox;
         private System.Windows.Forms.Button ViewSelEventImageButton;
         private System.Windows.Forms.TextBox EventImageLevelTextBox;
-        private System.Windows.Forms.ListBox EventImageNameListBox;
         private System.Windows.Forms.Button ViewAttenderAsActorButton;
         private System.Windows.Forms.TextBox EventAttenderNaneTextBox;
-        private System.Windows.Forms.ListBox EventAttenderIDListBox;
         private System.Windows.Forms.TextBox EventCountrynameTextBox;
         private System.Windows.Forms.TextBox EventCitynameTextBox;
         private System.Windows.Forms.TextBox EventAreanameTextBox;
@@ -4387,6 +4654,22 @@ namespace PhotoEditor00002
         private System.Windows.Forms.TextBox noOfComponentsTextBox;
         private System.Windows.Forms.Button sortingButton22;
         private System.Windows.Forms.Button sortingButton21;
+        private System.Windows.Forms.ComboBox EventAttenderIDComboBox1;
+        private System.Windows.Forms.ComboBox EventImageNameComboBox;
+        private System.Windows.Forms.ToolStripMenuItem histogramToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem graphToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
+        private System.Windows.Forms.TabPage recoverTab;
+        private System.Windows.Forms.Button startRecoveryBtn;
+        private System.Windows.Forms.Label recoverTypeLbl;
+        private System.Windows.Forms.ComboBox recoverTypecmbBx;
+        private System.Windows.Forms.Label recLvlLbl;
+        private System.Windows.Forms.ComboBox recoverSelCmbBx;
+        private System.Windows.Forms.Label searchPhraseLbl;
+        private System.Windows.Forms.TextBox searchPhraseTxtBx;
+        private System.Windows.Forms.FolderBrowserDialog searchFolderBrowserDialog;
+        private System.Windows.Forms.Button RetToListBtn;
+        private System.Windows.Forms.ToolStripMenuItem grayImageToolStripMenuItem;
     }
 }
 

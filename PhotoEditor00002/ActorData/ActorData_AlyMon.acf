@@ -15,7 +15,7 @@ BrthData : Undefined; Undefined; Undefined; Undefined; Undefined; Undefined; USA
 National : American
 SkinTone : Cocation; 0; 0; 0; Undefined
 RelStats : Married
-EyeColor : Blue
+EyeColor : Blue; Round; 1987-02-02
 Gender   : Female; 173.0; 25.0; Undefined; Undefined; Undefined; Stretchy; Undefined
 Length   : 173.0; centimeter; Undefined
 Weight   : 57.0; kilogram; Undefined
