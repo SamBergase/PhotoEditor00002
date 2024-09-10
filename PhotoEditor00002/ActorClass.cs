@@ -5,10 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Principal;
 using System.Globalization;
+using System.IO;
 
 namespace PhotoEditor00002
 {
     #region enum-definitions
+    public enum currEnum
+    { 
+        Undefined, Event, Occupation, Eyes, Residence, BrthDta, Face, Distance, Length, Weight, Gender, GenApp, GenBeh, BrstSz, BrstTp, Etnicity, HairText, HairLnt, BdyTp, MrkTp, Classification, NmeTp, GeoDir, RelImg, Nation
+    }
     public enum DistUnits
     {
         UndefDistUnit, Points, Millimeter, Centimeter, Decimeter, Meter, Inch, Feet, Yard
@@ -43,7 +48,7 @@ namespace PhotoEditor00002
     }
     public enum HairTextureType
     {
-        UndefHairTexture, Straight, Wavy, Curly, Coily
+        UndefHairTexture, Straight, Wavy, Curly, Coily, Frizzy
     }
     public enum HairLengthType
     {
@@ -190,6 +195,7 @@ namespace PhotoEditor00002
         public string colorTag;
         public string formTag;
         public myDateTime validDate;
+        public bool glasses;
     }
     public struct userMarkingData
     {
@@ -204,6 +210,7 @@ namespace PhotoEditor00002
         public string company;
         public string streetname;
         public int number;
+        public string cityname;
         public string statename;
         public string areaname;
         public int zipcode;
@@ -226,11 +233,27 @@ namespace PhotoEditor00002
         public defaultStruct imageContext;
         public ClassificationType classificationLevel;
     }
+    public struct userNationalities
+    {
+        public string nationTag;
+        public string nationName;
+        public int nationNumber;
+    }
     #endregion
     class ActorClass
     {
         #region variables
         private string userId;
+        public const int maxNoOfRootDirs = 15;
+        public int noOfRootDirs = 0;
+        private string[] userRootDir = new string[maxNoOfRootDirs];
+
+        public string[] BreastSizeStrings = { "Undef", "AA", "A", "B", "C", "D", "E", "F", "Flat", "Medium", "Bulgy", "Oversize" };
+        public string[] BreastTypeStrings = { "Undef", "Natural", "Silocone", "Saggy", "Puffy", "Nippy" };
+        public string[] HairTextureStrings = { "Undef", "Straight", "Wavy", "Curly", "Coily", "Frizzy" };
+        public string[] HairLengthStrings = { "Undef", "Short", "Neck", "Shoulder", "MidBack", "Waist", "Ass", "Long" };
+        public string[] SecrecyLevelStrings = { "UndefLevel", "Unclassified", "Limited", "Confidential", "Secret", "QualifSecret" };
+        public string[] MarkingsTypeStrings = { "UndefMarking", "Scar", "Freckles", "Birthmark", "Tattoo", "Piercing" };
 
         public const int maxNoOfEventCategories = 250;
         public int noOfEventCategories = 0;
@@ -248,6 +271,10 @@ namespace PhotoEditor00002
         public int noOfRelationCategories = 0;
         public defaultStruct[] relationCategories = new defaultStruct[maxNoOfRelationCategories];
 
+        public const int maxNoOfNationalityCategories = 250;
+        public int noOfNationalityCategories = 0;
+        public defaultStruct[] nationalityCategories = new defaultStruct[maxNoOfNationalityCategories];
+
         public const int maxNoOfCurrencyCategories = 250;
         public int noOfCurrencyCategories = 0;
         public defaultStruct[] currencyCategory = new defaultStruct[maxNoOfCurrencyCategories];
@@ -263,6 +290,10 @@ namespace PhotoEditor00002
         public const int maxNoOfRoleCategories = 128;
         public int noOfRoleCategories = 0;
         public defaultStruct[] roleCategories = new defaultStruct[maxNoOfRoleCategories];
+
+        public const int maxNoOfComplexionCategories = 128;
+        public int noOfComplexionCategories = 0;
+        public defaultStruct[] complexionCategory = new defaultStruct[maxNoOfComplexionCategories];
 
         public const int maxNoOfNames = 8;
         public int noOfNames = 0;
@@ -324,216 +355,1247 @@ namespace PhotoEditor00002
         public int noOfAttendedEventData = 0;
         public userAttendedEventData[] anvTillstallningar = new userAttendedEventData[maxNoOfAttendedEventData];
 
-        public const int maxNoOfRelatedImagesData = 1024;
+        public const int maxNoOfRelatedImagesData = 2048;
         public int noOfRelatedImagesData = 0;
         public userRelatedImages[] anvRelBilder = new userRelatedImages[maxNoOfRelatedImagesData];
 
         public const int maxNoOfNationalityData = 10;
         public int noOfNationalityData = 0;
-        public string[] nationality = new string[maxNoOfNationalityData];
+        public userNationalities[] anvNationalities = new userNationalities[maxNoOfNationalityData];
+//        public string[] nationality = new string[maxNoOfNationalityData];
 
         string scu = WindowsIdentity.GetCurrent().Name;
         string sProgPath = "source\\repos\\PhotoEditor00002\\PhotoEditor00002";
 
         public int noOfDataSet = 0;
         #endregion
-        public bool addEventCategory(string tag, string description, string level)
+        public bool checkEnumeration(string tag, int number, currEnum type)
         {
             bool retVal = false;
-            if (noOfEventCategories < maxNoOfEventCategories)
+            switch (tag.ToLower())
             {
-                eventCategories[noOfEventCategories].tag = tag;
-                eventCategories[noOfEventCategories].description = description;
-                if (level == "Open")
-                    eventCategories[noOfEventCategories].level = 1;
-                else if (level == "Limited")
-                    eventCategories[noOfEventCategories].level = 2;
-                else if (level == "Medium")
-                    eventCategories[noOfEventCategories].level = 3;
-                else if (level == "Relative")
-                    eventCategories[noOfEventCategories].level = 4;
-                else if (level == "Secret")
-                    eventCategories[noOfEventCategories].level = 5;
-                else if (level == "QualifSecret")
-                    eventCategories[noOfEventCategories].level = 6;
-                else
-                    eventCategories[noOfEventCategories].level = 0;
-                noOfEventCategories++;
-                retVal = true;
+                case "birth":
+                case "birthname":
+                    {
+                        if ((type == currEnum.NmeTp) && (number < maxNoOfNames))
+                        {
+                            anvNamn[number].nameType = NameType.Birth;
+                            retVal = true;
+                        }
+                    } break;
+                case "taken":
+                    {
+                        if ((type == currEnum.NmeTp) && (number < maxNoOfNames))
+                        {
+                            anvNamn[number].nameType = NameType.Taken;
+                            retVal = true;
+                        }
+                    } break;
+                case "married":
+                    {
+                        if ((type == currEnum.NmeTp) && (number < maxNoOfNames))
+                        {
+                            anvNamn[number].nameType = NameType.Married;
+                            retVal = true;
+                        }
+                    } break;
+                case "alias":
+                    {
+                        if ((type == currEnum.NmeTp) && (number < maxNoOfNames))
+                        {
+                            anvNamn[number].nameType = NameType.Alias;
+                            retVal = true;
+                        }
+                    } break;
+                case "nick":
+                case "nickname":
+                    {
+                        if ((type == currEnum.NmeTp) && (number < maxNoOfNames))
+                        {
+                            anvNamn[number].nameType = NameType.Nickname;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "male":
+                    {
+                        if (type == currEnum.BrthDta)
+                        {
+                            anvFodlseData.brthGender = GenderType.Male;
+                            retVal = true;
+                        }
+                        else if (type == currEnum.Gender)
+                        {
+                            if (number < maxNoOfGenderInfo)
+                            {
+                                anvKonsInfo[number].type = GenderType.Male;
+                                retVal = true;
+                            }
+                        }
+                    } break;
+                case "female":
+                    {
+                        if (type == currEnum.BrthDta)
+                        {
+                            anvFodlseData.brthGender = GenderType.Female;
+                            retVal = true;
+                        }
+                        else if (type == currEnum.Gender)
+                        {
+                            if (number < maxNoOfGenderInfo)
+                            {
+                                anvKonsInfo[number].type = GenderType.Female;
+                                retVal = true;
+                            }
+                        }
+                    }
+                    break;
+                case "n":
+                case "north":
+                    {
+                        if (type == currEnum.BrthDta)
+                        {
+                            anvFodlseData.latDir = GeogrDir.North;
+                            retVal = true;
+                        }
+                    } break;
+                case "e":
+                case "east":
+                    {
+                        if (type == currEnum.BrthDta)
+                        {
+                            if (type == currEnum.BrthDta)
+                            {
+                                anvFodlseData.lonDir = GeogrDir.East;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.BrstSz)
+                        {
+                            if (number < maxNoOfChestData)
+                            {
+                                anvBrostData[number].sizeType = BreastSizeType.E;
+                                retVal = true;
+                            }
+                        }
+                    } break;
+                case "w":
+                case "west":
+                    {
+                        if (type == currEnum.BrthDta)
+                        {
+                            anvFodlseData.lonDir = GeogrDir.West;
+                            retVal = true;
+                        }
+                    } break;
+                case "s":
+                case "south":
+                    {
+                        if (type == currEnum.BrthDta)
+                        {
+                            anvFodlseData.latDir = GeogrDir.South;
+                            retVal = true;
+                        }
+                    } break;
+                case "negro":
+                    {
+                        if (number < maxNoOfComplexions)
+                        {
+                            anvHudfarg[number].etnicType = EtnicityType.Negro;
+                            retVal = true;
+                        }
+                    } break;
+                case "asian":
+                    {
+                        if (number < maxNoOfComplexions)
+                        {
+                            anvHudfarg[number].etnicType = EtnicityType.Asian;
+                            retVal = true;
+                        }
+                    } break;
+                case "indian":
+                    {
+                        if (number < maxNoOfComplexions)
+                        {
+                            anvHudfarg[number].etnicType = EtnicityType.Indian;
+                            retVal = true;
+                        }
+                    } break;
+                case "cocation":
+                    {
+                        if (number < maxNoOfComplexions)
+                        {
+                            anvHudfarg[number].etnicType = EtnicityType.Cocation;
+                            retVal = true;
+                        }
+                    } break;
+                case "mulatto":
+                    {
+                        if (number < maxNoOfComplexions)
+                        {
+                            anvHudfarg[number].etnicType = EtnicityType.Mulatto;
+                            retVal = true;
+                        }
+                    } break;
+                case "innuit":
+                    {
+                        if (number < maxNoOfComplexions)
+                        {
+                            anvHudfarg[number].etnicType = EtnicityType.Innuit;
+                            retVal = true;
+                        }
+                    } break;
+                case "pts":
+                case "points":
+                    {
+                        if (type == currEnum.Gender)
+                        {
+                            if (number < maxNoOfGenderInfo)
+                            {
+                                anvKonsInfo[number].usedUnits = DistUnits.Points;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Length)
+                        {
+                            if (number < maxNoOfLengthData)
+                            {
+                                anvLangdData[number].unit = DistUnits.Points;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.BrstSz)
+                        {
+                            if (number < maxNoOfChestData)
+                            {
+                                anvBrostData[number].units = DistUnits.Points;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Face)
+                        {
+                            if (number < maxNoOfFaceData)
+                            {
+                                anvAnsiktsData[number].units = DistUnits.Points;
+                                retVal = true;
+                            }
+                        }
+                    } break;
+                case "mm":
+                case "millimeter":
+                    {
+                        if (type == currEnum.Gender)
+                        {
+                            if (number < maxNoOfGenderInfo)
+                            {
+                                anvKonsInfo[number].usedUnits = DistUnits.Millimeter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Length)
+                        {
+                            if (number < maxNoOfLengthData)
+                            {
+                                anvLangdData[number].unit = DistUnits.Millimeter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.BrstSz)
+                        {
+                            if (number < maxNoOfChestData)
+                            {
+                                anvBrostData[number].units = DistUnits.Millimeter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Face)
+                        {
+                            if (number < maxNoOfFaceData)
+                            {
+                                anvAnsiktsData[number].units = DistUnits.Millimeter;
+                                retVal = true;
+                            }
+                        }
+                    } break;
+                case "cm":
+                case "centimeter":
+                    {
+                        if (type == currEnum.Gender)
+                        {
+                            if (number < maxNoOfGenderInfo)
+                            {
+                                anvKonsInfo[number].usedUnits = DistUnits.Centimeter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Length)
+                        {
+                            if (number < maxNoOfLengthData)
+                            {
+                                anvLangdData[number].unit = DistUnits.Centimeter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.BrstSz)
+                        {
+                            if (number < maxNoOfChestData)
+                            {
+                                anvBrostData[number].units = DistUnits.Centimeter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Face)
+                        {
+                            if (number < maxNoOfFaceData)
+                            {
+                                anvAnsiktsData[number].units = DistUnits.Centimeter;
+                                retVal = true;
+                            }
+                        }
+                    } break;
+                case "dm":
+                case "decimeter":
+                    {
+                        if (type == currEnum.Gender)
+                        {
+                            if (number < maxNoOfGenderInfo)
+                            {
+                                anvKonsInfo[number].usedUnits = DistUnits.Decimeter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Length)
+                        {
+                            if (number < maxNoOfLengthData)
+                            {
+                                anvLangdData[number].unit = DistUnits.Decimeter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.BrstSz)
+                        {
+                            if (number < maxNoOfChestData)
+                            {
+                                anvBrostData[number].units = DistUnits.Decimeter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Face)
+                        {
+                            if (number < maxNoOfFaceData)
+                            {
+                                anvAnsiktsData[number].units = DistUnits.Decimeter;
+                                retVal = true;
+                            }
+                        }
+                    } break;
+                case "m":
+                case "meter":
+                    {
+                        if (type == currEnum.Gender)
+                        {
+                            if (number < maxNoOfGenderInfo)
+                            {
+                                anvKonsInfo[number].usedUnits = DistUnits.Meter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Length)
+                        {
+                            if (number < maxNoOfLengthData)
+                            {
+                                anvLangdData[number].unit = DistUnits.Meter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.BrstSz)
+                        {
+                            if (number < maxNoOfChestData)
+                            {
+                                anvBrostData[number].units = DistUnits.Meter;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Face)
+                        {
+                            if (number < maxNoOfFaceData)
+                            {
+                                anvAnsiktsData[number].units = DistUnits.Meter;
+                                retVal = true;
+                            }
+                        }
+                    }
+                    break;
+                case "in":
+                case "inch":
+                    {
+                        if (type == currEnum.Gender)
+                        {
+                            if (number < maxNoOfGenderInfo)
+                            {
+                                anvKonsInfo[number].usedUnits = DistUnits.Inch;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Length)
+                        {
+                            if (number < maxNoOfLengthData)
+                            {
+                                anvLangdData[number].unit = DistUnits.Inch;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.BrstSz)
+                        {
+                            if (number < maxNoOfChestData)
+                            {
+                                anvBrostData[number].units = DistUnits.Inch;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Face)
+                        {
+                            if (number < maxNoOfFaceData)
+                            {
+                                anvAnsiktsData[number].units = DistUnits.Inch;
+                                retVal = true;
+                            }
+                        }
+                    }
+                    break;
+                case "ft":
+                case "feet":
+                    {
+                        if (type == currEnum.Gender)
+                        {
+                            if (number < maxNoOfGenderInfo)
+                            {
+                                anvKonsInfo[number].usedUnits = DistUnits.Feet;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Length)
+                        {
+                            if (number < maxNoOfLengthData)
+                            {
+                                anvLangdData[number].unit = DistUnits.Feet;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.BrstSz)
+                        {
+                            if (number < maxNoOfChestData)
+                            {
+                                anvBrostData[number].units = DistUnits.Feet;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Face)
+                        {
+                            if (number < maxNoOfFaceData)
+                            {
+                                anvAnsiktsData[number].units = DistUnits.Feet;
+                                retVal = true;
+                            }
+                        }
+                    }
+                    break;
+                case "yd":
+                case "yard":
+                    {
+                        if (type == currEnum.Gender)
+                        {
+                            if (number < maxNoOfGenderInfo)
+                            {
+                                anvKonsInfo[number].usedUnits = DistUnits.Yard;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Length)
+                        {
+                            if (number < maxNoOfLengthData)
+                            {
+                                anvLangdData[number].unit = DistUnits.Yard;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.BrstSz)
+                        {
+                            if (number < maxNoOfChestData)
+                            {
+                                anvBrostData[number].units = DistUnits.Yard;
+                                retVal = true;
+                            }
+                        }
+                        else if (type == currEnum.Face)
+                        {
+                            if (number < maxNoOfFaceData)
+                            {
+                                anvAnsiktsData[number].units = DistUnits.Yard;
+                                retVal = true;
+                            }
+                        }
+                    }
+                    break;
+                case "barbie":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].appearance = GenderAppearanceType.Barbie;
+                            retVal = true;
+                        }
+                    } break;
+                case "curtains":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].appearance = GenderAppearanceType.Curtains;
+                            retVal = true;
+                        }
+                    } break;
+                case "horse":
+                case "horseshoe":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].appearance = GenderAppearanceType.Horseshoe;
+                            retVal = true;
+                        }
+                    } break;
+                case "puffy":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].appearance = GenderAppearanceType.Puffy;
+                            retVal = true;
+                        }
+                    } break;
+                case "tulip":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].appearance = GenderAppearanceType.Tulip;
+                            retVal = true;
+                        }
+                    } break;
+                case "1":
+                case "i":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].appearance = GenderAppearanceType.I;
+                            retVal = true;
+                        }
+                    } break;
+                case "2":
+                case "ii":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].appearance = GenderAppearanceType.II;
+                            retVal = true;
+                        }
+                    } break;
+                case "3":
+                case "iii":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].appearance = GenderAppearanceType.III;
+                            retVal = true;
+                        }
+                    } break;
+                case "4":
+                case "iv":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].appearance = GenderAppearanceType.IV;
+                            retVal = true;
+                        }
+                    } break;
+                case "5":
+                case "v":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].appearance = GenderAppearanceType.V;
+                            retVal = true;
+                        }
+                    } break;
+                case "sloppy":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].behaviour = GenderBhaviourType.Sloppy;
+                            retVal = true;
+                        }
+                    } break;
+                case "stretch":
+                case "stretchy":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].behaviour = GenderBhaviourType.Stretchy;
+                            retVal = true;
+                        }
+                    } break;
+                case "tight":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].behaviour = GenderBhaviourType.Tight;
+                            retVal = true;
+                        }
+                    } break;
+                case "stiff":
+                case "stiffer":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].behaviour = GenderBhaviourType.Stiffer;
+                            retVal = true;
+                        }
+                    } break;
+                case "grow":
+                case "grower":
+                    {
+                        if (number < maxNoOfGenderInfo)
+                        {
+                            anvKonsInfo[number].behaviour = GenderBhaviourType.Grower;
+                            retVal = true;
+                        }
+                    } break;
+                case "g":
+                case "gram":
+                    {
+                        if ((type == currEnum.Weight) && (number < maxNoOfWeightData))
+                        {
+                            anvViktData[number].unit = WeightUnits.Gram;
+                            retVal = true;
+                        }
+                    } break;
+                case "kg":
+                case "kilogram":
+                    {
+                        if ((type == currEnum.Weight) && (number < maxNoOfWeightData))
+                        {
+                            anvViktData[number].unit = WeightUnits.KiloGram;
+                            retVal = true;
+                        }
+                    } break;
+                case "tn":
+                case "tonnes":
+                    {
+                        if ((type == currEnum.Weight) && (number < maxNoOfWeightData))
+                        {
+                            anvViktData[number].unit = WeightUnits.Tonnes;
+                            retVal = true;
+                        }
+                    } break;
+                case "pd":
+                case "pound":
+                    {
+                        if ((type == currEnum.Weight) && (number < maxNoOfWeightData))
+                        {
+                            anvViktData[number].unit = WeightUnits.Pound;
+                            retVal = true;
+                        }
+                    } break;
+                case "st":
+                case "stones":
+                    {
+                        if ((type == currEnum.Weight) && (number < maxNoOfWeightData))
+                        {
+                            anvViktData[number].unit = WeightUnits.Stones;
+                            retVal = true;
+                        }
+                    } break;
+                case "natural":
+                    {
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].type = BreastType.NaturalBreasts;
+                            retVal = true;
+                        }
+                    } break;
+                case "fake":
+                case "plastic":
+                case "silicone":
+                    {
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].type = BreastType.SiliconeBreasts;
+                            retVal = true;
+                        }
+                    } break;
+                case "aa":
+                    { 
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].sizeType = BreastSizeType.AA;
+                            retVal = true;
+                        }
+                    } break;
+                case "a":
+                    {
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].sizeType = BreastSizeType.A;
+                            retVal = true;
+                        }
+                    } break;
+                case "b":
+                    {
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].sizeType = BreastSizeType.B;
+                            retVal = true;
+                        }
+                    } break;
+                case "bulgy":
+                    {
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].sizeType = BreastSizeType.Bulgy;
+                            retVal = true;
+                        }
+                    } break;
+                case "c":
+                    {
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].sizeType = BreastSizeType.C;
+                            retVal = true;
+                        }
+                    } break;
+                case "d":
+                    {
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].sizeType = BreastSizeType.D;
+                            retVal = true;
+                        }
+                    } break;
+                case "f":
+                    {
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].sizeType = BreastSizeType.F;
+                            retVal = true;
+                        }
+                    } break;
+                case "flat":
+                    {
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].sizeType = BreastSizeType.Flat;
+                            retVal = true;
+                        }
+                    } break;
+                case "medium":
+                case "normal":
+                    {
+                        if ((type == currEnum.BrstSz) && (number < maxNoOfChestData))
+                        {
+                            anvBrostData[number].sizeType = BreastSizeType.Medium;
+                            retVal = true;
+                        }
+                        else if ((type == currEnum.RelImg) && (number < maxNoOfRelatedImagesData))
+                        {
+                            anvRelBilder[number].classificationLevel = ClassificationType.Confidential;
+                            retVal = true;
+                        }
+
+                    }
+                    break;
+                case "oversize":
+                    {
+                        if (number < maxNoOfChestData)
+                        {
+                            anvBrostData[number].sizeType = BreastSizeType.Oversize;
+                            retVal = true;
+                        }
+                    } break;
+                case "straight":
+                    {
+                        if ((type == currEnum.HairText) && (noOfHairData < maxNoOfHairData))
+                        {
+                            anvHaar[number].textureTag = HairTextureType.Straight;
+                            retVal = true;
+                        }
+                    } break;
+                case "wavy":
+                    {
+                        if ((type == currEnum.HairText) && (noOfHairData < maxNoOfHairData))
+                        {
+                            anvHaar[number].textureTag = HairTextureType.Wavy;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "curly":
+                    {
+                        if ((type == currEnum.HairText) && (noOfHairData < maxNoOfHairData))
+                        {
+                            anvHaar[number].textureTag = HairTextureType.Curly;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "coily":
+                    {
+                        if ((type == currEnum.HairText) && (noOfHairData < maxNoOfHairData))
+                        {
+                            anvHaar[number].textureTag = HairTextureType.Coily;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "short":
+                    {
+                        if ((type == currEnum.HairLnt) && (number < maxNoOfHairData))
+                        {
+                            anvHaar[number].lengthTag = HairLengthType.Short;
+                            retVal = true;
+                        }
+                    } 
+                    break;
+                case "neck":
+                    {
+                        if ((type == currEnum.HairLnt) && (number < maxNoOfHairData))
+                        {
+                            anvHaar[number].lengthTag = HairLengthType.Neck;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "shoulder":
+                    {
+                        if ((type == currEnum.HairLnt) && (number < maxNoOfHairData))
+                        {
+                            anvHaar[number].lengthTag = HairLengthType.Shoulder;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "mid":
+                case "mid back":
+                    {
+                        if ((type == currEnum.HairLnt) && (number < maxNoOfHairData))
+                        {
+                            anvHaar[number].lengthTag = HairLengthType.MidBack;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "waist":
+                    {
+                        if ((type == currEnum.HairLnt) && (number < maxNoOfHairData))
+                        {
+                            anvHaar[number].lengthTag = HairLengthType.Waist;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "ass":
+                    {
+                        if ((type == currEnum.HairLnt) && (number < maxNoOfHairData))
+                        {
+                            anvHaar[number].lengthTag = HairLengthType.Ass;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "long":
+                    {
+                        if ((type == currEnum.HairLnt) && (number < maxNoOfHairData))
+                        {
+                            anvHaar[number].lengthTag = HairLengthType.Long;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "scar":
+                    {
+                        if ((type == currEnum.MrkTp) && (number < maxNoOfMarkingData))
+                        {
+                            anvMarkningar[number].markTag = MarkingType.Scar;
+                            retVal = true;
+                        }
+                    } 
+                    break;
+                case "freckles":
+                    {
+                        if ((type == currEnum.MrkTp) && (number < maxNoOfMarkingData))
+                        {
+                            anvMarkningar[number].markTag = MarkingType.Freckles;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "birthmark":
+                    {
+                        if ((type == currEnum.MrkTp) && (number < maxNoOfMarkingData))
+                        {
+                            anvMarkningar[number].markTag = MarkingType.Birthmark;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "tatt":
+                case "tattoo":
+                    {
+                        if ((type == currEnum.MrkTp) && (number < maxNoOfMarkingData))
+                        {
+                            anvMarkningar[number].markTag = MarkingType.Tattoo;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "pierce":
+                case "piercing":
+                    {
+                        if ((type == currEnum.MrkTp) && (number < maxNoOfMarkingData))
+                        {
+                            anvMarkningar[number].markTag = MarkingType.Piercing;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "open":
+                case "unclassified":
+                    {
+                        if ((type == currEnum.RelImg) && (number < maxNoOfRelatedImagesData))
+                        {
+                            anvRelBilder[number].classificationLevel = ClassificationType.Unclassified;
+                            retVal = true;
+                        }
+                    } 
+                    break;
+                case "limited":
+                    {
+                        if ((type == currEnum.RelImg) && (number < maxNoOfRelatedImagesData))
+                        {
+                            anvRelBilder[number].classificationLevel = ClassificationType.Limited;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "relative":
+                case "confidential":
+                    {
+                        if ((type == currEnum.RelImg) && (number < maxNoOfRelatedImagesData))
+                        {
+                            anvRelBilder[number].classificationLevel = ClassificationType.Confidential;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "secret":
+                    {
+                        if ((type == currEnum.RelImg) && (number < maxNoOfRelatedImagesData))
+                        {
+                            anvRelBilder[number].classificationLevel = ClassificationType.Secret;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                case "qualif":
+                case "qualifsecret":
+                    {
+                        if ((type == currEnum.RelImg) && (number < maxNoOfRelatedImagesData))
+                        {
+                            anvRelBilder[number].classificationLevel = ClassificationType.QualifSecret;
+                            retVal = true;
+                        }
+                    }
+                    break;
+                default:
+                    {
+                        // do nothing, retVal is allready "false";
+                    } break;
             }
             return retVal;
         }
-        public bool addContentCategory(string tag, string description, int level)
+        public bool handleDate(string indata, int number, currEnum type)
         {
+            // Possible formats : [YY]YY[-|.| ][MM][-|.| ][DD][ HH[:|.|-]]
             bool retVal = false;
-            if (noOfContentCategories < maxNoOfContentCategories)
+            int calcYear = 0;
+            int calcMonth = 0;
+            int calcDay = 0;
+            string largeDur = "";
+            string smallDur = "";
+            string durationType = "";
+            char delimchar;
+            if (indata.Contains("-"))
+                delimchar = '-';
+            else if (indata.Contains("."))
+                delimchar = '.';
+            else
+                delimchar = ' ';
+            int dp = indata.IndexOf(delimchar);
+            if ((dp > 0) && (dp < indata.Length - 1))
             {
-                contentCategories[noOfContentCategories].tag = tag;
-                contentCategories[noOfContentCategories].description = description;
-                contentCategories[noOfContentCategories].level = level;
-                noOfContentCategories++;
-                retVal = true;
-            }
-            return retVal;
-        }
-        public bool addContextCategory(string tag, string desc, string level)
-        {
-            bool retVal = false;
-            if (noOfContextCategories < maxNoOfContextCategories)
-            {
-                contextCategories[noOfContextCategories].tag = tag;
-                contextCategories[noOfContextCategories].description = desc;
-                //Undefined, Open, Limited, Medium, Relative, Secret, QualifSecret
-                if (level == "Open")
-                    contextCategories[noOfContextCategories].level = 1;
-                else if (level == "Limited")
-                    contextCategories[noOfContextCategories].level = 2;
-                else if (level == "Medium")
-                    contextCategories[noOfContextCategories].level = 3;
-                else if (level == "Relative")
-                    contextCategories[noOfContextCategories].level = 4;
-                else if (level == "Secret")
-                    contextCategories[noOfContextCategories].level = 5;
-                else if (level == "QualifSecret")
-                    contextCategories[noOfContextCategories].level = 6;
+                if (int.TryParse(indata.Substring(0, dp), out calcYear))
+                {
+                    if (calcYear < 100)
+                        calcYear = calcYear + 1900;
+                    indata = indata.Substring(dp + 1, indata.Length - dp - 1);
+                    // Possible formats : [MM][-|.| ][DD][ HH[:|.|-]]
+                    if (indata.Contains("-"))
+                        delimchar = '-';
+                    else if (indata.Contains("."))
+                        delimchar = '.';
+                    else if (indata.Contains(" "))
+                        delimchar = ' ';
+                    dp = indata.IndexOf(delimchar);
+                    if ((dp > 0) && (dp < indata.Length - 1))
+                    {
+                        if (int.TryParse(indata.Substring(0, dp), out calcMonth))
+                        {
+                            indata = indata.Substring(dp + 1, indata.Length - dp - 1);
+                            // Possible formats : [DD][ HH[:|.|-]]
+                            dp = indata.IndexOf(" ");
+                            if ((dp > 0) && (dp < indata.Length))
+                            {
+                                if (int.TryParse(indata.Substring(0, dp), out calcDay))
+                                    retVal = true;
+                                else
+                                    retVal = false;
+                                indata = indata.Substring(dp + 1, indata.Length - dp - 1);
+                                // Possible formats : HH[[:|.|-]MM]
+                                if (indata.Contains(":"))
+                                    delimchar = ':';
+                                else if (indata.Contains("."))
+                                    delimchar = '.';
+                                else if (indata.Contains("-"))
+                                    delimchar = '-';
+                                else if (indata.Contains(" "))
+                                    delimchar = ' ';
+                                dp = indata.IndexOf(delimchar);
+                                if ((dp > 0) && (dp < indata.Length - 1))
+                                {
+                                    largeDur = indata.Substring(0, dp);
+                                    indata = indata.Substring(dp + 1, indata.Length - dp - 1);
+                                    // Possible formats : [MM][time|hour|minute|second]
+                                    dp = indata.IndexOf(" ");
+                                    if ((dp > 0) && (dp < indata.Length - 1))
+                                    {
+                                        smallDur = indata.Substring(0, dp);
+                                        durationType = indata.Substring(dp + 1, indata.Length - dp - 1);
+                                    }
+                                    else
+                                        smallDur = indata;
+                                }
+                                else
+                                    largeDur = indata;
+                            }
+                            else
+                            {
+                                if (int.TryParse(indata, out calcDay))
+                                    retVal = true;
+                                else
+                                    retVal = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (int.TryParse(indata, out calcMonth))
+                            retVal = true;
+                        else
+                            retVal = false;
+                    }
+                }
                 else
-                    contextCategories[noOfContextCategories].level = 0;
-                noOfContextCategories++;
-                retVal = true;
+                    retVal = false;
             }
-            return retVal;
-        }
-        public bool addRelationCategory(string tag, string desc, string level)
-        {
-            bool retVal = false;
-            if (noOfRelationCategories < maxNoOfRelationCategories)
+            else
             {
-                relationCategories[noOfRelationCategories].tag = tag;
-                relationCategories[noOfRelationCategories].description = desc;
-                if (level == "Open")
-                    relationCategories[noOfRelationCategories].level = 1;
-                else if (level == "Limited")
-                    relationCategories[noOfRelationCategories].level = 2;
-                else if (level == "Medium")
-                    relationCategories[noOfRelationCategories].level = 3;
-                else if (level == "Relative")
-                    relationCategories[noOfRelationCategories].level = 4;
-                else if (level == "Secret")
-                    relationCategories[noOfRelationCategories].level = 5;
-                else if (level == "QualifSecret")
-                    relationCategories[noOfRelationCategories].level = 6;
+                if (int.TryParse(indata, out calcYear))
+                {
+                    if (calcYear < 100)
+                        calcYear = calcYear + 1900;
+                    retVal = true;
+                }
                 else
-                    relationCategories[noOfRelationCategories].level = 0;
-                noOfRelationCategories++;
-                retVal = true;
+                    retVal = false;
             }
-            return retVal;
-        }
-        public bool addCurrencyCategory(string tag, string desc, string level, double value)
-        {
-            bool retVal = true;
-            if (noOfCurrencyCategories < maxNoOfCurrencyCategories)
+            // actual handling
+            if (type == currEnum.BrthDta)
             {
-                currencyCategory[noOfCurrencyCategories].tag = tag;
-                currencyCategory[noOfCurrencyCategories].description = desc;
-                if (level == "Open")
-                    currencyCategory[noOfCurrencyCategories].level = 1;
-                else if (level == "Limited")
-                    currencyCategory[noOfCurrencyCategories].level = 2;
-                else if (level == "Medium")
-                    currencyCategory[noOfCurrencyCategories].level = 3;
-                else if (level == "Relative")
-                    currencyCategory[noOfCurrencyCategories].level = 4;
-                else if (level == "Secret")
-                    currencyCategory[noOfCurrencyCategories].level = 5;
-                else if (level == "QualifSecret")
-                    currencyCategory[noOfCurrencyCategories].level = 6;
-                else
-                    currencyCategory[noOfCurrencyCategories].level = 0;
-                currencyCategory[noOfCurrencyCategories].value = value;
-                noOfCurrencyCategories++;
+                if (calcYear > 0)
+                    anvFodlseData.brthDate.year = calcYear;
+                if (calcMonth > 0)
+                    anvFodlseData.brthDate.month = calcMonth;
+                if (calcDay > 0)
+                    anvFodlseData.brthDate.day = calcDay;
                 retVal = true;
             }
-            return retVal;
-        }
-        public bool addContactCategory(string tag, string desc, string level)
-        {
-            bool retVal = false;
-            if (noOfContactCategories < maxNoOfContactCategories)
+            else if ((type == currEnum.Etnicity) && (number < maxNoOfComplexions))
             {
-                contactCategory[noOfContactCategories].tag = tag;
-                contactCategory[noOfContactCategories].description = desc; // Egently the path or number to make contact.
-                if (level == "Open")
-                    contactCategory[noOfContactCategories].level = 1;
-                else if (level == "Limited")
-                    contactCategory[noOfContactCategories].level = 2;
-                else if (level == "Medium")
-                    contactCategory[noOfContactCategories].level = 3;
-                else if (level == "Relative")
-                    contactCategory[noOfContactCategories].level = 4;
-                else if (level == "Secret")
-                    contactCategory[noOfContactCategories].level = 5;
-                else if (level == "QualifSecret")
-                    contactCategory[noOfContactCategories].level = 6;
-                else
-                    contactCategory[noOfContactCategories].level = 0;
-                noOfContactCategories++;
+                if (calcYear > 0)
+                    anvHudfarg[number].validDate.year = calcYear;
+                if (calcMonth > 0)
+                    anvHudfarg[number].validDate.month = calcMonth;
+                if (calcDay > 0)
+                    anvHudfarg[number].validDate.day = calcDay;
                 retVal = true;
             }
-            return retVal;
-        }
-        public bool addHairColorCategory(string tag, string desc, string level)
-        {
-            bool retVal = false;
-            if (noOfHairColorCategories < maxNoOfHairColorCategories)
+            else if ((type == currEnum.Gender) && (number < maxNoOfGenderInfo))
             {
-                hairColorCategory[noOfHairColorCategories].tag = tag;
-                hairColorCategory[noOfHairColorCategories].description = desc;
-                if (level == "Open")
-                    hairColorCategory[noOfHairColorCategories].level = 1;
-                else if (level == "Limited")
-                    hairColorCategory[noOfHairColorCategories].level = 2;
-                else if (level == "Medium")
-                    hairColorCategory[noOfHairColorCategories].level = 3;
-                else if (level == "Relative")
-                    hairColorCategory[noOfHairColorCategories].level = 4;
-                else if (level == "Secret")
-                    hairColorCategory[noOfHairColorCategories].level = 5;
-                else if (level == "QualifSecret")
-                    hairColorCategory[noOfHairColorCategories].level = 6;
-                else
-                    hairColorCategory[noOfHairColorCategories].level = 0;
-                noOfHairColorCategories++;
+                if (calcYear > 0)
+                    anvKonsInfo[number].validDate.year = calcYear;
+                if (calcMonth > 0)
+                    anvKonsInfo[number].validDate.month = calcMonth;
+                if (calcDay > 0)
+                    anvKonsInfo[number].validDate.day = calcDay;
                 retVal = true;
             }
-            return retVal;
-        }
-        public bool addRoleCategory(string tag, string desc, string level)
-        {
-            bool retVal = false;
-            if (noOfRoleCategories < maxNoOfRoleCategories)
+            else if ((type == currEnum.Length) && (number < maxNoOfLengthData))
             {
-                roleCategories[noOfRoleCategories].tag = tag;
-                roleCategories[noOfRoleCategories].description = desc;
-                if (level == "Open")
-                    roleCategories[noOfRoleCategories].level = 1;
-                else if (level == "Limited")
-                    roleCategories[noOfRoleCategories].level = 2;
-                else if (level == "Medium")
-                    roleCategories[noOfRoleCategories].level = 3;
-                else if (level == "Relative")
-                    roleCategories[noOfRoleCategories].level = 4;
-                else if (level == "Secret")
-                    roleCategories[noOfRoleCategories].level = 5;
-                else if (level == "QualifSecret")
-                    roleCategories[noOfRoleCategories].level = 6;
-                else
-                    roleCategories[noOfRoleCategories].level = 0;
-                noOfRoleCategories++;
+                if (calcYear > 0)
+                    anvLangdData[number].validDate.year = calcYear;
+                if (calcMonth > 0)
+                    anvLangdData[number].validDate.month = calcMonth;
+                if (calcDay > 0)
+                    anvLangdData[number].validDate.day = calcDay;
                 retVal = true;
+            }
+            else if ((type == currEnum.Weight) && (number < maxNoOfWeightData))
+            {
+                if (calcYear > 0)
+                    anvViktData[number].validDate.year = calcYear;
+                if (calcMonth > 0)
+                    anvViktData[number].validDate.month = calcMonth;
+                if (calcDay > 0)
+                    anvViktData[number].validDate.day = calcDay;
+                retVal = true;
+            }
+            else if (((type == currEnum.BrstSz) || (type == currEnum.BrstTp)) && (number < maxNoOfChestData))
+            {
+                if (calcYear > 0)
+                    anvBrostData[number].validDate.year = calcYear;
+                if (calcMonth > 0)
+                    anvBrostData[number].validDate.month = calcMonth;
+                if (calcDay > 0)
+                    anvBrostData[number].validDate.day = calcDay;
+                retVal = true;
+            }
+            else if ((type == currEnum.Face) && (number < maxNoOfFaceData))
+            {
+                if (calcYear > 0)
+                    anvAnsiktsData[number].validDate.year = calcYear;
+                if (calcMonth > 0)
+                    anvAnsiktsData[number].validDate.month = calcMonth;
+                if (calcDay > 0)
+                    anvAnsiktsData[number].validDate.day = calcDay;
+                retVal = true;
+            }
+            else if ((type == currEnum.Residence) && (number < maxNoOfResidences))
+            {
+                if (anvBostader[number].boughtDate.year == 0)
+                {
+                    if (calcYear > 0)
+                        anvBostader[number].boughtDate.year = calcYear;
+                    if (calcMonth > 0)
+                        anvBostader[number].boughtDate.month = calcMonth;
+                    if (calcDay > 0)
+                        anvBostader[number].boughtDate.day = calcDay;
+                    retVal = true;
+                }   
+                else if (anvBostader[number].salesDate.year == 0)
+                {
+                    if (calcYear > 0)
+                        anvBostader[number].salesDate.year = calcYear;
+                    if (calcMonth > 0)
+                        anvBostader[number].salesDate.month = calcMonth;
+                    if (calcDay > 0)
+                        anvBostader[number].salesDate.day = calcDay;
+                    retVal = true;
+                }
+            }
+            else if (((type == currEnum.HairLnt) || (type == currEnum.HairText)) && (number < maxNoOfHairData))
+            {
+                if (calcYear > 0)
+                    anvHaar[number].validDate.year = calcYear;
+                if (calcMonth > 0)
+                    anvHaar[number].validDate.month = calcMonth;
+                if (calcDay > 0)
+                    anvHaar[number].validDate.day = calcDay;
+                retVal = true;
+            }
+            else if ((type == currEnum.Eyes) && (number < maxNoOfEyeColorData))
+            {
+                if (calcYear > 0)
+                    anvEyes[number].validDate.year = calcYear;
+                if (calcMonth > 0)
+                    anvEyes[number].validDate.month = calcMonth;
+                if (calcDay > 0)
+                    anvEyes[number].validDate.day = calcDay;
+                retVal = true;
+            }
+            else if ((type == currEnum.MrkTp) && (number < maxNoOfMarkingData))
+            {
+                if (calcYear > 0)
+                    anvMarkningar[number].validDate.year = calcYear;
+                if (calcMonth > 0)
+                    anvMarkningar[number].validDate.month = calcMonth;
+                if (calcDay > 0)
+                    anvMarkningar[number].validDate.year = calcDay;
+                retVal = true;
+            }
+            else if ((type == currEnum.Occupation) && (number < maxNoOfOccupationData))
+            {
+                if (anvAnstallningar[number].started.year == 0)
+                {
+                    if (calcYear > 0)
+                        anvAnstallningar[number].started.year = calcYear;
+                    if (calcMonth > 0)
+                        anvAnstallningar[number].started.month = calcMonth;
+                    if (calcDay > 0)
+                        anvAnstallningar[number].started.day = calcDay;
+                    retVal = true;
+                }
+                else if (anvAnstallningar[number].ended.year == 0)
+                {
+                    if (calcYear > 0)
+                        anvAnstallningar[number].ended.year = calcYear;
+                    if (calcMonth > 0)
+                        anvAnstallningar[number].ended.month = calcMonth;
+                    if (calcDay > 0)
+                        anvAnstallningar[number].ended.day = calcDay;
+                    retVal = true;
+                }
+            }
+            else if ((type == currEnum.Event) && (number < maxNoOfAttendedEventData))
+            {
+                if (anvTillstallningar[number].started.year == 0)
+                {
+                    if (calcYear > 0)
+                        anvTillstallningar[number].started.year = calcYear;
+                    if (calcMonth > 0)
+                        anvTillstallningar[number].started.month = calcMonth;
+                    if (calcDay > 0)
+                        anvTillstallningar[number].started.day = calcDay;
+                    retVal = true;
+                }
+                else if (anvTillstallningar[number].ended.year == 0)
+                {
+                    if (calcYear > 0)
+                        anvTillstallningar[number].ended.year = calcYear;
+                    if (calcMonth > 0)
+                        anvTillstallningar[number].ended.month = calcMonth;
+                    if (calcDay > 0)
+                        anvTillstallningar[number].ended.day = calcDay;
+                    retVal = true;
+                }
             }
             return retVal;
         }
+        //public string getActorDataDir() { return "C:\\Users\\"}
         public void loadActor(string userID, string storagePath)
         {
             string filename = "";
@@ -548,7 +1610,13 @@ namespace PhotoEditor00002
                 if ((tnr > 0) && (tnr < scu.Length - 1))
                     scu = scu.Substring(tnr + 1, scu.Length - tnr - 1);
                 string rootPath = "C:\\Users\\" + scu + "\\" + sProgPath;
-                filename = rootPath + "\\ActorData\\ActorData_" + userID + ".acf";
+                tnr = userID.IndexOf("_");
+                if (!((tnr > 0) && (tnr < userID.Length)))
+                    userID = "ActorData_" + userID;
+                tnr = userID.IndexOf(".");
+                if (!((tnr > 0) && (tnr < userID.Length)))
+                    userID = userID + ".acf";
+                filename = rootPath + "\\ActorData\\" + userID;
             }
             if (System.IO.File.Exists(filename))
             {
@@ -557,21 +1625,16 @@ namespace PhotoEditor00002
                     if (line != "-1")
                     {
                         int dp0, dp1, dp2, dp3, dp4, dp5, dp6, dp7, dp8, dp9, dp10, dp11, dp12;
-                        string dataTag = line.Substring(0, 8);
+                        string dataTag = line.Substring(0, 8).ToLower();
                         string dataInfo = line.Substring(11, line.Length - 11);
                         switch (dataTag)
                         {
-                            case "UserId ":
+                            case "userid  ":
                                 {
                                     this.userId = dataInfo;
                                     noOfDataSet++;
                                 } break;
-                            case "UserID ":
-                                {
-                                    this.userId = dataInfo;
-                                    noOfDataSet++;
-                                } break;
-                            case "UserName":
+                            case "username":
                                 {
                                     if (noOfNames < maxNoOfNames)
                                     {
@@ -581,17 +1644,7 @@ namespace PhotoEditor00002
                                         {
                                             // We have name(s) and nametype
                                             string namntyp = dataInfo.Substring(dp0 + 2, dataInfo.Length - dp0 - 2);
-                                            if (namntyp == "Birth")
-                                                anvNamn[noOfNames].nameType = NameType.Birth;
-                                            else if (namntyp == "Taken")
-                                                anvNamn[noOfNames].nameType = NameType.Taken;
-                                            else if (namntyp == "Married")
-                                                anvNamn[noOfNames].nameType = NameType.Married;
-                                            else if (namntyp == "Alias")
-                                                anvNamn[noOfNames].nameType = NameType.Alias;
-                                            else if ((namntyp == "Nick") || (namntyp == "Nickname") || (namntyp == "nick") || (namntyp == "nickname"))
-                                                anvNamn[noOfNames].nameType = NameType.Nickname;
-                                            else
+                                            if (!(checkEnumeration(namntyp, noOfNames, currEnum.NmeTp)))
                                                 anvNamn[noOfNames].nameType = NameType.UndefNameType;
                                             noOfDataSet++;
                                             dataInfo = dataInfo.Substring(0, dp0);
@@ -636,12 +1689,19 @@ namespace PhotoEditor00002
                                         this.noOfNames++;
                                     }
                                 } break;
-                            case "Contact ":
+                            case "contact ":
                                 {
+                                    // Format: <Type of Contact>; <contact path>
                                     if (noOfContacts < maxNoOfContacts)
                                     {
-                                        // Contact  : Type of Contact; contact path
-                                        dp0 = dataInfo.IndexOf(";");
+                                        char delimChar = ';';
+                                        int delimLength = 2;
+                                        if (dataInfo.Contains(","))
+                                        {
+                                            delimChar = ',';
+                                            delimLength = 2;
+                                        }
+                                        dp0 = dataInfo.IndexOf(delimChar);
                                         if ((dp0 > 0) && (dp0 < dataInfo.Length - 2))
                                         {
                                             // We have Contact type and contact path
@@ -653,7 +1713,7 @@ namespace PhotoEditor00002
                                                 {
                                                     foundCategory = true;
                                                     anvKontakter[noOfContacts].type = contactCategory[i];
-                                                    anvKontakter[noOfContacts].contactPath = dataInfo.Substring(dp0 + 2, dataInfo.Length - dp0 - 2);
+                                                    anvKontakter[noOfContacts].contactPath = dataInfo.Substring(dp0 + delimLength, dataInfo.Length - dp0 - delimLength);
                                                 }
                                             }
                                             if (!(foundCategory))
@@ -661,7 +1721,7 @@ namespace PhotoEditor00002
                                                 if (addContactCategory(cttt, "", "Undefined"))
                                                 {
                                                     anvKontakter[noOfContacts].type.tag = cttt;
-                                                    anvKontakter[noOfContacts].contactPath = dataInfo.Substring(dp0 + 2, dataInfo.Length - dp0 - 2);
+                                                    anvKontakter[noOfContacts].contactPath = dataInfo.Substring(dp0 + delimLength, dataInfo.Length - dp0 - delimLength);
                                                     anvKontakter[noOfContacts].type.level = 0;
                                                 }
                                             }
@@ -675,9 +1735,9 @@ namespace PhotoEditor00002
                                         this.noOfContacts++;
                                     }
                                 } break;
-                            case "BrthData":
+                            case "brthdata":
                                 {
-                                    // BrthData : number; additive; City; Area; Zipcode; Country; Date; Security code; Gender
+                                    // BrthData : Streetname; number; additive; City; Area; Zipcode; Country; Date; Security code; Gender; <latvalue> <dir>; <lonvalue> <dir>
                                     string tmpString = "";
                                     dp0 = dataInfo.IndexOf(";");
                                     if ((dp0 > 0) && (dp0 < dataInfo.Length - 2))
@@ -765,31 +1825,7 @@ namespace PhotoEditor00002
                                                                 {
                                                                     // Date; Security code; Gender
                                                                     tmpString = dataInfo.Substring(0, dp7);
-                                                                    int resval;
-                                                                    if ((tmpString != "Unknown") && (tmpString != "Undefined"))
-                                                                    {
-                                                                        int sdp1 = tmpString.IndexOf("-");
-                                                                        string yearString = tmpString.Substring(0, sdp1);
-                                                                        if (int.TryParse(yearString, out resval))
-                                                                        {
-                                                                            anvFodlseData.brthDate.year = resval;
-                                                                            noOfDataSet++;
-                                                                        }
-                                                                        tmpString = tmpString.Substring(sdp1 + 1, tmpString.Length - sdp1 - 1);
-                                                                        int sdp2 = tmpString.IndexOf("-");
-                                                                        string monthString = tmpString.Substring(0, sdp2);
-                                                                        if (int.TryParse(monthString, out resval))
-                                                                        {
-                                                                            anvFodlseData.brthDate.month = resval;
-                                                                            noOfDataSet++;
-                                                                        }
-                                                                        tmpString = tmpString.Substring(sdp2 + 1, tmpString.Length - sdp2 - 1);
-                                                                        if (int.TryParse(tmpString, out resval))
-                                                                        {
-                                                                            anvFodlseData.brthDate.day = resval;
-                                                                            noOfDataSet++;
-                                                                        }
-                                                                    }
+                                                                    handleDate(tmpString, 0, currEnum.BrthDta);
                                                                     dataInfo = dataInfo.Substring(dp7 + 2, dataInfo.Length - dp7 - 2);
                                                                     dp8 = dataInfo.IndexOf(";");
                                                                     if ((dp8 > 0) && (dp8 < dataInfo.Length - 2))
@@ -807,11 +1843,7 @@ namespace PhotoEditor00002
                                                                         if ((dp9 > 0) && (dp9 < dataInfo.Length - 2))
                                                                         {
                                                                             tmpString = dataInfo.Substring(0, dp9);
-                                                                            if (tmpString == "Male")
-                                                                                anvFodlseData.brthGender = GenderType.Male;
-                                                                            else if (tmpString == "Female")
-                                                                                anvFodlseData.brthGender = GenderType.Female;
-                                                                            else
+                                                                            if (!(checkEnumeration(tmpString, 0, currEnum.BrthDta)))
                                                                                 anvFodlseData.brthGender = GenderType.UndefGender;
                                                                             noOfDataSet++;
                                                                             dataInfo = dataInfo.Substring(dp9 + 2, dataInfo.Length - dp9 - 2);
@@ -830,11 +1862,7 @@ namespace PhotoEditor00002
                                                                                 if ((dp11 > 0) && (dp11 < dataInfo.Length - 2))
                                                                                 {
                                                                                     tmpString = dataInfo.Substring(0, dp11);
-                                                                                    if ((tmpString == "North") || (tmpString == "north") || (tmpString == "N") || (tmpString == "n"))
-                                                                                        anvFodlseData.latDir = GeogrDir.North;
-                                                                                    else if ((tmpString == "South") || (tmpString == "south") || (tmpString == "S") || (tmpString == "s"))
-                                                                                        anvFodlseData.latDir = GeogrDir.South;
-                                                                                    else
+                                                                                    if (!(checkEnumeration(tmpString, 0, currEnum.BrthDta)))
                                                                                         anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                                                                                     noOfDataSet++;
                                                                                     dataInfo = dataInfo.Substring(dp11 + 2, dataInfo.Length - dp11 - 2);
@@ -847,12 +1875,7 @@ namespace PhotoEditor00002
                                                                                             anvFodlseData.lonVal = fTmp;
                                                                                         noOfDataSet++;
                                                                                         dataInfo = dataInfo.Substring(dp12 + 2, dataInfo.Length - dp12 - 2);
-                                                                                        // lonDirection (H)
-                                                                                        if ((dataInfo == "East") || (dataInfo == "east") || (dataInfo == "E") || (dataInfo == "e"))
-                                                                                            anvFodlseData.lonDir = GeogrDir.East;
-                                                                                        else if ((dataInfo == "West") || (dataInfo == "west") || (dataInfo == "W") || (dataInfo == "w"))
-                                                                                            anvFodlseData.lonDir = GeogrDir.West;
-                                                                                        else
+                                                                                        if (!(checkEnumeration(dataInfo, 0, currEnum.BrthDta)))
                                                                                             anvFodlseData.lonDir = GeogrDir.UndefGeoDir;
                                                                                     }
                                                                                 }
@@ -862,11 +1885,7 @@ namespace PhotoEditor00002
                                                                         {
                                                                             if ((dataInfo.Length > 0) && (dataInfo != " "))
                                                                             {
-                                                                                if (dataInfo == "Male")
-                                                                                    anvFodlseData.brthGender = GenderType.Male;
-                                                                                else if (dataInfo == "Female")
-                                                                                    anvFodlseData.brthGender = GenderType.Female;
-                                                                                else
+                                                                                if (!(checkEnumeration(dataInfo, 0, currEnum.BrthDta)))
                                                                                     anvFodlseData.brthGender = GenderType.UndefGender;
                                                                                 noOfDataSet++;
                                                                             }
@@ -887,7 +1906,7 @@ namespace PhotoEditor00002
 
                                     }
                                 } break;
-                            case "SkinTone":
+                            case "skintone":
                                 {
                                     // SkinTone : Complexion; R-value; G-value; B-value; Valid-Date
                                     if (noOfComplexions < maxNoOfComplexions)
@@ -897,19 +1916,7 @@ namespace PhotoEditor00002
                                         {
                                             // Complexion; R-value; G-value; B-value; Valid-Date
                                             string cplx = dataInfo.Substring(0, dp0);
-                                            if (cplx == "Negro")
-                                                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Negro;
-                                            else if (cplx == "Asian")
-                                                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Asian;
-                                            else if (cplx == "Indian")
-                                                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Indian;
-                                            else if (cplx == "Cocation")
-                                                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Cocation;
-                                            else if (cplx == "Mulatto")
-                                                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Mulatto;
-                                            else if (cplx == "Innuit")
-                                                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Innuit;
-                                            else
+                                            if (!(checkEnumeration(cplx, noOfComplexions, currEnum.Etnicity)))
                                                 anvHudfarg[noOfComplexions].etnicType = EtnicityType.UndefEtnicity;
                                             noOfDataSet++;
                                             dataInfo = dataInfo.Substring(dp0 + 2, dataInfo.Length - dp0 - 2);
@@ -944,56 +1951,7 @@ namespace PhotoEditor00002
                                                             noOfDataSet++;
                                                         }
                                                         dataInfo = dataInfo.Substring(dp3 + 2, dataInfo.Length - dp3 - 2);
-                                                        // Valid-Date [YYYY-MM-DD|YY-MM-DD|YYYY-MM|YY-MM|YYYY|MM]
-                                                        dp5 = dataInfo.IndexOf("-");
-                                                        if ((dp5 > 0) && (dp5 < dataInfo.Length - 1))
-                                                        {
-                                                            // Valid-Date [YYYY-MM-DD|YY-MM-DD|YYYY-MM|YY-MM]
-                                                            string yrval = dataInfo.Substring(0, dp5);
-                                                            if (int.TryParse(yrval, out resval))
-                                                            {
-                                                                anvHudfarg[noOfComplexions].validDate.year = resval;
-                                                                noOfDataSet++;
-                                                            }
-                                                            dataInfo = dataInfo.Substring(dp5 + 1, dataInfo.Length - dp5 - 1);
-                                                            dp6 = dataInfo.IndexOf("-");
-                                                            if ((dp6 > 0) && (dp6 < dataInfo.Length - 1))
-                                                            {
-                                                                // Valid-Date [MM-DD]
-                                                                string mntval = dataInfo.Substring(0, dp6);
-                                                                if (int.TryParse(mntval, out resval))
-                                                                {
-                                                                    anvHudfarg[noOfComplexions].validDate.month = resval;
-                                                                    noOfDataSet++;
-                                                                }
-                                                                string dayval = dataInfo.Substring(dp6 + 1, dataInfo.Length - dp6 - 1);
-                                                                if (int.TryParse(dayval, out resval))
-                                                                {
-                                                                    anvHudfarg[noOfComplexions].validDate.day = resval;
-                                                                    noOfDataSet++;
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                // Valid-Date [MM|MM]
-                                                                string mntval = dataInfo.Substring(0, dp6);
-                                                                if (int.TryParse(mntval, out resval))
-                                                                {
-                                                                    anvHudfarg[noOfComplexions].validDate.month = resval;
-                                                                    noOfDataSet++;
-                                                                }
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            // Valid-Date [YYYY|YY]
-                                                            string yrval = dataInfo.Substring(0, dp5);
-                                                            if (int.TryParse(yrval, out resval))
-                                                            {
-                                                                anvHudfarg[noOfComplexions].validDate.year = resval;
-                                                                noOfDataSet++;
-                                                            }
-                                                        }
+                                                        handleDate(dataInfo, noOfComplexions, currEnum.Etnicity);
                                                     }
                                                 }
                                             }
@@ -1001,8 +1959,9 @@ namespace PhotoEditor00002
                                         noOfComplexions++;
                                     }
                                 } break;
-                            case "RelStats":
+                            case "relstats":
                                 {
+                                    // RelStats : <status>
                                     bool foundCategory = false;
                                     for (int i = 0; i < noOfRelationCategories; i++)
                                     {
@@ -1021,9 +1980,9 @@ namespace PhotoEditor00002
                                     }
                                     noOfDataSet++;
                                 } break;
-                            case "Gender  ":
+                            case "gender  ":
                                 {
-                                    // Gender   : GenderType "type"; float "length"; float "circumference"; DistUnits "usedUnits"; GenderAppearanceType "appearance"; GenderBhaviourType "behaviour"; string "presentation"; myDateTime "validDate"
+                                    // Gender   : GenderType; length; circumference; usedUnits; GenderAppearanceType; GenderBhaviourType; presentation; validDate
                                     if (noOfGenderInfo < maxNoOfGenderInfo)
                                     {
                                         dp0 = dataInfo.IndexOf(";");
@@ -1031,16 +1990,12 @@ namespace PhotoEditor00002
                                         {
                                             // GenderType "type"; float "length"; float "circumference"; DistUnits "usedUnits"; GenderAppearanceType "appearance"; GenderBhaviourType "behaviour"; string "presentation"; DateTime "validDate"
                                             string gdrtyp = dataInfo.Substring(0, dp0);
-                                            if ((gdrtyp == "Male") || (gdrtyp == "male"))
-                                                anvKonsInfo[noOfGenderInfo].type = GenderType.Male;
-                                            else if ((gdrtyp == "Female") || (gdrtyp == "female"))
-                                                anvKonsInfo[noOfGenderInfo].type = GenderType.Female;
-                                            else
+                                            if (!(checkEnumeration(gdrtyp, noOfGenderInfo, currEnum.Gender)))
                                                 anvKonsInfo[noOfGenderInfo].type = GenderType.UndefGender;
                                             noOfDataSet++;
                                             dataInfo = dataInfo.Substring(dp0 + 2, dataInfo.Length - dp0 - 2);
                                             dp1 = dataInfo.IndexOf(";");
-                                            int resval;
+                                            //int resval;
                                             if ((dp1 > 0) && (dp1 < dataInfo.Length - 2))
                                             {
                                                 // float "length"; float "circumference"; DistUnits "usedUnits"; GenderAppearanceType "appearance"; GenderBhaviourType "behaviour"; string "presentation"; DateTime "validDate"
@@ -1068,23 +2023,7 @@ namespace PhotoEditor00002
                                                     {
                                                         // DistUnits "usedUnits"; GenderAppearanceType "appearance"; GenderBhaviourType "behaviour"; string "presentation"; DateTime "validDate"
                                                         string disu = dataInfo.Substring(0, dp3);
-                                                        if ((disu == "Points") || (disu == "points"))
-                                                            anvKonsInfo[noOfGenderInfo].usedUnits = DistUnits.Points;
-                                                        else if ((disu == "Millimeter") || (disu == "millimeter"))
-                                                            anvKonsInfo[noOfGenderInfo].usedUnits = DistUnits.Millimeter;
-                                                        else if ((disu == "Centimeter") || (disu == "centimeter"))
-                                                            anvKonsInfo[noOfGenderInfo].usedUnits = DistUnits.Centimeter;
-                                                        else if ((disu == "Decimeter") || (disu == "decimeter"))
-                                                            anvKonsInfo[noOfGenderInfo].usedUnits = DistUnits.Decimeter;
-                                                        else if ((disu == "Meter") || (disu == "meter"))
-                                                            anvKonsInfo[noOfGenderInfo].usedUnits = DistUnits.Meter;
-                                                        else if ((disu == "Inch") || (disu == "inch"))
-                                                            anvKonsInfo[noOfGenderInfo].usedUnits = DistUnits.Inch;
-                                                        else if ((disu == "Feet") || (disu == "feet"))
-                                                            anvKonsInfo[noOfGenderInfo].usedUnits = DistUnits.Feet;
-                                                        else if ((disu == "Yard") || (disu == "yard"))
-                                                            anvKonsInfo[noOfGenderInfo].usedUnits = DistUnits.Yard;
-                                                        else
+                                                        if (!(checkEnumeration(disu, noOfGenderInfo, currEnum.Gender)))
                                                             anvKonsInfo[noOfGenderInfo].usedUnits = DistUnits.UndefDistUnit;
                                                         noOfDataSet++;
                                                         dataInfo = dataInfo.Substring(dp3 + 2, dataInfo.Length - dp3 - 2);
@@ -1093,27 +2032,7 @@ namespace PhotoEditor00002
                                                         {
                                                             // GenderAppearanceType "appearance"; GenderBhaviourType "behaviour"; string "presentation"; DateTime "validDate"
                                                             string gat = dataInfo.Substring(0, dp4);
-                                                            if ((gat == "Barbie") || (gat == "barbie"))
-                                                                anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.Barbie;
-                                                            else if ((gat == "Curtains") || (gat == "curtains"))
-                                                                anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.Curtains;
-                                                            else if ((gat == "Horseshoe") || (gat == "horseshoe"))
-                                                                anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.Horseshoe;
-                                                            else if ((gat == "Puffy") || (gat == "puffy"))
-                                                                anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.Puffy;
-                                                            else if ((gat == "Tulip") || (gat == "tulip"))
-                                                                anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.Tulip;
-                                                            else if ((gat == "I") || (gat == "1"))
-                                                                anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.I;
-                                                            else if ((gat == "II") || (gat == "2"))
-                                                                anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.II;
-                                                            else if ((gat == "III") || (gat == "3"))
-                                                                anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.III;
-                                                            else if ((gat == "IV") || (gat == "4"))
-                                                                anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.IV;
-                                                            else if ((gat == "V") || (gat == "5"))
-                                                                anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.V;
-                                                            else
+                                                            if (!(checkEnumeration(gat, noOfGenderInfo, currEnum.Gender)))
                                                                 anvKonsInfo[noOfGenderInfo].appearance = GenderAppearanceType.UndefGenderAppearance;
                                                             noOfDataSet++;
                                                             dataInfo = dataInfo.Substring(dp4 + 2, dataInfo.Length - dp4 - 2);
@@ -1122,17 +2041,7 @@ namespace PhotoEditor00002
                                                             {
                                                                 // GenderBhaviourType "behaviour"; string "presentation"; DateTime "validDate"
                                                                 string gbt = dataInfo.Substring(0, dp5);
-                                                                if ((gbt == "Sloppy") || (gbt == "sloppy"))
-                                                                    anvKonsInfo[noOfGenderInfo].behaviour = GenderBhaviourType.Sloppy;
-                                                                else if ((gbt == "Stretchy") || (gbt == "stretchy"))
-                                                                    anvKonsInfo[noOfGenderInfo].behaviour = GenderBhaviourType.Stretchy;
-                                                                else if ((gbt == "Tight") || (gbt == "tight"))
-                                                                    anvKonsInfo[noOfGenderInfo].behaviour = GenderBhaviourType.Tight;
-                                                                else if ((gbt == "Stiffer") || (gbt == "stiffer"))
-                                                                    anvKonsInfo[noOfGenderInfo].behaviour = GenderBhaviourType.Stiffer;
-                                                                else if ((gbt == "Grower") || (gbt == "grower"))
-                                                                    anvKonsInfo[noOfGenderInfo].behaviour = GenderBhaviourType.Grower;
-                                                                else
+                                                                if (!(checkEnumeration(gbt, noOfGenderInfo, currEnum.Gender)))
                                                                     anvKonsInfo[noOfGenderInfo].behaviour = GenderBhaviourType.UndeBehaviourType;
                                                                 noOfDataSet++;
                                                                 dataInfo = dataInfo.Substring(dp5 + 2, dataInfo.Length - dp5 - 2);
@@ -1147,53 +2056,7 @@ namespace PhotoEditor00002
                                                                         noOfDataSet++;
                                                                     }
                                                                     dataInfo = dataInfo.Substring(dp6 + 2, dataInfo.Length - dp6 - 2);
-                                                                    // DateTime "validDate" [YYYY-MM-DD|YY-MM-DD|YYYY-MM|YY-MM|YYYY|YY]
-                                                                    dp7 = dataInfo.IndexOf("-");
-                                                                    if ((dp7 > 0) && (dp7 < dataInfo.Length - 1))
-                                                                    {
-                                                                        // DateTime "validDate" [YYYY-MM-DD|YY-MM-DD|YYYY-MM|YY-MM]
-                                                                        if (int.TryParse(dataInfo.Substring(0, dp7), out resval))
-                                                                        {
-                                                                            anvKonsInfo[noOfGenderInfo].validDate.year = resval;
-                                                                            noOfDataSet++;
-                                                                        }
-                                                                        dataInfo = dataInfo.Substring(dp7 + 1, dataInfo.Length - dp7 - 1);
-                                                                        dp8 = dataInfo.IndexOf("-");
-                                                                        if ((dp8 > 0) && (dp8 < dataInfo.Length - 1))
-                                                                        {
-                                                                            // DateTime "validDate" [MM-DD]
-                                                                            string svdmon = dataInfo.Substring(0, dp8);
-                                                                            if (int.TryParse(svdmon, out resval))
-                                                                            {
-                                                                                anvKonsInfo[noOfGenderInfo].validDate.month = resval;
-                                                                                noOfDataSet++;
-                                                                            }
-                                                                            string svdday = dataInfo.Substring(dp8 + 1, dataInfo.Length - dp8 - 1);
-                                                                            if (int.TryParse(svdday, out resval))
-                                                                            {
-                                                                                anvKonsInfo[noOfGenderInfo].validDate.day = resval;
-                                                                                noOfDataSet++;
-                                                                            }
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            // DateTime "validDate" [MM]
-                                                                            if (int.TryParse(dataInfo, out resval))
-                                                                            {
-                                                                                anvKonsInfo[noOfGenderInfo].validDate.month = resval;
-                                                                                noOfDataSet++;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        // DateTime "validDate" [YYYY|YY]
-                                                                        if (int.TryParse(dataInfo, out resval))
-                                                                        {
-                                                                            anvKonsInfo[noOfGenderInfo].validDate.year = resval;
-                                                                            noOfDataSet++;
-                                                                        }
-                                                                    }
+                                                                    handleDate(dataInfo, noOfGenderInfo, currEnum.Gender);
                                                                 }
                                                             }
                                                         }
@@ -1204,7 +2067,7 @@ namespace PhotoEditor00002
                                         noOfGenderInfo++;
                                     }
                                 } break;
-                            case "Length  ":
+                            case "length  ":
                                 {
                                     // Length   : Value; Unit; Valid-Date
                                     if (noOfLengthData < maxNoOfLengthData)
@@ -1224,94 +2087,16 @@ namespace PhotoEditor00002
                                             if ((dp1 > 0) && (dp1 < dataInfo.Length - 2))
                                             {
                                                 string sUnit = dataInfo.Substring(0, dp1);
-                                                if ((sUnit == "Points") || (sUnit == "points"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Points;
-                                                else if ((sUnit == "Millimeter") || (sUnit == "millimeter"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Millimeter;
-                                                else if ((sUnit == "Centimeter") || (sUnit == "centimeter"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Centimeter;
-                                                else if ((sUnit == "Decimeter") || (sUnit == "decimeter"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Decimeter;
-                                                else if ((sUnit == "Meter") || (sUnit == "meter"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Meter;
-                                                else if ((sUnit == "Inch") || (sUnit == "inch"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Inch;
-                                                else if ((sUnit == "Feet") || (sUnit == "feet"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Feet;
-                                                else if ((sUnit == "Yard") || (sUnit == "yard"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Yard;
-                                                else
+                                                if (!(checkEnumeration(sUnit, noOfLengthData, currEnum.Length)))
                                                     anvLangdData[noOfLengthData].unit = DistUnits.UndefDistUnit;
                                                 noOfDataSet++;
                                                 dataInfo = dataInfo.Substring(dp1 + 2, dataInfo.Length - dp1 - 2);
-                                                dp2 = dataInfo.IndexOf("-");
-                                                if ((dp2 > 0) && (dp2 < dataInfo.Length - 1))
-                                                {
-                                                    string svay = dataInfo.Substring(0, dp2);
-                                                    int resval;
-                                                    if (int.TryParse(svay, out resval))
-                                                    {
-                                                        anvLangdData[noOfLengthData].validDate.year = resval;
-                                                        noOfDataSet++;
-                                                    }
-                                                    dataInfo = dataInfo.Substring(dp2 + 1, dataInfo.Length - dp2 - 1);
-                                                    dp3 = dataInfo.IndexOf("-");
-                                                    if ((dp3 > 0) && (dp3 < dataInfo.Length - 1))
-                                                    {
-                                                        string svam = dataInfo.Substring(0, dp3);
-                                                        if (int.TryParse(svam, out resval))
-                                                        {
-                                                            anvLangdData[noOfLengthData].validDate.month = resval;
-                                                            noOfDataSet++;
-                                                        }
-                                                        dataInfo = dataInfo.Substring(dp3 + 1, dataInfo.Length - dp3 - 1);
-                                                        if (int.TryParse(dataInfo, out resval))
-                                                        {
-                                                            anvLangdData[noOfLengthData].validDate.day = resval;
-                                                            noOfDataSet++;
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        // we only have month
-                                                        if (int.TryParse(dataInfo, out resval))
-                                                        {
-                                                            anvLangdData[noOfLengthData].validDate.month = resval;
-                                                            noOfDataSet++;
-                                                        }
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    // We only have a year
-                                                    int resval;
-                                                    if (int.TryParse(dataInfo, out resval))
-                                                    {
-                                                        anvLangdData[noOfLengthData].validDate.year = resval;
-                                                        noOfDataSet++;
-                                                    }
-                                                }
+                                                handleDate(dataInfo, noOfLengthData, currEnum.Length);
                                             }
                                             else
                                             {
                                                 // We only have unit
-                                                if ((dataInfo == "Points") || (dataInfo == "points"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Points;
-                                                else if ((dataInfo == "Millimeter") || (dataInfo == "millimeter"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Millimeter;
-                                                else if ((dataInfo == "Centimeter") || (dataInfo == "centimeter"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Centimeter;
-                                                else if ((dataInfo == "Decimeter") || (dataInfo == "decimeter"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Decimeter;
-                                                else if ((dataInfo == "Meter") || (dataInfo == "meter"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Meter;
-                                                else if ((dataInfo == "Inch") || (dataInfo == "inch"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Inch;
-                                                else if ((dataInfo == "Feet") || (dataInfo == "feet"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Feet;
-                                                else if ((dataInfo == "Yard") || (dataInfo == "yard"))
-                                                    anvLangdData[noOfLengthData].unit = DistUnits.Yard;
-                                                else
+                                                if (!(checkEnumeration(dataInfo, noOfLengthData, currEnum.Length)))
                                                     anvLangdData[noOfLengthData].unit = DistUnits.UndefDistUnit;
                                             }
                                         }
@@ -1329,7 +2114,7 @@ namespace PhotoEditor00002
                                         noOfLengthData++;
                                     }
                                 } break;
-                            case "Weight  ":
+                            case "weight  ":
                                 {
                                     // Weight   : Value; unit; Valid-Date
                                     if (noOfWeightData < maxNoOfWeightData)
@@ -1349,81 +2134,15 @@ namespace PhotoEditor00002
                                             if ((dp1 > 0) && (dp1 < dataInfo.Length - 2))
                                             {
                                                 string sUnit = dataInfo.Substring(0, dp1);
-                                                if ((sUnit == "Gram") || (sUnit == "gram"))
-                                                    anvViktData[noOfWeightData].unit = WeightUnits.Gram;
-                                                else if ((sUnit == "Kilogram") || (sUnit == "KiloGram") || (sUnit == "kilogram"))
-                                                    anvViktData[noOfWeightData].unit = WeightUnits.KiloGram;
-                                                else if ((sUnit == "Tonnes") || (sUnit == "tonnes"))
-                                                    anvViktData[noOfWeightData].unit = WeightUnits.Tonnes;
-                                                else if ((sUnit == "Pound")|| (sUnit == "pound"))
-                                                    anvViktData[noOfWeightData].unit = WeightUnits.Pound;
-                                                else if ((sUnit == "Stones") == (sUnit == "stones"))
-                                                    anvViktData[noOfWeightData].unit = WeightUnits.Stones;
-                                                else
+                                                if (!(checkEnumeration(sUnit, noOfWeightData, currEnum.Weight)))
                                                     anvViktData[noOfWeightData].unit = WeightUnits.UndefWeightUnit;
                                                 dataInfo = dataInfo.Substring(dp1 + 2, dataInfo.Length - dp1 - 2);
-                                                dp2 = dataInfo.IndexOf("-");
-                                                if ((dp2 > 0) && (dp2 < dataInfo.Length - 1))
-                                                {
-                                                    string svay = dataInfo.Substring(0, dp2);
-                                                    int resval;
-                                                    if (int.TryParse(svay, out resval))
-                                                    {
-                                                        anvViktData[noOfWeightData].validDate.year = resval;
-                                                        noOfDataSet++;
-                                                    }
-                                                    dataInfo = dataInfo.Substring(dp2 + 1, dataInfo.Length - dp2 - 1);
-                                                    dp3 = dataInfo.IndexOf("-");
-                                                    if ((dp3 > 0) && (dp3 < dataInfo.Length - 1))
-                                                    {
-                                                        string svam = dataInfo.Substring(0, dp3);
-                                                        if (int.TryParse(svam, out resval))
-                                                        {
-                                                            anvViktData[noOfWeightData].validDate.month = resval;
-                                                            noOfDataSet++;
-                                                        }
-                                                        dataInfo = dataInfo.Substring(dp3 + 1, dataInfo.Length - dp3 - 1);
-                                                        if (int.TryParse(dataInfo, out resval))
-                                                        {
-                                                            anvViktData[noOfWeightData].validDate.day = resval;
-                                                            noOfDataSet++;
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        // we only have month
-                                                        if (int.TryParse(dataInfo, out resval))
-                                                        {
-                                                            anvViktData[noOfWeightData].validDate.month = resval;
-                                                            noOfDataSet++;
-                                                        }
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    // We only have a year
-                                                    int resval;
-                                                    if (int.TryParse(dataInfo, out resval))
-                                                    {
-                                                        anvViktData[noOfWeightData].validDate.year = resval;
-                                                        noOfDataSet++;
-                                                    }
-                                                }
+                                                handleDate(dataInfo, noOfWeightData, currEnum.Weight);
                                             }
                                             else
                                             {
                                                 // We only have unit
-                                                if ((dataInfo == "Gram") || (dataInfo == "gram"))
-                                                    anvViktData[noOfWeightData].unit = WeightUnits.Gram;
-                                                else if ((dataInfo == "Kilogram") || (dataInfo == "KiloGram") || (dataInfo == "kilogram"))
-                                                    anvViktData[noOfWeightData].unit = WeightUnits.KiloGram;
-                                                else if ((dataInfo == "Tonnes") || (dataInfo == "tonnes"))
-                                                    anvViktData[noOfWeightData].unit = WeightUnits.Tonnes;
-                                                else if ((dataInfo == "Pound") || (dataInfo == "pound"))
-                                                    anvViktData[noOfWeightData].unit = WeightUnits.Pound;
-                                                else if ((dataInfo == "Stones") || (dataInfo == "stones"))
-                                                    anvViktData[noOfWeightData].unit = WeightUnits.Stones;
-                                                else
+                                                if (!(checkEnumeration(dataInfo, noOfWeightData, currEnum.Weight)))
                                                     anvViktData[noOfWeightData].unit = WeightUnits.UndefWeightUnit;
                                             }
                                         }
@@ -1441,7 +2160,7 @@ namespace PhotoEditor00002
                                         noOfWeightData++;
                                     }
                                 } break;
-                            case "Boobs   ":
+                            case "boobs   ":
                                 {
                                     // Boobs    : Type-tag; Circumf; Unit; Size-tag; Valid-Date
                                     if (noOfChestData < maxNoOfChestData)
@@ -1451,11 +2170,7 @@ namespace PhotoEditor00002
                                         {
                                             // Type-tag; Circumf; Unit; Size-tag; Valid-Date
                                             string sChTp = dataInfo.Substring(0, dp0);
-                                            if (sChTp == "Natural")
-                                                anvBrostData[noOfChestData].type = BreastType.NaturalBreasts;
-                                            else if ((sChTp == "Silicone") || (sChTp == "Fake") || (sChTp == "Plastic"))
-                                                anvBrostData[noOfChestData].type = BreastType.SiliconeBreasts;
-                                            else
+                                            if (!(checkEnumeration(sChTp, noOfChestData, currEnum.BrstTp)))
                                                 anvBrostData[noOfChestData].type = BreastType.UndefBreastType;
                                             noOfDataSet++;
                                             dataInfo = dataInfo.Substring(dp0 + 2, dataInfo.Length - dp0 - 2);
@@ -1476,15 +2191,7 @@ namespace PhotoEditor00002
                                                 {
                                                     // Unit; Size-tag; Valid-Date
                                                     string sChUnt = dataInfo.Substring(0, dp2);
-                                                    if ((sChUnt == "Centimeter") || (sChUnt == "centimeter"))
-                                                        anvBrostData[noOfChestData].units = DistUnits.Centimeter;
-                                                    else if ((sChUnt == "Decimeter") || (sChUnt == "decimeter"))
-                                                        anvBrostData[noOfChestData].units = DistUnits.Decimeter;
-                                                    else if ((sChUnt == "Inch") || (sChUnt == "inch") || (sChUnt == "Inches") || (sChUnt == "inches"))
-                                                        anvBrostData[noOfChestData].units = DistUnits.Inch;
-                                                    else if ((sChUnt == "Feet") || (sChUnt == "feet"))
-                                                        anvBrostData[noOfChestData].units = DistUnits.Feet;
-                                                    else
+                                                    if (!(checkEnumeration(sChUnt, noOfChestData, currEnum.BrstSz)))
                                                         anvBrostData[noOfChestData].units = DistUnits.UndefDistUnit;
                                                     dataInfo = dataInfo.Substring(dp2 + 2, dataInfo.Length - dp2 - 2);
                                                     dp3 = dataInfo.IndexOf(";");
@@ -1492,77 +2199,10 @@ namespace PhotoEditor00002
                                                     {
                                                         // Size-tag; Valid-Date
                                                         string chSzTag = dataInfo.Substring(0, dp3);
-                                                        if ((chSzTag == "AA") || (chSzTag == "aa"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.AA;
-                                                        else if ((chSzTag == "A") || (chSzTag == "a"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.A;
-                                                        else if ((chSzTag == "B") || (chSzTag == "b"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.B;
-                                                        else if ((chSzTag == "Bulgy") || (chSzTag == "bulgy"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.Bulgy;
-                                                        else if ((chSzTag == "C") || (chSzTag == "c"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.C;
-                                                        else if ((chSzTag == "D") || (chSzTag == "d"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.D;
-                                                        else if ((chSzTag == "E") || (chSzTag == "e"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.E;
-                                                        else if ((chSzTag == "F") || (chSzTag == "f"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.F;
-                                                        else if ((chSzTag == "Flat") || (chSzTag == "flat"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.Flat;
-                                                        else if ((chSzTag == "Normal") || (chSzTag == "normal") || (chSzTag == "Medium") || (chSzTag == "medium"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.Medium;
-                                                        else if ((chSzTag == "OverSize") || (chSzTag == "Oversize") || (chSzTag == "oversize"))
-                                                            anvBrostData[noOfChestData].sizeType = BreastSizeType.Oversize;
-                                                        else
+                                                        if (!(checkEnumeration(chSzTag, noOfChestData, currEnum.BrstSz)))
                                                             anvBrostData[noOfChestData].sizeType = BreastSizeType.UndefBreastSize;
                                                         dataInfo = dataInfo.Substring(dp3 + 2, dataInfo.Length - dp3 - 2);
-                                                        dp4 = dataInfo.IndexOf("-");
-                                                        if ((dp4 > 0) && (dp4 < dataInfo.Length - 1))
-                                                        {
-                                                            // Valid-Date [YYYY-MM-DD|YY-MM-DD]
-                                                            string svay = dataInfo.Substring(0, dp4);
-                                                            int resval;
-                                                            if (int.TryParse(svay, out resval))
-                                                            {
-                                                                anvBrostData[noOfChestData].validDate.year = resval;
-                                                                noOfDataSet++;
-                                                            }
-                                                            dataInfo = dataInfo.Substring(dp4 + 1, dataInfo.Length - dp4 - 1);
-                                                            dp5 = dataInfo.IndexOf("-");
-                                                            if ((dp5 > 0) && (dp5 < dataInfo.Length - 1))
-                                                            {
-                                                                string svam = dataInfo.Substring(0, dp5);
-                                                                if (int.TryParse(svam, out resval))
-                                                                {
-                                                                    anvBrostData[noOfChestData].validDate.month = resval;
-                                                                    noOfDataSet++;
-                                                                }
-                                                                dataInfo = dataInfo.Substring(dp5 + 1, dataInfo.Length - dp5 - 1);
-                                                                if (int.TryParse(dataInfo, out resval))
-                                                                {
-                                                                    anvBrostData[noOfChestData].validDate.day = resval;
-                                                                    noOfDataSet++;
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (int.TryParse(dataInfo, out resval))
-                                                                {
-                                                                    anvBrostData[noOfChestData].validDate.month = resval;
-                                                                    noOfDataSet++;
-                                                                }
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            int resval;
-                                                            if (int.TryParse(dataInfo, out resval))
-                                                            {
-                                                                anvBrostData[noOfChestData].validDate.year = resval;
-                                                                noOfDataSet++;
-                                                            }
-                                                        }
+                                                        handleDate(dataInfo, noOfChestData, currEnum.BrstSz);
                                                     }
                                                 }
                                             }
@@ -1570,7 +2210,7 @@ namespace PhotoEditor00002
                                         noOfChestData++;
                                     }
                                 } break;
-                            case "FaceData":
+                            case "facedata":
                                 {
                                     // FaceData : Eye-width; Cheekbone-Width; Chin-Width; Mouth-Width; Height; Unit; Valid-Date
                                     if (noOfFaceData < maxNoOfFaceData)
@@ -1640,70 +2280,10 @@ namespace PhotoEditor00002
                                                             {
                                                                 // Unit; Valid-Date
                                                                 string sunt = dataInfo.Substring(0, dp5);
-                                                                if ((sunt == "Poits") || (sunt == "points"))
-                                                                    anvAnsiktsData[noOfFaceData].units = DistUnits.Points;
-                                                                else if ((sunt == "Millimeter") || (sunt == "millimeter"))
-                                                                    anvAnsiktsData[noOfFaceData].units = DistUnits.Millimeter;
-                                                                else if ((sunt == "Centimeter") || (sunt == "centimeter"))
-                                                                    anvAnsiktsData[noOfFaceData].units = DistUnits.Centimeter;
-                                                                else if ((sunt == "Decimeter") || (sunt == "decimeter"))
-                                                                    anvAnsiktsData[noOfFaceData].units = DistUnits.Decimeter;
-                                                                else if ((sunt == "Meter") || (sunt == "meter"))
-                                                                    anvAnsiktsData[noOfFaceData].units = DistUnits.Meter;
-                                                                else if ((sunt == "Inch") || (sunt == "inch") || (sunt == "Inches") || (sunt == "inches"))
-                                                                    anvAnsiktsData[noOfFaceData].units = DistUnits.Inch;
-                                                                else if ((sunt == "Feet") || (sunt == "feet") || (sunt == "Foot") || (sunt == "foot"))
-                                                                    anvAnsiktsData[noOfFaceData].units = DistUnits.Feet;
-                                                                else
+                                                                if (!(checkEnumeration(sunt, noOfFaceData, currEnum.Face)))
                                                                     anvAnsiktsData[noOfFaceData].units = DistUnits.UndefDistUnit;
                                                                 dataInfo = dataInfo.Substring(dp5 + 2, dataInfo.Length - dp5 - 2);
-                                                                dp6 = dataInfo.IndexOf("-");
-                                                                int resval;
-                                                                if ((dp6 > 0) && (dp6 < dataInfo.Length - 1))
-                                                                {
-                                                                    // Valid-Date [YYYY-MM-DD|YY-MM-DD]
-                                                                    string sad = dataInfo.Substring(0, dp6);
-                                                                    if (int.TryParse(sad, out resval))
-                                                                    {
-                                                                        anvAnsiktsData[noOfFaceData].validDate.year = resval;
-                                                                        noOfDataSet++;
-                                                                    }
-                                                                    dataInfo = dataInfo.Substring(dp6 + 1, dataInfo.Length - dp6 - 1);
-                                                                    dp7 = dataInfo.IndexOf("-");
-                                                                    if ((dp7 > 0) && (dp7 < dataInfo.Length - 1))
-                                                                    {
-                                                                        // ValidDate [MM-DD]
-                                                                        string smon = dataInfo.Substring(0, dp7);
-                                                                        if (int.TryParse(smon, out resval))
-                                                                        {
-                                                                            anvAnsiktsData[noOfFaceData].validDate.month = resval;
-                                                                            noOfDataSet++;
-                                                                        }
-                                                                        string sday = dataInfo.Substring(dp7 + 1, dataInfo.Length - dp7 - 1);
-                                                                        if (int.TryParse(sday, out resval))
-                                                                        {
-                                                                            anvAnsiktsData[noOfFaceData].validDate.day = resval;
-                                                                            noOfDataSet++;
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (int.TryParse(dataInfo, out resval))
-                                                                        {
-                                                                            anvAnsiktsData[noOfFaceData].validDate.month = resval;
-                                                                            noOfDataSet++;
-                                                                        }
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    // ValidDate [YYYY|YY]
-                                                                    if (int.TryParse(dataInfo, out resval))
-                                                                    {
-                                                                        anvAnsiktsData[noOfFaceData].validDate.year = resval;
-                                                                        noOfDataSet++;
-                                                                    }
-                                                                }
+                                                                handleDate(dataInfo, noOfFaceData, currEnum.Face);
                                                             }
                                                         }
                                                     }
@@ -1713,7 +2293,7 @@ namespace PhotoEditor00002
                                         noOfFaceData++;
                                     }
                                 } break;
-                            case "Residnce":
+                            case "residnce":
                                 {
                                     // Residnce : Streetname; number; additive; City; Area; Zipcode; Country; Purchase; In-Date; Out-Date; Sale; Currency
                                     if (noOfResidences < maxNoOfResidences)
@@ -1728,6 +2308,7 @@ namespace PhotoEditor00002
                                             dataInfo = dataInfo.Substring(dp0 + 2, dataInfo.Length - dp0 - 2);
                                             dp1 = dataInfo.IndexOf(";");
                                             int resdata;
+                                            float fresdata;
                                             if ((dp1 > 0) && (dp1 < dataInfo.Length - 2))
                                             {
                                                 // number; additive; City; Area; Zipcode; Country; Purchase; In-Date; Out-Date; Sale; Currency
@@ -1786,7 +2367,7 @@ namespace PhotoEditor00002
                                                                     {
                                                                         // Purchase; In-Date; Out-Date; Sale; Currency
                                                                         string spch = dataInfo.Substring(0, dp7);
-                                                                        if (int.TryParse(spch, out resdata))
+                                                                        if (float.TryParse(spch, out fresdata))
                                                                         {
                                                                             anvBostader[noOfResidences].boughtValue = resdata;
                                                                             noOfDataSet++;
@@ -1797,106 +2378,16 @@ namespace PhotoEditor00002
                                                                         {
                                                                             // In-Date; Out-Date; Sale; Currency
                                                                             string sindat = dataInfo.Substring(0, dp8);
-                                                                            int dp81 = sindat.IndexOf("-");
-                                                                            int resval;
-                                                                            if ((dp81 > 0) && (dp81 < sindat.Length - 1))
-                                                                            {
-                                                                                // InDate [YYYY-MM-DD|YY-MM-DD]
-                                                                                string sinyr = sindat.Substring(0, dp81);
-                                                                                if (int.TryParse(sinyr, out resval))
-                                                                                {
-                                                                                    anvBostader[noOfResidences].boughtDate.year = resval;
-                                                                                    noOfDataSet++;
-                                                                                }
-                                                                                sindat = sindat.Substring(dp81 + 1, sindat.Length - dp81 - 1);
-                                                                                int dp82 = sindat.IndexOf("-");
-                                                                                if ((dp82 > 0) && (dp82 < sindat.Length - 1))
-                                                                                {
-                                                                                    // InDate [MM-DD|MM-DD]
-                                                                                    string sinmon = sindat.Substring(0, dp82);
-                                                                                    if (int.TryParse(sinmon, out resval))
-                                                                                    {
-                                                                                        anvBostader[noOfResidences].boughtDate.month = resval;
-                                                                                        noOfDataSet++;
-                                                                                    }
-                                                                                    sindat = sindat.Substring(dp82 + 1, sindat.Length - dp82 - 1);
-                                                                                    if (int.TryParse(sindat, out resval))
-                                                                                    {
-                                                                                        anvBostader[noOfResidences].boughtDate.day = resval;
-                                                                                        noOfDataSet++;
-                                                                                    }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (int.TryParse(sindat, out resval))
-                                                                                    {
-                                                                                        anvBostader[noOfResidences].boughtDate.month = resval;
-                                                                                        noOfDataSet++;
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                // InDate [YYYY|YY]
-                                                                                if (int.TryParse(sindat, out resval))
-                                                                                {
-                                                                                    anvBostader[noOfResidences].boughtDate.year = resval;
-                                                                                    noOfDataSet++;
-                                                                                }
-                                                                            }
+                                                                            anvBostader[noOfResidences].boughtDate.year = 0;
+                                                                            handleDate(sindat, noOfResidences, currEnum.Residence);
                                                                             dataInfo = dataInfo.Substring(dp8 + 2, dataInfo.Length - dp8 - 2);
                                                                             dp9 = dataInfo.IndexOf(";");
                                                                             if ((dp9 > 0) && (dp9 < dataInfo.Length - 1))
                                                                             {
                                                                                 // Out-Date; Sale; Currency
                                                                                 string soutdat = dataInfo.Substring(0, dp9);
-                                                                                int dp91 = soutdat.IndexOf("-");
-                                                                                if ((dp91 > 0) && (dp91 < soutdat.Length - 1))
-                                                                                {
-                                                                                    // OutDate [YYYY-MM-DD|YY-MM-DD]
-                                                                                    string soutyr = soutdat.Substring(0, dp91);
-                                                                                    if (int.TryParse(soutyr, out resval))
-                                                                                    {
-                                                                                        anvBostader[noOfResidences].salesDate.year = resval;
-                                                                                        noOfDataSet++;
-                                                                                    }
-                                                                                    soutdat = soutdat.Substring(dp91 + 1, soutdat.Length - dp91 - 1);
-                                                                                    int dp92 = soutdat.IndexOf("-");
-                                                                                    if ((dp92 > 0) && (dp92 < soutdat.Length - 1))
-                                                                                    {
-                                                                                        // OutDate [MM-DD]
-                                                                                        string soutmon = soutdat.Substring(0, dp92);
-                                                                                        if (int.TryParse(soutmon, out resval))
-                                                                                        {
-                                                                                            anvBostader[noOfResidences].salesDate.month = resval;
-                                                                                            noOfDataSet++;
-                                                                                        }
-                                                                                        soutdat = soutdat.Substring(dp92 + 1, soutdat.Length - dp92 - 1);
-                                                                                        if (int.TryParse(soutdat, out resval))
-                                                                                        {
-                                                                                            anvBostader[noOfResidences].salesDate.day = resval;
-                                                                                            noOfDataSet++;
-                                                                                        }
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        // OutDate [MM]
-                                                                                        if (int.TryParse(soutdat, out resval))
-                                                                                        {
-                                                                                            anvBostader[noOfResidences].salesDate.month = resval;
-                                                                                            noOfDataSet++;
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    // OutDate [YYYY|YY]
-                                                                                    if (int.TryParse(soutdat, out resval))
-                                                                                    {
-                                                                                        anvBostader[noOfResidences].salesDate.year = resval;
-                                                                                        noOfDataSet++;
-                                                                                    }
-                                                                                }
+                                                                                anvBostader[noOfResidences].salesDate.year = 0;
+                                                                                handleDate(soutdat, noOfResidences, currEnum.Residence);
                                                                                 dataInfo = dataInfo.Substring(dp9 + 2, dataInfo.Length - dp9 - 2);
                                                                                 dp10 = dataInfo.IndexOf(";");
                                                                                 if ((dp10 > 0) && (dp10 < dataInfo.Length - 1))
@@ -1944,7 +2435,7 @@ namespace PhotoEditor00002
                                         noOfResidences++;
                                     }
                                 } break;
-                            case "HairColr":
+                            case "haircolr":
                                 {
                                     // HairColr : Color-tag; Texture-tag; Length-tag; Valid-Date
                                     if (noOfHairData < maxNoOfHairData)
@@ -1974,110 +2465,25 @@ namespace PhotoEditor00002
                                             dataInfo = dataInfo.Substring(dp0 + 2, dataInfo.Length - dp0 - 2);
                                             dp1 = dataInfo.IndexOf(";");
                                             string hrtxt = dataInfo.Substring(0, dp1);
-                                            // Texture-tag; Length-tag; Valid-Date
-                                            if ((hrtxt == "Straight") || (hrtxt == "straight"))
-                                                anvHaar[noOfHairData].textureTag = HairTextureType.Straight;
-                                            else if ((hrtxt == "Wavy") || (hrtxt == "wavy"))
-                                                anvHaar[noOfHairData].textureTag = HairTextureType.Wavy;
-                                            else if ((hrtxt == "Curly") || (hrtxt == "curly"))
-                                                anvHaar[noOfHairData].textureTag = HairTextureType.Curly;
-                                            else if ((hrtxt == "Coily") || (hrtxt == "coily"))
-                                                anvHaar[noOfHairData].textureTag = HairTextureType.Coily;
-                                            else
+                                            if (!(checkEnumeration(hrtxt, noOfHairData, currEnum.HairText)))
                                                 anvHaar[noOfHairData].textureTag = HairTextureType.UndefHairTexture;
                                             dataInfo = dataInfo.Substring(dp1 + 2, dataInfo.Length - dp1 - 2);
                                             dp2 = dataInfo.IndexOf(";");
-                                            string hrlnt = dataInfo.Substring(0, dp2);
-                                            // Length-tag; Valid-Date
-                                            if ((hrlnt == "Short") || (hrlnt == "short"))
-                                                anvHaar[noOfHairData].lengthTag = HairLengthType.Short;
-                                            else if ((hrlnt == "Neck") || (hrlnt == "neck"))
-                                                anvHaar[noOfHairData].lengthTag = HairLengthType.Neck;
-                                            else if ((hrlnt == "Shoulder") || (hrlnt == "shoulder"))
-                                                anvHaar[noOfHairData].lengthTag = HairLengthType.Shoulder;
-                                            else if ((hrlnt == "Mid Back") || (hrlnt == "mid back"))
-                                                anvHaar[noOfHairData].lengthTag = HairLengthType.MidBack;
-                                            else if ((hrlnt == "Waist") || (hrlnt == "waist"))
-                                                anvHaar[noOfHairData].lengthTag = HairLengthType.Waist;
-                                            else if ((hrlnt == "Ass") || (hrlnt == "ass"))
-                                                anvHaar[noOfHairData].lengthTag = HairLengthType.Ass;
-                                            else if ((hrlnt == "Long") || (hrlnt == "long"))
-                                                anvHaar[noOfHairData].lengthTag = HairLengthType.Long;
-                                            else
-                                                anvHaar[noOfHairData].lengthTag = HairLengthType.UndefHairLength;
-                                            dataInfo = dataInfo.Substring(dp2 + 2, dataInfo.Length - dp2 - 2);
-                                            // Valid-Date
-                                            if ((dataInfo != "Undefined") && (dataInfo != "Unknown"))
+                                            if ((dp2 > 0) && (dp2 < dataInfo.Length - 1))
                                             {
-                                                dp3 = dataInfo.IndexOf("-");
-                                                if ((dp3 > 0) && (dp3 < dataInfo.Length - 1))
-                                                {
-                                                    if (dataInfo.Length > 9)
-                                                    {
-                                                        // Format YYYY-MM-DD
-                                                        string yrval = dataInfo.Substring(0, 4);
-                                                        string mtval = dataInfo.Substring(5, 2);
-                                                        string dyval = dataInfo.Substring(8, 2);
-                                                        anvHaar[noOfHairData].validDate.year = int.Parse(yrval);
-                                                        anvHaar[noOfHairData].validDate.month = int.Parse(mtval);
-                                                        anvHaar[noOfHairData].validDate.day = int.Parse(dyval);
-                                                    }
-                                                    else if (dataInfo.Length > 7)
-                                                    {
-                                                        // Format YY-MM-DD
-                                                        string yrval = dataInfo.Substring(0, 2);
-                                                        string mtval = dataInfo.Substring(3, 2);
-                                                        string dyval = dataInfo.Substring(6, 2);
-                                                        anvHaar[noOfHairData].validDate.year = int.Parse(yrval);
-                                                        anvHaar[noOfHairData].validDate.month = int.Parse(mtval);
-                                                        anvHaar[noOfHairData].validDate.day = int.Parse(dyval);
-                                                    }
-                                                    else
-                                                    {
-                                                        // Format YY-MM
-                                                        string yrval = dataInfo.Substring(0, 2);
-                                                        string mtval = dataInfo.Substring(3, 2);
-                                                        anvHaar[noOfHairData].validDate.year = int.Parse(yrval);
-                                                        anvHaar[noOfHairData].validDate.month = int.Parse(mtval);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (dataInfo.Length > 7)
-                                                    {
-                                                        // Format YYYYMMDD
-                                                        string yrval = dataInfo.Substring(0, 4);
-                                                        string mtval = dataInfo.Substring(4, 2);
-                                                        string dyval = dataInfo.Substring(6, 2);
-                                                        anvHaar[noOfHairData].validDate.year = int.Parse(yrval);
-                                                        anvHaar[noOfHairData].validDate.month = int.Parse(mtval);
-                                                        anvHaar[noOfHairData].validDate.day = int.Parse(dyval);
-                                                    }
-                                                    else if (dataInfo.Length > 5)
-                                                    {
-                                                        // Format YYMMDD
-                                                        string yrval = dataInfo.Substring(0, 2);
-                                                        string mtval = dataInfo.Substring(2, 2);
-                                                        string dyval = dataInfo.Substring(4, 2);
-                                                        anvHaar[noOfHairData].validDate.year = int.Parse(yrval);
-                                                        anvHaar[noOfHairData].validDate.month = int.Parse(mtval);
-                                                        anvHaar[noOfHairData].validDate.day = int.Parse(dyval);
-                                                    }
-                                                    else
-                                                    {
-                                                        // Format YYYY
-                                                        string yrval = dataInfo.Substring(0, 4);
-                                                        anvHaar[noOfHairData].validDate.year = int.Parse(yrval);
-                                                    }
-                                                }
+                                                string hrlnt = dataInfo.Substring(0, dp2);
+                                                if (!(checkEnumeration(hrlnt, noOfHairData, currEnum.HairLnt)))
+                                                    anvHaar[noOfHairData].lengthTag = HairLengthType.UndefHairLength;
+                                                dataInfo = dataInfo.Substring(dp2 + 2, dataInfo.Length - dp2 - 2);
+                                                handleDate(dataInfo, noOfHairData, currEnum.HairLnt);
                                             }
                                         }
                                         noOfHairData++;
                                     }
                                 } break;
-                            case "EyeColor":
+                            case "eyecolor":
                                 {
-                                    // EyeColor : Color-tag; Form-tag; Valid-Date
+                                    // EyeColor : Color-tag; Form-tag; Valid-Date; Glasses
                                     if (noOfEyeColorData < maxNoOfEyeColorData)
                                     {
                                         dp0 = dataInfo.IndexOf(";");
@@ -2094,71 +2500,20 @@ namespace PhotoEditor00002
                                                 if ((formTag != "Undefined") && (formTag != "Unknown") && (formTag != "undefined") && (formTag != "unknown"))
                                                     anvEyes[noOfEyeColorData].formTag = formTag;
                                                 dataInfo = dataInfo.Substring(dp1 + 2, dataInfo.Length - dp1 - 2);
-                                                dp2 = dataInfo.IndexOf("-");
-                                                if ((dp2 > 0) && (dp2 < dataInfo.Length))
+                                                dp2 = dataInfo.IndexOf(";");
+                                                if ((dp2 > 0) && (dp2 < dataInfo.Length - 1))
                                                 {
-                                                    // We have YY[YY]-MM[-DD]
-                                                    if (dataInfo.Length > 9)
-                                                    {
-                                                        // Format YYYY-MM-DD
-                                                        string yrval = dataInfo.Substring(0, 4);
-                                                        string mtval = dataInfo.Substring(5, 2);
-                                                        string dyval = dataInfo.Substring(8, 2);
-                                                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(yrval);
-                                                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(mtval);
-                                                        anvEyes[noOfEyeColorData].validDate.day = int.Parse(dyval);
-                                                    }
-                                                    else if (dataInfo.Length > 7)
-                                                    {
-                                                        // Format YY-MM-DD
-                                                        string yrval = dataInfo.Substring(0, 2);
-                                                        string mtval = dataInfo.Substring(3, 2);
-                                                        string dyval = dataInfo.Substring(6, 2);
-                                                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(yrval) + 1900;
-                                                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(mtval);
-                                                        anvEyes[noOfEyeColorData].validDate.day = int.Parse(dyval);
-                                                    }
-                                                    else if (dataInfo.Length > 4)
-                                                    {
-                                                        // Format YY-MM
-                                                        string yrval = dataInfo.Substring(0, 2);
-                                                        string mtval = dataInfo.Substring(3, 2);
-                                                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(yrval) + 1900;
-                                                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(mtval);
-                                                    }
+                                                    handleDate(dataInfo.Substring(0, dp2), noOfEyeColorData, currEnum.Eyes);
+                                                    dataInfo = dataInfo.Substring(dp2 + 2, dataInfo.Length - dp2 - 2);
+                                                    if ((dataInfo.ToLower().Contains("no")) || (dataInfo.ToLower().Contains("none")) || (dataInfo.ToLower().Contains("false")))
+                                                        anvEyes[noOfEyeColorData].glasses = false;
                                                     else
-                                                    {
-                                                        // Format YYYY
-                                                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(dataInfo);
-                                                    }
+                                                        anvEyes[noOfEyeColorData].glasses = true;
                                                 }
                                                 else
                                                 {
-                                                    if (dataInfo.Length > 7)
-                                                    {
-                                                        // Format YYYYMMDD
-                                                        string yrval = dataInfo.Substring(0, 4);
-                                                        string mtval = dataInfo.Substring(4, 2);
-                                                        string dyval = dataInfo.Substring(6, 2);
-                                                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(yrval);
-                                                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(mtval);
-                                                        anvEyes[noOfEyeColorData].validDate.day = int.Parse(dyval);
-                                                    }
-                                                    else if (dataInfo.Length > 5)
-                                                    {
-                                                        // Format YYMMDD
-                                                        string yrval = dataInfo.Substring(0, 2);
-                                                        string mtval = dataInfo.Substring(2, 2);
-                                                        string dyval = dataInfo.Substring(4, 2);
-                                                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(yrval) + 1900;
-                                                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(mtval);
-                                                        anvEyes[noOfEyeColorData].validDate.day = int.Parse(dyval);
-                                                    }
-                                                    else
-                                                    {
-                                                        // Format YYYY
-                                                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(dataInfo);
-                                                    }
+                                                    handleDate(dataInfo, noOfEyeColorData, currEnum.Eyes);
+                                                    anvEyes[noOfEyeColorData].glasses = false;
                                                 }
                                             }
                                         }
@@ -2169,7 +2524,7 @@ namespace PhotoEditor00002
                                         noOfEyeColorData++;
                                     }
                                 } break;
-                            case "MarkData":
+                            case "markdata":
                                 {
                                     // MarkData : type-tag; placement; Motif; Valid-Date
                                     if (noOfMarkingData < maxNoOfMarkingData)
@@ -2179,17 +2534,7 @@ namespace PhotoEditor00002
                                         if ((dp0 > 0) && (dp0 < dataInfo.Length))
                                         {
                                             string mrktpe = dataInfo.Substring(0, dp0);
-                                            if ((mrktpe == "Scar") || (mrktpe == "scar"))
-                                                anvMarkningar[noOfMarkingData].markTag = MarkingType.Scar;
-                                            else if ((mrktpe == "Freckles") || (mrktpe == "freckles"))
-                                                anvMarkningar[noOfMarkingData].markTag = MarkingType.Freckles;
-                                            else if ((mrktpe == "Birthmark") || (mrktpe == "birthmark"))
-                                                anvMarkningar[noOfMarkingData].markTag = MarkingType.Birthmark;
-                                            else if ((mrktpe == "Tattoo") || (mrktpe == "tattoo"))
-                                                anvMarkningar[noOfMarkingData].markTag = MarkingType.Tattoo;
-                                            else if ((mrktpe == "Piercing") || (mrktpe == "piercing"))
-                                                anvMarkningar[noOfMarkingData].markTag = MarkingType.Piercing;
-                                            else
+                                            if (!(checkEnumeration(mrktpe, noOfMarkingData, currEnum.MrkTp)))
                                                 anvMarkningar[noOfMarkingData].markTag = MarkingType.UndefMarking;
                                             dataInfo = dataInfo.Substring(dp0 + 2, dataInfo.Length - dp0 - 2);
                                             dp1 = dataInfo.IndexOf(";");
@@ -2208,83 +2553,22 @@ namespace PhotoEditor00002
                                                     if ((motf != "Undefined") && (motf != "Unknown"))
                                                         anvMarkningar[noOfMarkingData].motif = motf;
                                                     dataInfo = dataInfo.Substring(dp2 + 2, dataInfo.Length - dp2 - 2);
-                                                    // Valid-Date
-                                                    dp3 = dataInfo.IndexOf("-");
-                                                    if ((dp3 > 0) && (dp3 < dataInfo.Length - 1))
-                                                    {
-                                                        if (dataInfo.Length > 9)
-                                                        {
-                                                            // Format YYYY-MM-DD
-                                                            string yrval = dataInfo.Substring(0, 4);
-                                                            string mtval = dataInfo.Substring(5, 2);
-                                                            string dyval = dataInfo.Substring(8, 2);
-                                                            anvMarkningar[noOfMarkingData].validDate.year = int.Parse(yrval);
-                                                            anvMarkningar[noOfMarkingData].validDate.month = int.Parse(mtval);
-                                                            anvMarkningar[noOfMarkingData].validDate.day = int.Parse(dyval);
-                                                        }
-                                                        else if (dataInfo.Length > 7)
-                                                        {
-                                                            // Format YY-MM-DD
-                                                            string yrval = dataInfo.Substring(0, 2);
-                                                            string mtval = dataInfo.Substring(3, 2);
-                                                            string dyval = dataInfo.Substring(6, 2);
-                                                            anvMarkningar[noOfMarkingData].validDate.year = int.Parse(yrval);
-                                                            anvMarkningar[noOfMarkingData].validDate.month = int.Parse(mtval);
-                                                            anvMarkningar[noOfMarkingData].validDate.day = int.Parse(dyval);
-                                                        }
-                                                        else
-                                                        {
-                                                            // Format YY-MM
-                                                            string yrval = dataInfo.Substring(0, 2);
-                                                            string mtval = dataInfo.Substring(3, 2);
-                                                            anvMarkningar[noOfMarkingData].validDate.year = int.Parse(yrval);
-                                                            anvMarkningar[noOfMarkingData].validDate.month = int.Parse(mtval);
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (dataInfo.Length > 7)
-                                                        {
-                                                            // Format YYYYMMDD
-                                                            string yrval = dataInfo.Substring(0, 4);
-                                                            string mtval = dataInfo.Substring(4, 2);
-                                                            string dyval = dataInfo.Substring(6, 2);
-                                                            anvMarkningar[noOfMarkingData].validDate.year = int.Parse(yrval);
-                                                            anvMarkningar[noOfMarkingData].validDate.month = int.Parse(mtval);
-                                                            anvMarkningar[noOfMarkingData].validDate.day = int.Parse(dyval);
-                                                        }
-                                                        else if (dataInfo.Length > 5)
-                                                        {
-                                                            // Format YYMMDD
-                                                            string yrval = dataInfo.Substring(0, 2);
-                                                            string mtval = dataInfo.Substring(2, 2);
-                                                            string dyval = dataInfo.Substring(4, 2);
-                                                            anvMarkningar[noOfMarkingData].validDate.year = int.Parse(yrval);
-                                                            anvMarkningar[noOfMarkingData].validDate.month = int.Parse(mtval);
-                                                            anvMarkningar[noOfMarkingData].validDate.day = int.Parse(dyval);
-                                                        }
-                                                        else
-                                                        {
-                                                            // Format YYYY
-                                                            string yrval = dataInfo.Substring(0, 4);
-                                                            anvMarkningar[noOfMarkingData].validDate.year = int.Parse(yrval);
-                                                        }
-                                                    }
+                                                    handleDate(dataInfo, noOfMarkingData, currEnum.MrkTp);
                                                 }
                                             }
                                         }
                                         noOfMarkingData++;
                                     }
                                 } break;
-                            case "Ocupatn ":
+                            case "ocupatn ":
                                 {
-                                    // Ocupatn  : Title; Company; Streetname; Number; State; Areaname; Zipcode; Country; Start-Date; End-Date
+                                    // Ocupatn  : Title; Company; Streetname; Number; Cityname; State; Areaname; Zipcode; Country; Start-Date; End-Date
                                     if (noOfOccupationData < maxNoOfOccupationData)
                                     {
                                         dp0 = dataInfo.IndexOf(";");
                                         if ((dp0 > 0) && (dp0 < dataInfo.Length - 2))
                                         {
-                                            // Title; Company; Streetname; Number; State; Areaname; Zipcode; Country; Start-Date; End-Date
+                                            // Title; Company; Streetname; Number;  Cityname; State; Areaname; Zipcode; Country; Start-Date; End-Date
                                             string ttl = dataInfo.Substring(0, dp0);
                                             if ((ttl != "Unknown") && (ttl != "Undefined"))
                                                 anvAnstallningar[noOfOccupationData].title = ttl;
@@ -2292,7 +2576,7 @@ namespace PhotoEditor00002
                                             dp1 = dataInfo.IndexOf(";");
                                             if ((dp1 > 0) && (dp1 < dataInfo.Length - 2))
                                             {
-                                                // Company; Streetname; Number; State; Areaname; Zipcode; Country; Start-Date; End-Date
+                                                // Company; Streetname; Number;  Cityname; State; Areaname; Zipcode; Country; Start-Date; End-Date
                                                 string cpny = dataInfo.Substring(0, dp1);
                                                 if ((cpny != "Unknown") && (cpny != "Undefined"))
                                                     anvAnstallningar[noOfOccupationData].company = cpny;
@@ -2300,7 +2584,7 @@ namespace PhotoEditor00002
                                                 dp2 = dataInfo.IndexOf(";");
                                                 if ((dp2 > 0) && (dp2 < dataInfo.Length - 2))
                                                 {
-                                                    // Streetname; Number; State; Areaname; Zipcode; Country; Start-Date; End-Date
+                                                    // Streetname; Number;  Cityname; State; Areaname; Zipcode; Country; Start-Date; End-Date
                                                     string strtnm = dataInfo.Substring(0, dp2);
                                                     if ((strtnm != "Undefined") && (strtnm != "Unknown"))
                                                         anvAnstallningar[noOfOccupationData].streetname = strtnm;
@@ -2308,237 +2592,66 @@ namespace PhotoEditor00002
                                                     dp3 = dataInfo.IndexOf(";");
                                                     if ((dp3 > 0) && (dp3 < dataInfo.Length - 2))
                                                     {
-                                                        // Number; State; Areaname; Zipcode; Country; Start-Date; End-Date
+                                                        // Number; Cityname; State; Areaname; Zipcode; Country; Start-Date; End-Date
                                                         string sno = dataInfo.Substring(0, dp3);
                                                         if ((sno != "Undefined") && (sno != "Unknown"))
                                                             anvAnstallningar[noOfOccupationData].number = int.Parse(sno);
                                                         dataInfo = dataInfo.Substring(dp3 + 2, dataInfo.Length - dp3 - 2);
-                                                        dp4 = dataInfo.IndexOf(";");
-                                                        if ((dp4 > 0) && (dp4 < dataInfo.Length - 2))
+                                                        int dpp = dataInfo.IndexOf(";");
+                                                        if ((dpp > 0) && (dpp < dataInfo.Length - 2))
                                                         {
-                                                            // State; Areaname; Zipcode; Country; Start-Date; End-Date
-                                                            string ste = dataInfo.Substring(0, dp4);
-                                                            if ((ste != "Undefined") && (ste != "Unknown"))
-                                                                anvAnstallningar[noOfOccupationData].statename = ste;
-                                                            dataInfo = dataInfo.Substring(dp4 + 2, dataInfo.Length - dp4 - 2);
-                                                            dp5 = dataInfo.IndexOf(";");
-                                                            if ((dp5 > 0) && (dp5 < dataInfo.Length - 2))
+                                                            //  Cityname; State; Areaname; Zipcode; Country; Start-Date; End-Date
+                                                            string cty = dataInfo.Substring(0, dpp);
+                                                            if ((cty != "Undefined") && (cty != "Unknown"))
+                                                                anvAnstallningar[noOfOccupationData].cityname = cty;
+                                                            dataInfo = dataInfo.Substring(dpp + 2, dataInfo.Length - dpp - 2);
+                                                            dp4 = dataInfo.IndexOf(";");
+                                                            if ((dp4 > 0) && (dp4 < dataInfo.Length - 1))
                                                             {
-                                                                // Areaname; Zipcode; Country; Start-Date; End-Date
-                                                                string arn = dataInfo.Substring(0, dp5);
-                                                                if ((arn != "Undefined") && (arn != "Unknown"))
-                                                                    anvAnstallningar[noOfOccupationData].areaname = arn;
-                                                                dataInfo = dataInfo.Substring(dp5 + 2, dataInfo.Length - dp5 - 2);
-                                                                dp6 = dataInfo.IndexOf(";");
-                                                                if ((dp6 > 0) && (dp6 < dataInfo.Length - 2))
+                                                                string ste = dataInfo.Substring(0, dp4);
+                                                                if ((ste != "Undefined") && (ste != "Unknown"))
+                                                                    anvAnstallningar[noOfOccupationData].statename = ste;
+                                                                dataInfo = dataInfo.Substring(dp4 + 2, dataInfo.Length - dp4 - 2);
+                                                                dp5 = dataInfo.IndexOf(";");
+                                                                if ((dp5 > 0) && (dp5 < dataInfo.Length - 2))
                                                                 {
-                                                                    // Zipcode; Country; Start-Date; End-Date
-                                                                    string zc = dataInfo.Substring(0, dp6);
-                                                                    if ((zc != "Undefined") && (zc != "Unknown"))
-                                                                        anvAnstallningar[noOfOccupationData].zipcode = int.Parse(zc);
-                                                                    dataInfo = dataInfo.Substring(dp6 + 2, dataInfo.Length - dp6 - 2);
-                                                                    dp7 = dataInfo.IndexOf(";");
-                                                                    if ((dp7 > 0) && (dp7 < dataInfo.Length - 2))
+                                                                    // Areaname; Zipcode; Country; Start-Date; End-Date
+                                                                    string arn = dataInfo.Substring(0, dp5);
+                                                                    if ((arn != "Undefined") && (arn != "Unknown"))
+                                                                        anvAnstallningar[noOfOccupationData].areaname = arn;
+                                                                    dataInfo = dataInfo.Substring(dp5 + 2, dataInfo.Length - dp5 - 2);
+                                                                    dp6 = dataInfo.IndexOf(";");
+                                                                    if ((dp6 > 0) && (dp6 < dataInfo.Length - 2))
                                                                     {
-                                                                        // Country; Start-Date; End-Date
-                                                                        string ctry = dataInfo.Substring(0, dp7);
-                                                                        if ((ctry != "Undefined") && (ctry != "Unknown"))
-                                                                            anvAnstallningar[noOfOccupationData].country = ctry;
-                                                                        dataInfo = dataInfo.Substring(dp7 + 2, dataInfo.Length - dp7 - 2);
-                                                                        dp8 = dataInfo.IndexOf(";");
-                                                                        if ((dp8 > 0) && (dp8 < dataInfo.Length - 2))
+                                                                        // Zipcode; Country; Start-Date; End-Date
+                                                                        string zc = dataInfo.Substring(0, dp6);
+                                                                        if ((zc != "Undefined") && (zc != "Unknown"))
+                                                                            anvAnstallningar[noOfOccupationData].zipcode = int.Parse(zc);
+                                                                        dataInfo = dataInfo.Substring(dp6 + 2, dataInfo.Length - dp6 - 2);
+                                                                        dp7 = dataInfo.IndexOf(";");
+                                                                        if ((dp7 > 0) && (dp7 < dataInfo.Length - 2))
                                                                         {
-                                                                            // Start-Date; End-Date
-                                                                            string stdt = dataInfo.Substring(0, dp8);
-                                                                            int dp81 = stdt.IndexOf("-");
-                                                                            if ((dp81 > 0) && (dp81 < stdt.Length - 1))
+                                                                            // Country; Start-Date; End-Date
+                                                                            string ctry = dataInfo.Substring(0, dp7);
+                                                                            if ((ctry != "Undefined") && (ctry != "Unknown"))
+                                                                                anvAnstallningar[noOfOccupationData].country = ctry;
+                                                                            dataInfo = dataInfo.Substring(dp7 + 2, dataInfo.Length - dp7 - 2);
+                                                                            dp8 = dataInfo.IndexOf(";");
+                                                                            if ((dp8 > 0) && (dp8 < dataInfo.Length - 2))
                                                                             {
-                                                                                if (stdt.Length > 9)
-                                                                                {
-                                                                                    // Format YYYY-MM-DD
-                                                                                    string yrval = stdt.Substring(0, 4);
-                                                                                    string mtval = stdt.Substring(5, 2);
-                                                                                    string dyval = stdt.Substring(8, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.day = int.Parse(dyval);
-                                                                                }
-                                                                                else if (stdt.Length > 7)
-                                                                                {
-                                                                                    // Format YY-MM-DD
-                                                                                    string yrval = stdt.Substring(0, 2);
-                                                                                    string mtval = stdt.Substring(3, 2);
-                                                                                    string dyval = stdt.Substring(6, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.day = int.Parse(dyval);
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    // Format YY-MM
-                                                                                    string yrval = stdt.Substring(0, 2);
-                                                                                    string mtval = stdt.Substring(3, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.month = int.Parse(mtval);
-                                                                                }
+                                                                                // Start-Date; End-Date
+                                                                                string stdt = dataInfo.Substring(0, dp8);
+                                                                                anvAnstallningar[noOfOccupationData].started.year = 0;
+                                                                                handleDate(stdt, noOfOccupationData, currEnum.Occupation);
+                                                                                dataInfo = dataInfo.Substring(dp8 + 2, dataInfo.Length - dp8 - 2);
+                                                                                anvAnstallningar[noOfOccupationData].ended.year = 0;
+                                                                                handleDate(dataInfo, noOfOccupationData, currEnum.Occupation);
                                                                             }
                                                                             else
                                                                             {
-                                                                                if (stdt.Length > 7)
-                                                                                {
-                                                                                    // Format YYYYMMDD
-                                                                                    string yrval = stdt.Substring(0, 4);
-                                                                                    string mtval = stdt.Substring(4, 2);
-                                                                                    string dyval = stdt.Substring(6, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.day = int.Parse(dyval);
-                                                                                }
-                                                                                else if (stdt.Length > 5)
-                                                                                {
-                                                                                    // Format YYMMDD
-                                                                                    string yrval = stdt.Substring(0, 2);
-                                                                                    string mtval = stdt.Substring(2, 2);
-                                                                                    string dyval = stdt.Substring(4, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.day = int.Parse(dyval);
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    // Format YYYY
-                                                                                    string yrval = stdt.Substring(0, 4);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                }
-                                                                            }
-                                                                            dataInfo = dataInfo.Substring(dp8 + 2, dataInfo.Length - dp8 - 2);
-                                                                            // End-Date
-                                                                            dp9 = dataInfo.IndexOf("-");
-                                                                            if ((dp9 > 0) && (dp9 < stdt.Length - 1))
-                                                                            {
-                                                                                if (dataInfo.Length > 9)
-                                                                                {
-                                                                                    // Format YYYY-MM-DD
-                                                                                    string yrval = dataInfo.Substring(0, 4);
-                                                                                    string mtval = dataInfo.Substring(5, 2);
-                                                                                    string dyval = dataInfo.Substring(8, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.day = int.Parse(dyval);
-                                                                                }
-                                                                                else if (dataInfo.Length > 7)
-                                                                                {
-                                                                                    // Format YY-MM-DD
-                                                                                    string yrval = dataInfo.Substring(0, 2);
-                                                                                    string mtval = dataInfo.Substring(3, 2);
-                                                                                    string dyval = dataInfo.Substring(6, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.day = int.Parse(dyval);
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    // Format YY-MM
-                                                                                    string yrval = dataInfo.Substring(0, 2);
-                                                                                    string mtval = dataInfo.Substring(3, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.month = int.Parse(mtval);
-                                                                                }
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (dataInfo.Length > 7)
-                                                                                {
-                                                                                    // Format YYYYMMDD
-                                                                                    string yrval = dataInfo.Substring(0, 4);
-                                                                                    string mtval = dataInfo.Substring(4, 2);
-                                                                                    string dyval = dataInfo.Substring(6, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.day = int.Parse(dyval);
-                                                                                }
-                                                                                else if (dataInfo.Length > 5)
-                                                                                {
-                                                                                    // Format YYMMDD
-                                                                                    string yrval = dataInfo.Substring(0, 2);
-                                                                                    string mtval = dataInfo.Substring(2, 2);
-                                                                                    string dyval = dataInfo.Substring(4, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.day = int.Parse(dyval);
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    // Format YYYY
-                                                                                    string yrval = dataInfo.Substring(0, 4);
-                                                                                    anvAnstallningar[noOfOccupationData].ended.year = int.Parse(yrval);
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            // Start-Date; End-Date
-                                                                            string stdt = dataInfo.Substring(0, dp8);
-                                                                            int dp81 = stdt.IndexOf("-");
-                                                                            if ((dp81 > 0) && (dp81 < stdt.Length - 1))
-                                                                            {
-                                                                                if (stdt.Length > 9)
-                                                                                {
-                                                                                    // Format YYYY-MM-DD
-                                                                                    string yrval = stdt.Substring(0, 4);
-                                                                                    string mtval = stdt.Substring(5, 2);
-                                                                                    string dyval = stdt.Substring(8, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.day = int.Parse(dyval);
-                                                                                }
-                                                                                else if (dataInfo.Length > 7)
-                                                                                {
-                                                                                    // Format YY-MM-DD
-                                                                                    string yrval = stdt.Substring(0, 2);
-                                                                                    string mtval = stdt.Substring(3, 2);
-                                                                                    string dyval = stdt.Substring(6, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.day = int.Parse(dyval);
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    // Format YY-MM
-                                                                                    string yrval = stdt.Substring(0, 2);
-                                                                                    string mtval = stdt.Substring(3, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.month = int.Parse(mtval);
-                                                                                }
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (dataInfo.Length > 7)
-                                                                                {
-                                                                                    // Format YYYYMMDD
-                                                                                    string yrval = stdt.Substring(0, 4);
-                                                                                    string mtval = stdt.Substring(4, 2);
-                                                                                    string dyval = stdt.Substring(6, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.day = int.Parse(dyval);
-                                                                                }
-                                                                                else if (dataInfo.Length > 5)
-                                                                                {
-                                                                                    // Format YYMMDD
-                                                                                    string yrval = stdt.Substring(0, 2);
-                                                                                    string mtval = stdt.Substring(2, 2);
-                                                                                    string dyval = stdt.Substring(4, 2);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.month = int.Parse(mtval);
-                                                                                    anvAnstallningar[noOfOccupationData].started.day = int.Parse(dyval);
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    // Format YYYY
-                                                                                    string yrval = stdt.Substring(0, 4);
-                                                                                    anvAnstallningar[noOfOccupationData].started.year = int.Parse(yrval);
-                                                                                }
+                                                                                // Start-Date
+                                                                                anvAnstallningar[noOfOccupationData].started.year = 0;
+                                                                                handleDate(dataInfo, noOfOccupationData, currEnum.Occupation);
                                                                             }
                                                                         }
                                                                     }
@@ -2552,7 +2665,7 @@ namespace PhotoEditor00002
                                         noOfOccupationData++;
                                     }
                                 } break;
-                            case "Attended":
+                            case "attended":
                                 {
                                     // Attended : Event ID; Event-Type-tag; Start-Date-Time; End-Date-Time; Role
                                     if (noOfAttendedEventData < maxNoOfAttendedEventData)
@@ -2592,123 +2705,16 @@ namespace PhotoEditor00002
                                                 {
                                                     // Start-Date-Time; End-Date-Time; Role
                                                     string stdt = dataInfo.Substring(0, dp2);
-                                                    int dp21 = stdt.IndexOf("-");
-                                                    if ((dp21 > 0) && (dp21 < stdt.Length - 1))
-                                                    {
-                                                        if (stdt.Length > 9)
-                                                        {
-                                                            // Format YYYY-MM-DD
-                                                            string yrval = stdt.Substring(0, 4);
-                                                            string mtval = stdt.Substring(5, 2);
-                                                            string dyval = stdt.Substring(8, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mtval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(dyval);
-                                                        }
-                                                        else if (stdt.Length > 7)
-                                                        {
-                                                            // Format YY-MM-DD
-                                                            string yrval = stdt.Substring(0, 2);
-                                                            string mtval = stdt.Substring(3, 2);
-                                                            string dyval = stdt.Substring(6, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mtval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(dyval);
-                                                        }
-                                                        else
-                                                        {
-                                                            // Format YY-MM
-                                                            string yrval = stdt.Substring(0, 2);
-                                                            string mtval = stdt.Substring(3, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mtval);
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (stdt.Length > 7)
-                                                        {
-                                                            // Format YYYYMMDD
-                                                            string yrval = stdt.Substring(0, 4);
-                                                            string mtval = stdt.Substring(4, 2);
-                                                            string dyval = stdt.Substring(6, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mtval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(dyval);
-                                                        }
-                                                        else if (stdt.Length > 5)
-                                                        {
-                                                            // Format YYMMDD
-                                                            string yrval = stdt.Substring(0, 2);
-                                                            string mtval = stdt.Substring(2, 2);
-                                                            string dyval = stdt.Substring(4, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mtval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(dyval);
-                                                        }
-                                                        else
-                                                        {
-                                                            // Format YYYY
-                                                            string yrval = stdt.Substring(0, 4);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                        }
-                                                    }
+                                                    anvTillstallningar[noOfAttendedEventData].started.year = 0;
+                                                    handleDate(stdt, noOfAttendedEventData, currEnum.Event);
                                                     dataInfo = dataInfo.Substring(dp2 + 2, dataInfo.Length - dp2 - 2);
                                                     // End-Date;  Role
                                                     int dpp = dataInfo.IndexOf(";");
                                                     if ((dpp > 0) && (dpp < dataInfo.Length - 1))
                                                     {
                                                         string stds = dataInfo.Substring(0, dpp);
-                                                        dp9 = stds.IndexOf("-");
-                                                        if ((dp9 > 0) && (dp9 < stds.Length - 1))
-                                                        {
-                                                            string yrval = stds.Substring(0, dp9);
-                                                            stds = stds.Substring(dp9 + 1, stds.Length - dp9 - 1);
-                                                            dp9 = stds.IndexOf("-");
-                                                            if ((dp9 > 0) && (dp9 < stds.Length - 1))
-                                                            {
-                                                                string mtval = stds.Substring(0, dp9);
-                                                                stds = stds.Substring(dp9 + 1, stds.Length - dp9 - 1);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mtval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(stds);
-                                                            }
-                                                            else
-                                                            {
-                                                                anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(stds);
-                                                            }
-                                                        }
-                                                        else if (stds.Length == 4)
-                                                            anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(stds);
-                                                        else if (stds.Length == 2)
-                                                            anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(stds) + 1900;
-                                                        else if (stds.Length > 7)
-                                                        {
-                                                            // Format YYYYMMDD
-                                                            string yrval = stds.Substring(0, 4);
-                                                            string mtval = stds.Substring(4, 2);
-                                                            string dyval = stds.Substring(6, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mtval);
-                                                            anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(dyval);
-                                                        }
-                                                        else if (stds.Length > 5)
-                                                        {
-                                                            // Format YYMMDD
-                                                            string yrval = stds.Substring(0, 2);
-                                                            string mtval = stds.Substring(2, 2);
-                                                            string dyval = stds.Substring(4, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mtval);
-                                                            anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(dyval);
-                                                        }
-                                                        else
-                                                        {
-                                                            // Format YYYY
-                                                            string yrval = stds.Substring(0, 4);
-                                                            anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                        }
+                                                        anvTillstallningar[noOfAttendedEventData].ended.year = 0;
+                                                        handleDate(stds, noOfAttendedEventData, currEnum.Event);
                                                         dataInfo = dataInfo.Substring(dpp + 2, dataInfo.Length - dpp - 2);
                                                         bool foundRoleCategory = false;
                                                         for (int i = 0; i < noOfRoleCategories; i++)
@@ -2729,140 +2735,28 @@ namespace PhotoEditor00002
                                                     }
                                                     else
                                                     {
-                                                        dp9 = dataInfo.IndexOf("-");
-                                                        if ((dp9 > 0) && (dp9 < dataInfo.Length - 1))
-                                                        {
-                                                            if (dataInfo.Length > 9)
-                                                            {
-                                                                // Format YYYY-MM-DD
-                                                                string yrval = dataInfo.Substring(0, 4);
-                                                                string mtval = dataInfo.Substring(5, 2);
-                                                                string dyval = dataInfo.Substring(8, 2);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mtval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(dyval);
-                                                            }
-                                                            else if (dataInfo.Length > 7)
-                                                            {
-                                                                // Format YY-MM-DD
-                                                                string yrval = dataInfo.Substring(0, 2);
-                                                                string mtval = dataInfo.Substring(3, 2);
-                                                                string dyval = dataInfo.Substring(6, 2);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mtval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(dyval);
-                                                            }
-                                                            else
-                                                            {
-                                                                // Format YY-MM
-                                                                string yrval = dataInfo.Substring(0, 2);
-                                                                string mtval = dataInfo.Substring(3, 2);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mtval);
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (dataInfo.Length > 7)
-                                                            {
-                                                                // Format YYYYMMDD
-                                                                string yrval = dataInfo.Substring(0, 4);
-                                                                string mtval = dataInfo.Substring(4, 2);
-                                                                string dyval = dataInfo.Substring(6, 2);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mtval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(dyval);
-                                                            }
-                                                            else if (dataInfo.Length > 5)
-                                                            {
-                                                                // Format YYMMDD
-                                                                string yrval = dataInfo.Substring(0, 2);
-                                                                string mtval = dataInfo.Substring(2, 2);
-                                                                string dyval = dataInfo.Substring(4, 2);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mtval);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(dyval);
-                                                            }
-                                                            else
-                                                            {
-                                                                // Format YYYY
-                                                                string yrval = dataInfo.Substring(0, 4);
-                                                                anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrval);
-                                                            }
-                                                        }
+                                                        anvTillstallningar[noOfAttendedEventData].ended.year = 0;
+                                                        handleDate(dataInfo, noOfAttendedEventData, currEnum.Event);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    // Start-Date-Time;
-                                                    dp9 = dataInfo.IndexOf("-");
-                                                    if ((dp9 > 0) && (dp9 < dataInfo.Length - 1))
-                                                    {
-                                                        if (dataInfo.Length > 9)
-                                                        {
-                                                            // Format YYYY-MM-DD
-                                                            string yrval = dataInfo.Substring(0, 4);
-                                                            string mtval = dataInfo.Substring(5, 2);
-                                                            string dyval = dataInfo.Substring(8, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mtval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(dyval);
-                                                        }
-                                                        else if (dataInfo.Length > 7)
-                                                        {
-                                                            // Format YY-MM-DD
-                                                            string yrval = dataInfo.Substring(0, 2);
-                                                            string mtval = dataInfo.Substring(3, 2);
-                                                            string dyval = dataInfo.Substring(6, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mtval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(dyval);
-                                                        }
-                                                        else
-                                                        {
-                                                            // Format YY-MM
-                                                            string yrval = dataInfo.Substring(0, 2);
-                                                            string mtval = dataInfo.Substring(3, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mtval);
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (dataInfo.Length > 7)
-                                                        {
-                                                            // Format YYYYMMDD
-                                                            string yrval = dataInfo.Substring(0, 4);
-                                                            string mtval = dataInfo.Substring(4, 2);
-                                                            string dyval = dataInfo.Substring(6, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mtval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(dyval);
-                                                        }
-                                                        else if (dataInfo.Length > 5)
-                                                        {
-                                                            // Format YYMMDD
-                                                            string yrval = dataInfo.Substring(0, 2);
-                                                            string mtval = dataInfo.Substring(2, 2);
-                                                            string dyval = dataInfo.Substring(4, 2);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mtval);
-                                                            anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(dyval);
-                                                        }
-                                                        else
-                                                        {
-                                                            // Format YYYY
-                                                            string yrval = dataInfo.Substring(0, 4);
-                                                            anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrval);
-                                                        }
-                                                    }
+                                                    anvTillstallningar[noOfAttendedEventData].started.year = 0;
+                                                    handleDate(dataInfo, noOfAttendedEventData, currEnum.Event);
                                                 }
                                             }
                                         }
                                         noOfAttendedEventData++;
                                     }
                                 } break;
-                            case "ReltdImg":
+                            case "rootdir ":
+                                {
+                                    if (noOfRootDirs < maxNoOfRootDirs)
+                                    {
+                                        userRootDir[noOfRootDirs++] = dataInfo;
+                                    }
+                                } break;
+                            case "reltdimg":
                                 {
                                     // ReltdImg : Path-Name-ext; Type-Of-Content-Tag; Security-Level
                                     if (noOfRelatedImagesData < maxNoOfRelatedImagesData)
@@ -2914,12 +2808,29 @@ namespace PhotoEditor00002
                                         noOfRelatedImagesData++;
                                     }
                                 } break;
-                            case "National":
+                            case "national":
                                 {
-                                    // National : Nationality-name
+                                    // National : Nationality-name[; tag]
                                     if (noOfNationalityData < maxNoOfNationalityData)
                                     {
-                                        nationality[noOfNationalityData] = dataInfo;
+                                        dp0 = dataInfo.IndexOf(";");
+                                        if ((dp0 > 0) && (dp0 < dataInfo.Length - 1))
+                                        {
+                                            string natnam = dataInfo.Substring(0, dp0);
+                                            string nattag = dataInfo.Substring(dp0 + 2, dataInfo.Length - dp0 - 2);
+                                            Boolean foundItem = false;
+                                            for (int i = 0; i < noOfNationalityCategories; i++)
+                                            {
+                                                if ((nationalityCategories[i].tag == nattag) && (nationalityCategories[i].description == natnam))
+                                                    foundItem = true;
+                                            }
+                                            if (!(foundItem))
+                                                addNationalityCategory(nattag, natnam, "Open");
+                                            anvNationalities[noOfNationalityData].nationName = natnam;
+                                            anvNationalities[noOfNationalityData].nationTag = nattag;
+                                        }
+                                        else
+                                            anvNationalities[noOfNationalityData].nationName = dataInfo;
                                         noOfNationalityData++;
                                     }
                                 } break;
@@ -2935,35 +2846,42 @@ namespace PhotoEditor00002
         {
             bool retVal = false;
             string filename = "";
-            if ((storagePath != "") && (System.IO.Directory.Exists(storagePath)) && 
+            if ((storagePath != "") && (System.IO.File.Exists(storagePath)))
+            {
+                filename = storagePath;
+            }
+            else if ((storagePath != "") && (System.IO.Directory.Exists(storagePath)) &&
                 (System.IO.File.Exists(storagePath + "\\ActorData_" + userID + ".acf")))
             {
                 filename = storagePath + "\\ActorData_" + userID + ".acf";
             }
             else
             {
-                int tnr = scu.IndexOf("\\");
-                if ((tnr > 0) && (tnr < scu.Length - 1))
-                    scu = scu.Substring(tnr + 1, scu.Length - tnr - 1);
-                string rootPath = "C:\\Users\\" + scu + "\\" + sProgPath;
-                filename = rootPath + "\\ActorData\\ActorData_" + userID + ".acf";
+                return false;
             }
             using (System.IO.FileStream afs = System.IO.File.Create(filename))
             {
                 using (System.IO.StreamWriter sw = new System.IO.StreamWriter(afs))
                 {
+                    #region UserId   : <ID>
                     var line = "UserId   : " + this.userId; // + Environment.NewLine;
                     sw.WriteLine(line);
+                    #endregion
+                    #region UserName : <Name>[ <midname>][ <familyname>]; <NameTag>]
                     for (int i = 0; i < this.getNoOfUserNames(); i++)
                     {
                         line = "UserName : " + this.getUserSurName(i) + " " + this.getUserMidName(i) + " " + this.getUserFamName(i) + "; " + this.getUserNameTag(i);
                         sw.WriteLine(line);
                     }
+                    #endregion
+                    #region Contact  : <ContactTypeTag>; <Path>
                     for (int i = 0; i < this.getNoOfUserContacts(); i++)
                     {
                         line = "Contact  : " + this.getUserContactType(i) + "; " + this.getUserContactPath(i);
                         sw.WriteLine(line);
                     }
+                    #endregion
+                    #region BrthData : <StreetName>; <Number>; <AddOn>; <CityName>; <AreaName>; <ZipCode>; <Country>; <Date>; <SocSecNo>; <Gender>; <Latitude>; <Longitude>
                     line = "BrthData : " + this.getUserBirthStreet();
                     line = line + "; " + this.getUserBirthStreetNumber();
                     line = line + "; " + this.getUserBirthStreetNumberAddon();
@@ -2977,18 +2895,24 @@ namespace PhotoEditor00002
                     line = line + "; " + this.getUserBirthLatitude();
                     line = line + "; " + this.getUserBirthLongitude();
                     sw.WriteLine(line);
+                    #endregion
+                    #region SkinTone : <SkinToneTag>; <RedValue>; <GreenValue>; <BlueValue>; <Date>
                     for (int i = 0; i < getNumberOfSkinTones(); i++)
                     {
                         line = "SkinTone : " + getUserSkinToneTag(i) + "; " + getUserSkinToneRedChannel(i) + "; " + getUserSkinToneGreenChannel(i) + "; " + getUserSkinToneBlueChannel(i) + "; " + getUserSkinToneValidDate(i);
                         sw.WriteLine(line);
                     }
-                    line = "RelStats + " + anvAktuellRelation.tag + "; " + anvAktuellRelation.description + "; " + anvAktuellRelation.level.ToString();
+                    #endregion
+                    #region RelStats : <RelationTag>; <Description>; <SecurityLevelTag>
+                    line = "RelStats : " + anvAktuellRelation.tag + "; " + anvAktuellRelation.description + "; " + anvAktuellRelation.level.ToString();
                     sw.WriteLine(line);
+                    #endregion
+                    #region Gender   : <GenderTypeTag>; <Length>; <Circ.>; <UnitTag>; <AppearanceTag>; <BehaviourTag>; <Presentation>; <Date>
                     for (int i = 0; i < getNumberOfGenderData(); i++)
                     {
                         line = "Gender   : " + getUserGenderType(i);
-                        line = line + "; " + getUserGenderLength(i);
-                        line = line + "; " + getUserGenderCircumf(i);
+                        line = line + "; " + getUserGenderLengthValue(i);
+                        line = line + "; " + getUserGenderCircumfValue(i);
                         line = line + "; " + getUserGenderUnit(i);
                         line = line + "; " + getUserGenderAppearance(i);
                         line = line + "; " + getUserGenderBehaviour(i);
@@ -2996,15 +2920,24 @@ namespace PhotoEditor00002
                         line = line + "; " + getUserGenderInfoValidDate(i);
                         sw.WriteLine(line);
                     }
+                    #endregion
+                    #region Weight   : <Value>; <UnitTag>; <Date>
                     for (int i = 0; i < getNumberOfWeightData(); i++)
                     {
-                        // Weight   : Value; unit; Valid-Date
                         line = "Weight   : " + getUserWeightVal(i) + "; " + getUserWeightUnit(i) + "; " + getUserWeightInfoValidDate(i);
                         sw.WriteLine(line);
                     }
+                    #endregion
+                    #region Length  : <Value>; <UnitTag; <date>
+                    for (int i = 0; i < getNumberOfLengthData(); i++)
+                    {
+                        line = "Length   : " + getUserLengthVal(i) + "; " + getUserLengthUnit(i) + "; " + getUserLengthInfoValidDate(i);
+                        sw.WriteLine(line);
+                    }
+                    #endregion
+                    #region Boobs    : <TypeTag>; <Circ.>; <UnitTag>; <SizeTag>; <Date>
                     for (int i = 0; i < getNumberOfChestData(); i++)
                     {
-                        // Boobs    : Type-tag; Circumf; Unit; Size-tag; Valid-Date
                         line = "Boobs    : " + getUserChestType(i);
                         line = line + "; " + getUserChestCircumfVal(i);
                         line = line + "; " + getUserChestCircumfUnit(i);
@@ -3012,55 +2945,26 @@ namespace PhotoEditor00002
                         line = line + "; " + getUserChestInfoValidDate(i);
                         sw.WriteLine(line);
                     }
-                    for (int i = 0; i < getNumberOfFaceData(); i++)
-                    {
-                        // FaceData : Eye-width; Cheekbone-Width; Chin-Width; Mouth-Width; Height; Unit; Valid-Date
-                        line = "FaceData : " + getFaceEyeWidth(i);
-                        line = line + getFaceCheekboneWidth(i);
-                        line = line + getFaceChinWidth(i);
-                        line = line + getFaceMouthWidth(i);
-                        line = line + getFaceHeight(i);
-                        line = line + getFaceUsedUnit(i);
-                        line = line + getFaceInfoValidDate(i);
-                        sw.WriteLine(line);
-                    }
-                    for (int i = 0; i < getNoOfResicenceData(); i++)
-                    {
-                        // Residnce : Streetname; number; additive; City; Area; Zipcode; Country; Purchase; In-Date; Out-Date; Sale; Currency
-                        line = "Residnce : " + getActorResidStrtNme(i);
-                        line = line + "; " + getActorResidStrtNo(i);
-                        line = line + "; " + getActorResidStrtNoAdd(i);
-                        line = line + "; " + getActorResidCity(i);
-                        line = line + "; " + getActorResidZipcode(i);
-                        line = line + "; " + getActorResidCountry(i);
-                        line = line + "; " + getActorResidBoughtVal(i);
-                        line = line + "; " + getActorResidBought(i);
-                        line = line + "; " + getActorResidSold(i);
-                        line = line + "; " + getActorResidSalesVal(i);
-                        line = line + "; " + getActorResidCurrency(i);
-                        sw.WriteLine(line);
-                    }
+                    #endregion
+                    #region HairColr : <ColorTag>; <TextureTag>; <LengthTag>; <Date>
                     for (int i = 0; i < getNumberOfHairData(); i++)
                     {
-                        // HairColr : Color-tag; Texture-tag; Length-tag; Valid-Date
                         line = "HairColr : " + getUserHairColor(i);
                         line = line + "; " + getUserHairTexture(i);
                         line = line + "; " + getUserHairLength(i);
                         line = line + "; " + getUserHairValidDate(i);
                         sw.WriteLine(line);
                     }
-                    for (int i = 0; i < getNumberOfEyeData(); i++)
-                    {
-                        // EyeColor : Color-tag; Form-tag; Valid-Date
-                        line = "EyeColor : " + getUserEyeColorTag(i) + "; " + getUserEyeFormTag(i) + "; " + getUserEyeDataValidDate(i);
-                        sw.WriteLine(line);
-                    }
+                    #endregion
+                    #region MarkData : <TypeTag>; <Place>; <Motif>; <Date>
                     for (int i = 0; i < getNoOfMarkingsData(); i++)
                     {
                         // MarkData : type-tag; placement; Motif; Valid-Date
                         line = "MarkData : " + getActorMarkingType(i) + "; " + getActorMarkingPlace(i) + "; " + getActorMarkingMotif(i) + "; " + getActorMarkingValidDate(i);
                         sw.WriteLine(line);
                     }
+                    #endregion
+                    #region Occupatn : <Title>; <Company>; <Streetname>; <Number>; <State>; <Area>; <ZipCode>; <Country>; <StartDate>[; <EndDate>]
                     for (int i = 0; i < getNoOfOccupationsData(); i++)
                     {
                         // Ocupatn  : Title; Company; Streetname; Number; State; Areaname; Zipcode; Country; Start-Date; End-Date
@@ -3077,6 +2981,47 @@ namespace PhotoEditor00002
                             line = line + "; " + getActorOccupationEnded(i);
                         sw.WriteLine(line);
                     }
+                    #endregion
+                    #region [FaceData : <EyeWidth>; <CheekboneWidth>; <ChinWidth>; <MouthWidth>; <Height>; <UnitTag>; <Date>]
+                    for (int i = 0; i < getNumberOfFaceData(); i++)
+                    {
+                        line = "FaceData : " + getFaceEyeWidth(i);
+                        line = line + getFaceCheekboneWidth(i);
+                        line = line + getFaceChinWidth(i);
+                        line = line + getFaceMouthWidth(i);
+                        line = line + getFaceHeight(i);
+                        line = line + getFaceUsedUnit(i);
+                        line = line + getFaceInfoValidDate(i);
+                        sw.WriteLine(line);
+                    }
+                    #endregion
+                    #region Residnce : <Street>; <No>; <Add>; <City>, <ZipCode>; <Country>; <BoughtFor>; <BoughtDate>; <SaleDate>; <SoldFor>; <CurrencyTag>
+                    for (int i = 0; i < getNoOfResicenceData(); i++)
+                    {
+                        // Residnce : Streetname; number; additive; City; Area; Zipcode; Country; Purchase; In-Date; Out-Date; Sale; Currency
+                        line = "Residnce : " + getActorResidStrtNme(i);
+                        line = line + "; " + getActorResidStrtNo(i);
+                        line = line + "; " + getActorResidStrtNoAdd(i);
+                        line = line + "; " + getActorResidCity(i);
+                        line = line + "; " + getActorResidZipcode(i);
+                        line = line + "; " + getActorResidCountry(i);
+                        line = line + "; " + getActorResidBoughtVal(i);
+                        line = line + "; " + getActorResidBought(i);
+                        line = line + "; " + getActorResidSold(i);
+                        line = line + "; " + getActorResidSalesVal(i);
+                        line = line + "; " + getActorResidCurrency(i);
+                        sw.WriteLine(line);
+                    }
+                    #endregion
+                    #region [EyeColor : <ColorTag>; <EyeFormTag>; <Date>]
+                    for (int i = 0; i < getNumberOfEyeData(); i++)
+                    {
+                        // EyeColor : Color-tag; Form-tag; Valid-Date
+                        line = "EyeColor : " + getUserEyeColorTag(i) + "; " + getUserEyeFormTag(i) + "; " + getUserEyeDataValidDate(i);
+                        sw.WriteLine(line);
+                    }
+                    #endregion
+                    #region Attended : <EventID>; <EventTypeTag>; <StartDateTime>; <EndDateTime>; <RoleTag>
                     for (int i = 0; i < getNoOfAttendedEventsData(); i++)
                     {
                         // Attended : Event ID; Event-Type-tag; Start-Date-Time; End-Date-Time; Role
@@ -3087,19 +3032,31 @@ namespace PhotoEditor00002
                         line = line + "; " + getActorAttendedEventRoleTag(i);
                         sw.WriteLine(line);
                     }
+                    #endregion
+                    #region ReltdImg : <PathNameExt>; <ContentTag>; <SecurityLevelTag>
                     for (int i = 0; i < getNoOfRelatedImages(); i++)
                     {
                         // ReltdImg : Path-Name-ext; Type-Of-Content-Tag; Security-Level
                         line = "ReltdImg : " + getActorRelatedImagePath(i) + "; " + getActorRelatedImageContent(i) + "; " + getActorRelatedImageClass(i);
                         sw.WriteLine(line);
                     }
+                    #endregion
+                    #region RootDir  : <RootPath>
+                    for (int i = 0; i < noOfRootDirs; i++)
+                    {
+                        // RootDir  : root dir path
+                        line = "RootDir  : " + getActorRootDir(i);
+                        sw.WriteLine(line);
+                    }
+                    #endregion
+                    #region [National : <NationalityTag>]
                     for (int i = 0; i < getNoOfNationalityData(); i++)
                     {
                         // National : Nationality-name
                         line = "National : " + getNationalityData(i);
                         sw.WriteLine(line);
                     }
-
+                    #endregion
                     // Last line of this "using"-clause.
                     sw.Close();
                 }
@@ -3107,6 +3064,508 @@ namespace PhotoEditor00002
             }
             return retVal;
         }
+        public int getNoOfBreastSizeStrings() { return BreastSizeStrings.Length; }
+        public string getBreastSizeString(int nr) { return BreastSizeStrings[nr]; }
+        public int getNoOfBreastTypeStrings() { return BreastTypeStrings.Length; }
+        public string getBreastTypeString(int nr) { return BreastTypeStrings[nr]; }
+        public int getNoOfHairTextureStrings() { return HairTextureStrings.Length; }
+        public string getHairTextureString(int nr) { return HairTextureStrings[nr]; }
+        public int getNoOfHairLengthStrings() { return HairLengthStrings.Length; }
+        public string getHairLengthString(int nr) { return HairLengthStrings[nr]; }
+        public int getNoOfSecrecyStrings() { return SecrecyLevelStrings.Length; }
+        public string getSecrecyString(int nr) { return SecrecyLevelStrings[nr]; }
+        public int getNoOfMarkingStrings() { return MarkingsTypeStrings.Length; }
+        public string getMarkingString(int nr) { return MarkingsTypeStrings[nr]; }
+        #region category handling
+        #region EventCategories
+        public int getNoOfEventCategories() { return noOfEventCategories; }
+        public bool addEventCategory(string tag, string description, string level)
+        {
+            bool retVal = false;
+            if (noOfEventCategories < maxNoOfEventCategories)
+            {
+                eventCategories[noOfEventCategories].tag = tag;
+                eventCategories[noOfEventCategories].description = description;
+                if (level == "Open")
+                    eventCategories[noOfEventCategories].level = 1;
+                else if (level == "Limited")
+                    eventCategories[noOfEventCategories].level = 2;
+                else if (level == "Medium")
+                    eventCategories[noOfEventCategories].level = 3;
+                else if (level == "Relative")
+                    eventCategories[noOfEventCategories].level = 4;
+                else if (level == "Secret")
+                    eventCategories[noOfEventCategories].level = 5;
+                else if (level == "QualifSecret")
+                    eventCategories[noOfEventCategories].level = 6;
+                else
+                    eventCategories[noOfEventCategories].level = 0;
+                noOfEventCategories++;
+                retVal = true;
+            }
+            return retVal;
+        }
+        public string getEventCategoryTag(int nr) { return eventCategories[nr].tag; }
+        public string getEventCategoryDescription(int nr) { return eventCategories[nr].description; }
+        public int getEventCategoryLevel(int nr) { return eventCategories[nr].level; }
+        public bool removeEventCategory(int nr)
+        {
+            bool retVal = false;
+            if ((nr <= 0) && (nr < noOfEventCategories))
+            {
+                for (int i = nr; i < noOfEventCategories; i++)
+                {
+                    eventCategories[i].description = eventCategories[i + 1].description;
+                    eventCategories[i].level = eventCategories[i + 1].level;
+                    eventCategories[i].tag = eventCategories[i + 1].tag;
+                    eventCategories[i].value = eventCategories[i + 1].value;
+                }
+                retVal = true;
+                noOfEventCategories--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region ContentCategories
+        public bool addContentCategory(string tag, string description, int level)
+        {
+            bool retVal = false;
+            if (noOfContentCategories < maxNoOfContentCategories)
+            {
+                contentCategories[noOfContentCategories].tag = tag;
+                contentCategories[noOfContentCategories].description = description;
+                contentCategories[noOfContentCategories].level = level;
+                noOfContentCategories++;
+                retVal = true;
+            }
+            return retVal;
+        }
+        public int getNoOfContentCategories() { return noOfContentCategories; }
+        public string getContentCategoryTag(int nr) { return contentCategories[nr].tag; }
+        public string getContentCategoryDescription(int nr) { return contentCategories[nr].description; }
+        public int getContentCateogryLevel(int nr) { return contentCategories[nr].level; }
+        public bool removeContentCategory(int nr)
+        {
+            bool retVal = false;
+            if ((nr <= 0) && (nr < noOfContentCategories))
+            {
+                for (int i = nr; i < noOfContentCategories; i++)
+                {
+                    contentCategories[i].description = contentCategories[i + 1].description;
+                    contentCategories[i].level = contentCategories[i + 1].level;
+                    contentCategories[i].tag = contentCategories[i + 1].tag;
+                    contentCategories[i].value = contentCategories[i + 1].value;
+                }
+                retVal = true;
+                noOfContentCategories--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region ContextCategories
+        public bool addContextCategory(string tag, string desc, string level)
+        {
+            bool retVal = false;
+            if (noOfContextCategories < maxNoOfContextCategories)
+            {
+                contextCategories[noOfContextCategories].tag = tag;
+                contextCategories[noOfContextCategories].description = desc;
+                //Undefined, Open, Limited, Medium, Relative, Secret, QualifSecret
+                if (level == "Open")
+                    contextCategories[noOfContextCategories].level = 1;
+                else if (level == "Limited")
+                    contextCategories[noOfContextCategories].level = 2;
+                else if (level == "Medium")
+                    contextCategories[noOfContextCategories].level = 3;
+                else if (level == "Relative")
+                    contextCategories[noOfContextCategories].level = 4;
+                else if (level == "Secret")
+                    contextCategories[noOfContextCategories].level = 5;
+                else if (level == "QualifSecret")
+                    contextCategories[noOfContextCategories].level = 6;
+                else
+                    contextCategories[noOfContextCategories].level = 0;
+                noOfContextCategories++;
+                retVal = true;
+            }
+            return retVal;
+        }
+        public int getNoOfContextCategories() { return noOfContextCategories; }
+        public string getContextCategoryTag(int nr) { return contextCategories[nr].tag; }
+        public string getContextCategoryDescription(int nr) { return contextCategories[nr].description; }
+        public int getContextCategoryLevel(int nr) { return contextCategories[nr].level; }
+        public bool removeContextCategory(int nr)
+        {
+            bool retVal = false;
+            if ((nr <= 0) && (nr < noOfContextCategories))
+            {
+                for (int i = nr; i < noOfContextCategories; i++)
+                {
+                    contextCategories[i].description = contextCategories[i + 1].description;
+                    contextCategories[i].level = contextCategories[i + 1].level;
+                    contextCategories[i].tag = contextCategories[i + 1].tag;
+                    contextCategories[i].value = contextCategories[i + 1].value;
+                }
+                retVal = true;
+                noOfContextCategories--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region RelationCategories
+        public bool addRelationCategory(string tag, string desc, string level)
+        {
+            bool retVal = false;
+            if (noOfRelationCategories < maxNoOfRelationCategories)
+            {
+                relationCategories[noOfRelationCategories].tag = tag;
+                relationCategories[noOfRelationCategories].description = desc;
+                if (level == "Open")
+                    relationCategories[noOfRelationCategories].level = 1;
+                else if (level == "Limited")
+                    relationCategories[noOfRelationCategories].level = 2;
+                else if (level == "Medium")
+                    relationCategories[noOfRelationCategories].level = 3;
+                else if (level == "Relative")
+                    relationCategories[noOfRelationCategories].level = 4;
+                else if (level == "Secret")
+                    relationCategories[noOfRelationCategories].level = 5;
+                else if (level == "QualifSecret")
+                    relationCategories[noOfRelationCategories].level = 6;
+                else
+                    relationCategories[noOfRelationCategories].level = 0;
+                noOfRelationCategories++;
+                retVal = true;
+            }
+            return retVal;
+        }
+        public int getNoOfRelationCategories() { return noOfRelationCategories; }
+        public string getRelationCategoryTag(int nr) { return relationCategories[nr].tag; }
+        public string getRelationCategoryDescription(int nr) { return relationCategories[nr].description; }
+        public int getRelationCategoryLevel(int nr) { return relationCategories[nr].level; }
+        public bool removeRelationCategory(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfRelationCategories))
+            {
+                for (int i = nr; i < noOfRelationCategories; i++)
+                {
+                    relationCategories[i].description = relationCategories[i + 1].description;
+                    relationCategories[i].level = relationCategories[i + 1].level;
+                    relationCategories[i].tag = relationCategories[i + 1].tag;
+                    relationCategories[i].value = relationCategories[i + 1].value;
+                }
+                retVal = true;
+                noOfRelationCategories--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region NationalityCategories
+        public bool addNationalityCategory(string tag, string desc, string level)
+        {
+            Boolean retVal = false;
+            if (noOfNationalityCategories < maxNoOfNationalityCategories)
+            {
+                nationalityCategories[noOfNationalityCategories].tag = tag;
+                nationalityCategories[noOfNationalityCategories].description = desc;
+                if (level == "Open")
+                    nationalityCategories[noOfNationalityCategories].level = 1;
+                else if (level == "Limited")
+                    nationalityCategories[noOfNationalityCategories].level = 2;
+                else if (level == "Medium")
+                    nationalityCategories[noOfNationalityCategories].level = 3;
+                else if (level == "Relative")
+                    nationalityCategories[noOfNationalityCategories].level = 4;
+                else if (level == "Secret")
+                    nationalityCategories[noOfNationalityCategories].level = 5;
+                else if (level == "QualifSecret")
+                    nationalityCategories[noOfNationalityCategories].level = 6;
+                else
+                    nationalityCategories[noOfNationalityCategories].level = 0;
+                noOfNationalityCategories++;
+                retVal = true;
+            }
+            return retVal;
+        }
+        public int getNoOfNationalityCategories() { return noOfNationalityCategories; }
+        public string getNationalityCategoryTag(int nr) { return nationalityCategories[nr].tag; }
+        public string getNationalityCategoryDescription(int nr) { return nationalityCategories[nr].description; }
+        public int getNationalityCategoryLevel(int nr) { return nationalityCategories[nr].level; }
+        public bool removeNationalityCategory(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfNationalityCategories))
+            { 
+                for (int i = nr; i < noOfNationalityCategories; i++)
+                {
+                    nationalityCategories[i].description = nationalityCategories[i + 1].description;
+                    nationalityCategories[i].level = nationalityCategories[i + 1].level;
+                    nationalityCategories[i].tag = nationalityCategories[i + 1].tag;
+                    nationalityCategories[i].value = nationalityCategories[i + 1].value;
+                }
+                retVal = true;
+                noOfNationalityCategories--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region ComplexionCategories
+        public bool addComplexionCategory(string tag, string desc, string level)
+        {
+            bool retVal = false;
+            if (noOfComplexions < maxNoOfComplexions)
+            {
+                bool foundCategory = false;
+                for (int i = 0; i < maxNoOfComplexionCategories; i++)
+                {
+                    if (tag == complexionCategory[i].tag)
+                        foundCategory = true;
+                }
+                if (!(foundCategory))
+                {
+                    complexionCategory[noOfComplexionCategories].tag = tag;
+                    complexionCategory[noOfComplexionCategories].description = desc;
+                    if (level.ToLower() == "unclassified")
+                        complexionCategory[noOfComplexionCategories].level = 1;
+                    else if (level.ToLower() == "limited")
+                        complexionCategory[noOfComplexionCategories].level = 2;
+                    else if (level.ToLower() == "confidential")
+                        complexionCategory[noOfComplexionCategories].level = 3;
+                    else if (level.ToLower() == "secret")
+                        complexionCategory[noOfComplexionCategories].level = 4;
+                    else if (level.ToLower() == "qualifsecret")
+                        complexionCategory[noOfComplexionCategories].level = 5;
+                    else
+                        complexionCategory[noOfComplexionCategories].level = 0;
+                    retVal = true;
+                    noOfComplexionCategories++;
+                }
+            }
+            return retVal;
+        }
+        public int getNoOfComplexionCategories() { return noOfComplexionCategories; }
+        public string getComplexionCategoryTag(int nr) { return complexionCategory[nr].tag; }
+        public string getComplexionCategoryDescirption(int nr) { return complexionCategory[nr].description; }
+        public int getComplexionCategoryLevel(int nr) { return complexionCategory[nr].level; }
+        public bool removeComplexionCategory(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfComplexionCategories))
+            {
+                for (int i = nr; i < noOfComplexionCategories; i++)
+                {
+                    complexionCategory[i].tag = complexionCategory[i + 1].tag;
+                    complexionCategory[i].description = complexionCategory[i + 1].description;
+                    complexionCategory[i].level = complexionCategory[i + 1].level;
+                    retVal = true;
+                    noOfComplexionCategories--;
+                }
+            }
+            return retVal;
+        }
+        #endregion
+        #region CurrencyCategories
+        public bool addCurrencyCategory(string tag, string desc, string level, double value)
+        {
+            bool retVal = true;
+            if (noOfCurrencyCategories < maxNoOfCurrencyCategories)
+            {
+                currencyCategory[noOfCurrencyCategories].tag = tag;
+                currencyCategory[noOfCurrencyCategories].description = desc;
+                if (level == "Open")
+                    currencyCategory[noOfCurrencyCategories].level = 1;
+                else if (level == "Limited")
+                    currencyCategory[noOfCurrencyCategories].level = 2;
+                else if (level == "Medium")
+                    currencyCategory[noOfCurrencyCategories].level = 3;
+                else if (level == "Relative")
+                    currencyCategory[noOfCurrencyCategories].level = 4;
+                else if (level == "Secret")
+                    currencyCategory[noOfCurrencyCategories].level = 5;
+                else if (level == "QualifSecret")
+                    currencyCategory[noOfCurrencyCategories].level = 6;
+                else
+                    currencyCategory[noOfCurrencyCategories].level = 0;
+                currencyCategory[noOfCurrencyCategories].value = value;
+                noOfCurrencyCategories++;
+                retVal = true;
+            }
+            return retVal;
+        }
+        public int getNoOfCurrencyCategories() { return noOfCurrencyCategories; }
+        public string getCurrencyCategoryTag(int nr) { return currencyCategory[nr].tag; }
+        public string getCurrencyCategoryDescription(int nr) { return currencyCategory[nr].description; }
+        public int getCurrencyCategoryLevel(int nr) { return currencyCategory[nr].level; }
+        public double getCurrencyCategoryValue(int nr) { return currencyCategory[nr].value; }
+        public bool removeCurrencyCategory(int nr)
+        {
+            bool retVal = false;
+            if ((nr <= 0) && (nr < noOfCurrencyCategories))
+            {
+                for (int i = nr; i < noOfCurrencyCategories; i++)
+                {
+                    currencyCategory[i].description = currencyCategory[i + 1].description;
+                    currencyCategory[i].level = currencyCategory[i + 1].level;
+                    currencyCategory[i].tag = currencyCategory[i + 1].tag;
+                    currencyCategory[i].value = currencyCategory[i + 1].value;
+                }
+                retVal = true;
+                noOfCurrencyCategories--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region ContactCategory
+        public bool addContactCategory(string tag, string desc, string level)
+        {
+            bool retVal = false;
+            if (noOfContactCategories < maxNoOfContactCategories)
+            {
+                contactCategory[noOfContactCategories].tag = tag;
+                contactCategory[noOfContactCategories].description = desc; // Egently the path or number to make contact.
+                if (level == "Open")
+                    contactCategory[noOfContactCategories].level = 1;
+                else if (level == "Limited")
+                    contactCategory[noOfContactCategories].level = 2;
+                else if (level == "Medium")
+                    contactCategory[noOfContactCategories].level = 3;
+                else if (level == "Relative")
+                    contactCategory[noOfContactCategories].level = 4;
+                else if (level == "Secret")
+                    contactCategory[noOfContactCategories].level = 5;
+                else if (level == "QualifSecret")
+                    contactCategory[noOfContactCategories].level = 6;
+                else
+                    contactCategory[noOfContactCategories].level = 0;
+                noOfContactCategories++;
+                retVal = true;
+            }
+            return retVal;
+        }
+        public int getNoOfContactCategories() { return noOfContactCategories; }
+        public string getContactCategoryTag(int nr) { return contactCategory[nr].tag; }
+        public string getContactCategoryDescription(int nr) { return contactCategory[nr].description; }
+        public int getContactCategoryLevel(int nr) { return contactCategory[nr].level; }
+        public bool removeContactCategory(int nr)
+        {
+            bool retVal = false;
+            if ((nr <= 0) && (nr < noOfContactCategories))
+            {
+                for (int i = nr; i < noOfContactCategories; i++)
+                {
+                    contactCategory[i].description = contactCategory[i + 1].description;
+                    contactCategory[i].level = contactCategory[i + 1].level;
+                    contactCategory[i].tag = contactCategory[i + 1].tag;
+                    contactCategory[i].value = contactCategory[i + 1].value;
+                }
+                retVal = true;
+                noOfContactCategories--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region HairColorCategory
+        public bool addHairColorCategory(string tag, string desc, string level)
+        {
+            bool retVal = false;
+            if (noOfHairColorCategories < maxNoOfHairColorCategories)
+            {
+                hairColorCategory[noOfHairColorCategories].tag = tag;
+                hairColorCategory[noOfHairColorCategories].description = desc;
+                if (level == "Open")
+                    hairColorCategory[noOfHairColorCategories].level = 1;
+                else if (level == "Limited")
+                    hairColorCategory[noOfHairColorCategories].level = 2;
+                else if (level == "Medium")
+                    hairColorCategory[noOfHairColorCategories].level = 3;
+                else if (level == "Relative")
+                    hairColorCategory[noOfHairColorCategories].level = 4;
+                else if (level == "Secret")
+                    hairColorCategory[noOfHairColorCategories].level = 5;
+                else if (level == "QualifSecret")
+                    hairColorCategory[noOfHairColorCategories].level = 6;
+                else
+                    hairColorCategory[noOfHairColorCategories].level = 0;
+                noOfHairColorCategories++;
+                retVal = true;
+            }
+            return retVal;
+        }
+        public int getNoOfHairColorCategories() { return noOfHairColorCategories; }
+        public string getHairColorCategoryTag(int nr) { return hairColorCategory[nr].tag; }
+        public string getHairColorCategoryDescription(int nr) { return hairColorCategory[nr].description; }
+        public int getHairColorCategoryLevel(int nr) { return hairColorCategory[nr].level; }
+        public bool removeHairColorCategory(int nr)
+        {
+            bool retVal = false;
+            if ((nr <= 0) && (nr < noOfHairColorCategories))
+            {
+                for (int i = nr; i < noOfHairColorCategories; i++)
+                {
+                    hairColorCategory[i].description = hairColorCategory[i + 1].description;
+                    hairColorCategory[i].level = hairColorCategory[i + 1].level;
+                    hairColorCategory[i].tag = hairColorCategory[i + 1].tag;
+                    hairColorCategory[i].value = hairColorCategory[i + 1].value;
+                }
+                retVal = true;
+                noOfHairColorCategories--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region RoleCategory
+        public bool addRoleCategory(string tag, string desc, string level)
+        {
+            bool retVal = false;
+            if (noOfRoleCategories < maxNoOfRoleCategories)
+            {
+                roleCategories[noOfRoleCategories].tag = tag;
+                roleCategories[noOfRoleCategories].description = desc;
+                if (level == "Open")
+                    roleCategories[noOfRoleCategories].level = 1;
+                else if (level == "Limited")
+                    roleCategories[noOfRoleCategories].level = 2;
+                else if (level == "Medium")
+                    roleCategories[noOfRoleCategories].level = 3;
+                else if (level == "Relative")
+                    roleCategories[noOfRoleCategories].level = 4;
+                else if (level == "Secret")
+                    roleCategories[noOfRoleCategories].level = 5;
+                else if (level == "QualifSecret")
+                    roleCategories[noOfRoleCategories].level = 6;
+                else
+                    roleCategories[noOfRoleCategories].level = 0;
+                noOfRoleCategories++;
+                retVal = true;
+            }
+            return retVal;
+        }
+        public int getNoOfRoleCategories() { return noOfRoleCategories; }
+        public string getRoleCategoryTag(int nr) { return roleCategories[nr].tag; }
+        public string getRoleCategoryDescription(int nr) { return roleCategories[nr].description; }
+        public int getRoleCategoryLevel(int nr) { return roleCategories[nr].level; }
+        public bool removeRoleCategory(int nr)
+        {
+            bool retVal = false;
+            if ((nr <= 0) && (nr < noOfRoleCategories))
+            {
+                for (int i = nr; i < noOfRoleCategories; i++)
+                {
+                    roleCategories[i].description = roleCategories[i + 1].description;
+                    roleCategories[i].level = roleCategories[i + 1].level;
+                    roleCategories[i].tag = roleCategories[i + 1].tag;
+                    roleCategories[i].value = roleCategories[i + 1].value;
+                }
+                retVal = true;
+                noOfRoleCategories--;
+            }
+            return retVal;
+        }
+        #endregion
+        #endregion
+        #region names and ID
+        public string getUserId() { return userId; }
         public int getNoOfUserNames() { return noOfNames; }
         public string getUserNameTag(int nr) { return anvNamn[nr].nameType.ToString(); }
         public string getUserSurName(int nr) { return anvNamn[nr].Surname; }
@@ -3117,17 +3576,7 @@ namespace PhotoEditor00002
             if (noOfNames < maxNoOfNames)
             {
                 noOfNames++;
-                if ((type == "Birth") || (type == "birth") || (type == "born"))
-                    anvNamn[noOfNames].nameType = NameType.Birth;
-                else if ((type == "Taken") || (type == "taken"))
-                    anvNamn[noOfNames].nameType = NameType.Taken;
-                else if ((type == "Married") || (type == "married") || (type == "Husbands") || (type == "husbands"))
-                    anvNamn[noOfNames].nameType = NameType.Married;
-                else if ((type == "Alias") || (type == "alias"))
-                    anvNamn[noOfNames].nameType = NameType.Alias;
-                else if ((type == "Nick") || (type == "nick") || (type == "Nickname") || (type == "nickname"))
-                    anvNamn[noOfNames].nameType = NameType.Nickname;
-                else
+                if (!(checkEnumeration(type, noOfNames, currEnum.NmeTp)))
                     anvNamn[noOfNames].nameType = NameType.UndefNameType;
                 anvNamn[noOfNames].Surname = surn;
                 anvNamn[noOfNames].Midname = midn;
@@ -3137,9 +3586,40 @@ namespace PhotoEditor00002
             else
                 return false;
         }
+        public bool removeUserName(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfNames))
+            {
+                for (int i = nr; i < noOfNames; i++)
+                {
+                    anvNamn[i].Famname = anvNamn[i + 1].Famname;
+                    anvNamn[i].Midname = anvNamn[i + 1].Midname;
+                    anvNamn[i].nameType = anvNamn[i + 1].nameType;
+                    anvNamn[i].Surname = anvNamn[i + 1].Surname;
+                }
+                retVal = true;
+                noOfNames--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region contact handling
         public int getNoOfUserContacts() { return noOfContacts; }
-        public string getUserContactType(int nr) { return anvKontakter[nr].type.tag; }
-        public string getUserContactPath(int nr) { return anvKontakter[nr].contactPath; }
+        public string getUserContactType(int nr) 
+        {
+            if ((nr >= 0) && (nr < maxNoOfContacts) && (anvKontakter[nr].type.tag != null))
+                return anvKontakter[nr].type.tag;
+            else
+                return "";
+        }
+        public string getUserContactPath(int nr)
+        {
+            if ((nr >= 0) && (nr < maxNoOfContacts))
+                return anvKontakter[nr].contactPath;
+            else
+                return "";
+        }
         public bool addUserContact(string type, string path)
         {
             if (noOfContacts < maxNoOfContacts)
@@ -3172,6 +3652,23 @@ namespace PhotoEditor00002
             else
                 return false;
         }
+        public bool removeUserContact(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfContacts))
+            {
+                for (int i = nr; i < noOfContacts; i++)
+                {
+                    anvKontakter[i].contactPath = anvKontakter[i + 1].contactPath;
+                    anvKontakter[i].type = anvKontakter[i + 1].type;
+                }
+                retVal = true;
+                noOfContacts--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region birthData
         public string getUserBirthStreet() { return anvFodlseData.brthStreet; }
         public string getUserBirthStreetNumber() { return anvFodlseData.brthStreetNumber.ToString(); }
         public string getUserBirthStreetNumberAddon() { return anvFodlseData.brthStreetNumberAddon; }
@@ -3179,7 +3676,25 @@ namespace PhotoEditor00002
         public string getUserBirthAreaname() { return anvFodlseData.brthAreaname; }
         public string getUserBirthZipcode() { return anvFodlseData.brthZipcode; }
         public string getUserBirthCountry() { return anvFodlseData.brthCountryname; }
-        public string getUserBirthDate() { return anvFodlseData.brthDate.year.ToString() + "-" + anvFodlseData.brthDate.month.ToString() + "-" + anvFodlseData.brthDate.day.ToString(); }
+        public string getUserBirthDate() 
+        {
+            if ((anvFodlseData.brthDate.year > 0) && (anvFodlseData.brthDate.month > 9) && (anvFodlseData.brthDate.day > 9))
+                return anvFodlseData.brthDate.year.ToString() + "-" + anvFodlseData.brthDate.month.ToString() + "-" + anvFodlseData.brthDate.day.ToString();
+            else if ((anvFodlseData.brthDate.year > 0) && (anvFodlseData.brthDate.month > 9) && (anvFodlseData.brthDate.day > 0))
+                return anvFodlseData.brthDate.year.ToString() + "-" + anvFodlseData.brthDate.month.ToString() + "-0" + anvFodlseData.brthDate.day.ToString();
+            else if ((anvFodlseData.brthDate.year > 0) && (anvFodlseData.brthDate.month > 0) && (anvFodlseData.brthDate.day > 9))
+                return anvFodlseData.brthDate.year.ToString() + "-0" + anvFodlseData.brthDate.month.ToString() + "-" + anvFodlseData.brthDate.day.ToString();
+            else if ((anvFodlseData.brthDate.year > 0) && (anvFodlseData.brthDate.month > 0) && (anvFodlseData.brthDate.day > 0))
+                return anvFodlseData.brthDate.year.ToString() + "-0" + anvFodlseData.brthDate.month.ToString() + "-0" + anvFodlseData.brthDate.day.ToString();
+            else if ((anvFodlseData.brthDate.year > 0) && (anvFodlseData.brthDate.month > 9))
+                return anvFodlseData.brthDate.year.ToString() + "-" + anvFodlseData.brthDate.month.ToString();
+            else if ((anvFodlseData.brthDate.year > 0) && (anvFodlseData.brthDate.month > 0))
+                return anvFodlseData.brthDate.year.ToString() + "-0" + anvFodlseData.brthDate.month.ToString();
+            else if (anvFodlseData.brthDate.year > 0)
+                return anvFodlseData.brthDate.year.ToString();
+            else
+                return "";
+        }
         public string getUserBirthSocNo() { return anvFodlseData.brthSecurityCode; }
         public void setUserBirthSocNo(string indata) { anvFodlseData.brthSecurityCode = indata; }
         public string getUserBirthGender() { return anvFodlseData.brthGender.ToString(); }
@@ -3205,10 +3720,8 @@ namespace PhotoEditor00002
                     int semisecint = int.Parse(semisecstr);
                     anvFodlseData.latVal = (degint * 10000) + (minint * 100) + (secint * 1) + (semisecint / 100);
                     string dirstr = indata.Substring(dp + 1, indata.Length - dp - 1);
-                    if ((dirstr == "N") || (dirstr == "n") || (dirstr == "North") || (dirstr == "north"))
-                        anvFodlseData.latDir = GeogrDir.North;
-                    else
-                        anvFodlseData.latDir = GeogrDir.South;
+                    if (!(checkEnumeration(dirstr, 0, currEnum.BrthDta)))
+                        anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                 }
                 else if (dp > 5)
                 {
@@ -3227,10 +3740,8 @@ namespace PhotoEditor00002
                         int semisecint = int.Parse(semisecstr);
                         anvFodlseData.latVal = (degint * 10000) + (minint * 100) + (secint * 1) + (semisecint / 100);
                         string dirstr = tststr1.Substring(dp1 + 1, tststr1.Length - dp1 - 1);
-                        if ((dirstr == "N") || (dirstr == "n") || (dirstr == "North") || (dirstr == "north"))
-                            anvFodlseData.latDir = GeogrDir.North;
-                        else
-                            anvFodlseData.latDir = GeogrDir.South;
+                        if (!(checkEnumeration(dirstr, 0, currEnum.BrthDta)))
+                            anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                     }
                     else
                     {
@@ -3243,10 +3754,8 @@ namespace PhotoEditor00002
                         int secint = int.Parse(secstr);
                         anvFodlseData.latVal = (degint * 10000) + (minint * 100) + (secint * 1);
                         string dirstr = indata.Substring(dp + 1, indata.Length - dp - 1);
-                        if ((dirstr == "N") || (dirstr == "n") || (dirstr == "North") || (dirstr == "north"))
-                            anvFodlseData.latDir = GeogrDir.North;
-                        else
-                            anvFodlseData.latDir = GeogrDir.South;
+                        if (!(checkEnumeration(dirstr, 0, currEnum.BrthDta)))
+                            anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                     }
                 }
                 else if (dp > 3)
@@ -3258,10 +3767,8 @@ namespace PhotoEditor00002
                     int minint = int.Parse(minstr);
                     anvFodlseData.latVal = (degint * 10000) + (minint * 100);
                     string dirstr = indata.Substring(dp + 1, indata.Length - dp - 1);
-                    if ((dirstr == "N") || (dirstr == "n") || (dirstr == "North") || (dirstr == "north"))
-                        anvFodlseData.latDir = GeogrDir.North;
-                    else
-                        anvFodlseData.latDir = GeogrDir.South;
+                    if (!(checkEnumeration(dirstr, 0, currEnum.BrthDta)))
+                        anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                 }
                 else if (dp > 1)
                 {
@@ -3280,10 +3787,8 @@ namespace PhotoEditor00002
                         int degint = int.Parse(degstr);
                         anvFodlseData.latVal = (degint * 10000);
                         string dirstr = indata.Substring(dp + 1, indata.Length - dp - 1);
-                        if ((dirstr == "N") || (dirstr == "n") || (dirstr == "North") || (dirstr == "north"))
-                            anvFodlseData.latDir = GeogrDir.North;
-                        else
-                            anvFodlseData.latDir = GeogrDir.South;
+                        if (!(checkEnumeration(dirstr, 0, currEnum.BrthDta)))
+                            anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                     }
                 }
             }
@@ -3314,39 +3819,31 @@ namespace PhotoEditor00002
                                 int semisecint = int.Parse(indata.Substring(0, dp));
                                 indata = indata.Substring(dp + 1, indata.Length - dp - 1);
                                 anvFodlseData.latVal = (degrint * 10000) + (minint * 100) + (secint * 1) + (semisecint / 100);
-                                if ((indata == "N") || (indata == "n") || (indata == "North") || (indata == "north"))
-                                    anvFodlseData.latDir = GeogrDir.North;
-                                else
-                                    anvFodlseData.latDir = GeogrDir.South;
+                                if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                                    anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                             }
                             else
                             {
                                 // Only degrees, minutes, seconds, and direction
                                 anvFodlseData.latVal = (degrint * 10000) + (minint * 100) + (secint * 1);// + (semisecint / 100);
-                                if ((indata == "N") || (indata == "n") || (indata == "North") || (indata == "north"))
-                                    anvFodlseData.latDir = GeogrDir.North;
-                                else
-                                    anvFodlseData.latDir = GeogrDir.South;
+                                if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                                    anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                             }
                         }
                         else
                         {
                             // Only degrees, minutes, and direction
                             anvFodlseData.latVal = (degrint * 10000) + (minint * 100);// + (secint * 1) + (semisecint / 100);
-                            if ((indata == "N") || (indata == "n") || (indata == "North") || (indata == "north"))
-                                anvFodlseData.latDir = GeogrDir.North;
-                            else
-                                anvFodlseData.latDir = GeogrDir.South;
+                            if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                                anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                         }
                     }
                     else
                     {
                         // Possibly direction
                         anvFodlseData.latVal = (degrint * 10000);// + (minint * 100) + (secint * 1) + (semisecint / 100);
-                        if ((indata == "N") || (indata == "n") || (indata == "North") || (indata == "north"))
-                            anvFodlseData.latDir = GeogrDir.North;
-                        else
-                            anvFodlseData.latDir = GeogrDir.South;
+                        if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                            anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                     }
                 }
             }
@@ -3382,39 +3879,31 @@ namespace PhotoEditor00002
                             int semisecpart = int.Parse(indata.Substring(0, dp));
                             indata = indata.Substring(dp + 1, indata.Length - dp - 1);
                             anvFodlseData.lonVal = (degpart * 10000) + (minpart * 100) + secpart + (semisecpart / 100);
-                            if ((indata == "E") || (indata == "e") || (indata == "East") || (indata == "east"))
-                                anvFodlseData.lonDir = GeogrDir.East;
-                            else
-                                anvFodlseData.lonDir = GeogrDir.West;
+                            if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                                anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                         }
                         else
                         {
                             // Format: DDD.MM.SS [East|east|E|e]|[West|west|W|w]
                             anvFodlseData.lonVal = (degpart * 10000) + (minpart * 100) + secpart;
-                            if ((indata == "E") || (indata == "e") || (indata == "East") || (indata == "east"))
-                                anvFodlseData.lonDir = GeogrDir.East;
-                            else
-                                anvFodlseData.lonDir = GeogrDir.West;
+                            if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                                anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                         }
                     }
                     else
                     {
                         // Format: DDD.MM [East|east|E|e]|[West|west|W|w]
                         anvFodlseData.lonVal = (degpart * 10000) + (minpart * 100);
-                        if ((indata == "E") || (indata == "e") || (indata == "East") || (indata == "east"))
-                            anvFodlseData.lonDir = GeogrDir.East;
-                        else
-                            anvFodlseData.lonDir = GeogrDir.West;
+                        if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                            anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                     }
                 }
                 else
                 {
                     // Format DDD [East|east|E|e]|[West|west|W|w]
                     anvFodlseData.lonVal = (degpart * 10000);
-                    if ((indata == "E") || (indata == "e") || (indata == "East") || (indata == "east"))
-                        anvFodlseData.lonDir = GeogrDir.East;
-                    else
-                        anvFodlseData.lonDir = GeogrDir.West;
+                    if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                        anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                 }
             }
             else
@@ -3445,37 +3934,29 @@ namespace PhotoEditor00002
                                 indata = indata.Substring(dp + 1, indata.Length - dp - 1);
                                 // Format: [East|east|E|e]|[West|west|W|w]
                                 anvFodlseData.lonVal = (degpart * 10000) + (minpart * 100) + secpart + (semisecpart / 100);
-                                if ((indata == "E") || (indata == "e") || (indata == "East") || (indata == "east"))
-                                    anvFodlseData.lonDir = GeogrDir.East;
-                                else
-                                    anvFodlseData.lonDir = GeogrDir.West;
+                                if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                                    anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                             }
                             else
                             {
                                 anvFodlseData.lonVal = (degpart * 10000) + (minpart * 100) + secpart;
-                                if ((indata == "E") || (indata == "e") || (indata == "East") || (indata == "east"))
-                                    anvFodlseData.lonDir = GeogrDir.East;
-                                else
-                                    anvFodlseData.lonDir = GeogrDir.West;
+                                if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                                    anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                             }
                         }
                         else
                         {
                             anvFodlseData.lonVal = (degpart * 10000) + (minpart * 100);
-                            if ((indata == "E") || (indata == "e") || (indata == "East") || (indata == "east"))
-                                anvFodlseData.lonDir = GeogrDir.East;
-                            else
-                                anvFodlseData.lonDir = GeogrDir.West;
+                            if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                                anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                         }
                     }
                     else
                     {
                         // Format: DDD [East|east|E|e]|[West|west|W|w]
                         anvFodlseData.lonVal = (degpart * 10000);
-                        if ((indata == "E") || (indata == "e") || (indata == "East") || (indata == "east"))
-                            anvFodlseData.lonDir = GeogrDir.East;
-                        else
-                            anvFodlseData.lonDir = GeogrDir.West;
+                        if (!(checkEnumeration(indata, 0, currEnum.BrthDta)))
+                            anvFodlseData.latDir = GeogrDir.UndefGeoDir;
                     }
                 }
             }
@@ -3500,58 +3981,11 @@ namespace PhotoEditor00002
         public bool setUserBirthDate(string instr)
         {
             bool retVal = true;
-            int dp0 = instr.IndexOf("-");
-            if ((dp0 > 0) && (dp0 < instr.Length - 1))
-            {
-                // Have "-" in indata
-                // Possible formats: [YYYY-MM-DD(10)|YY-MM-DD(8)|YYYY-MM(7)|YY-MM(5)]
-                string yrstr = instr.Substring(0, dp0);
-                instr = instr.Substring(dp0 + 1, instr.Length - dp0 - 1);
-                dp0 = instr.IndexOf("-");
-                if ((dp0 > 0) && (dp0 < instr.Length - 1))
-                {
-                    string mtstr = instr.Substring(0, dp0);
-                    instr = instr.Substring(dp0 + 1, instr.Length - dp0 - 1);
-                    dp0 = instr.IndexOf("-");
-                    if ((dp0 > 0) && (dp0 < instr.Length - 1))
-                    {
-                        string dystr = instr.Substring(0, dp0);
-                        anvFodlseData.brthDate.day = int.Parse(dystr);
-                    }
-                    else
-                    {
-                        anvFodlseData.brthDate.day = int.Parse(instr);
-                    }
-                    anvFodlseData.brthDate.month = int.Parse(mtstr);
-                }
-                anvFodlseData.brthDate.year = int.Parse(yrstr);
-            }
-            else
-            {
-                // Don't have "-" in indata
-                if (instr.Length > 7)
-                {
-                    // Format YYYYMMDD
-                    string yrstr = instr.Substring(0, 4);
-                    string mtstr = instr.Substring(4, 2);
-                    string dystr = instr.Substring(6, 2);
-                    anvFodlseData.brthDate.year = int.Parse(yrstr);
-                    anvFodlseData.brthDate.month = int.Parse(mtstr);
-                    anvFodlseData.brthDate.day = int.Parse(dystr);
-                }
-                else if (instr.Length > 5)
-                {
-                    // Format YYMMDD
-                    string yrstr = instr.Substring(0, 2);
-                    string mtstr = instr.Substring(2, 2);
-                    string dystr = instr.Substring(4, 2);
-                    anvFodlseData.brthDate.year = int.Parse(yrstr) + 1900;
-                    anvFodlseData.brthDate.month = int.Parse(mtstr);
-                    anvFodlseData.brthDate.day = int.Parse(dystr);
-                }
-            }
+            retVal = handleDate(instr, 0, currEnum.BrthDta);
             return retVal;
         }
+        #endregion
+        #region faceData
         // --- Face data ---
         public int getNumberOfFaceData() { return noOfFaceData; }
         public string getFaceEyeWidth(int nr) { return anvAnsiktsData[nr].eyeWidth.ToString(); }
@@ -3561,10 +3995,83 @@ namespace PhotoEditor00002
         public string getFaceMouthWidth(int nr) { return anvAnsiktsData[nr].mouthWidth.ToString(); }
         public string getFaceHeight(int nr) { return anvAnsiktsData[nr].height.ToString(); }
         public string getFaceUsedUnit(int nr) { return anvAnsiktsData[nr].units.ToString(); }
-        public string getFaceInfoValidDate(int nr) { return anvAnsiktsData[nr].validDate.year.ToString() + "-" + anvAnsiktsData[nr].validDate.month.ToString() + "-" + anvAnsiktsData[nr].validDate.day.ToString(); }
+        public string getFaceInfoValidDate(int nr)
+        {
+            if ((anvAnsiktsData[nr].validDate.year > 0) && (anvAnsiktsData[nr].validDate.month > 9) && (anvAnsiktsData[nr].validDate.day > 9))
+                return anvAnsiktsData[nr].validDate.year.ToString() + "-" + anvAnsiktsData[nr].validDate.month.ToString() + "-" + anvAnsiktsData[nr].validDate.day.ToString();
+            else if ((anvAnsiktsData[nr].validDate.year > 0) && (anvAnsiktsData[nr].validDate.month > 9) && (anvAnsiktsData[nr].validDate.day > 0))
+                return anvAnsiktsData[nr].validDate.year.ToString() + "-" + anvAnsiktsData[nr].validDate.month.ToString() + "-0" + anvAnsiktsData[nr].validDate.day.ToString();
+            else if ((anvAnsiktsData[nr].validDate.year > 0) && (anvAnsiktsData[nr].validDate.month > 0) && (anvAnsiktsData[nr].validDate.day > 9))
+                return anvAnsiktsData[nr].validDate.year.ToString() + "-0" + anvAnsiktsData[nr].validDate.month.ToString() + "-" + anvAnsiktsData[nr].validDate.day.ToString();
+            else if ((anvAnsiktsData[nr].validDate.year > 0) && (anvAnsiktsData[nr].validDate.month > 0) && (anvAnsiktsData[nr].validDate.day > 0))
+                return anvAnsiktsData[nr].validDate.year.ToString() + "-0" + anvAnsiktsData[nr].validDate.month.ToString() + "-0" + anvAnsiktsData[nr].validDate.day.ToString();
+            else if ((anvAnsiktsData[nr].validDate.year > 0) && (anvAnsiktsData[nr].validDate.month > 9))
+                return anvAnsiktsData[nr].validDate.year.ToString() + "-" + anvAnsiktsData[nr].validDate.month.ToString();
+            else if ((anvAnsiktsData[nr].validDate.year > 0) && (anvAnsiktsData[nr].validDate.month > 0))
+                return anvAnsiktsData[nr].validDate.year.ToString() + "-0" + anvAnsiktsData[nr].validDate.month.ToString();
+            else if ((anvAnsiktsData[nr].validDate.year > 0))
+                return anvAnsiktsData[nr].validDate.year.ToString();
+            else
+                return "";
+        }
+        public bool setFaceInfoData(int nr, int ewdt, int cbwdt, int chnwdt, int mthwdt, int fcehgt, string usdunt, string dat)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfFaceData)
+            {
+                anvAnsiktsData[nr].eyeWidth = ewdt;
+                anvAnsiktsData[nr].cheekboneWidth = cbwdt;
+                anvAnsiktsData[nr].chinWidth = chnwdt;
+                anvAnsiktsData[nr].mouthWidth = mthwdt;
+                anvAnsiktsData[nr].height = fcehgt;
+                if (checkEnumeration(usdunt, nr, currEnum.Face))
+                    retVal = handleDate(dat, nr, currEnum.Face);
+            }
+            return retVal;
+        }
+        public bool removeFaceInfoData(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfFaceData))
+            {
+                for (int i = nr; i < noOfFaceData; i++)
+                {
+                    anvAnsiktsData[i].cheekboneWidth = anvAnsiktsData[i + 1].cheekboneWidth;
+                    anvAnsiktsData[i].chinWidth = anvAnsiktsData[i + 1].chinWidth;
+                    anvAnsiktsData[i].eyeWidth = anvAnsiktsData[i + 1].eyeWidth;
+                    anvAnsiktsData[i].height = anvAnsiktsData[i + 1].height;
+                    anvAnsiktsData[i].mouthWidth = anvAnsiktsData[i + 1].mouthWidth;
+                    anvAnsiktsData[i].units = anvAnsiktsData[i + 1].units;
+                    anvAnsiktsData[i].validDate = anvAnsiktsData[i + 1].validDate;
+                }
+                retVal = true;
+                noOfFaceData--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region Etnicity
         // --- Skin tones ---
         public int getNumberOfSkinTones() { return noOfComplexions; }
-        public string getUserSkinToneValidDate(int nr) { return anvHudfarg[nr].validDate.year.ToString() + "-" + anvHudfarg[nr].validDate.month.ToString() + "-" + anvHudfarg[nr].validDate.day.ToString(); }
+        public string getUserSkinToneValidDate(int nr)
+        {
+            if ((anvHudfarg[nr].validDate.year > 0) && (anvHudfarg[nr].validDate.month > 9) && (anvHudfarg[nr].validDate.day > 9))
+                return anvHudfarg[nr].validDate.year.ToString() + "-" + anvHudfarg[nr].validDate.month.ToString() + "-" + anvHudfarg[nr].validDate.day.ToString();
+            else if ((anvHudfarg[nr].validDate.year > 0) && (anvHudfarg[nr].validDate.month > 9) && (anvHudfarg[nr].validDate.day > 0))
+                return anvHudfarg[nr].validDate.year.ToString() + "-" + anvHudfarg[nr].validDate.month.ToString() + "-0" + anvHudfarg[nr].validDate.day.ToString();
+            else if ((anvHudfarg[nr].validDate.year > 0) && (anvHudfarg[nr].validDate.month > 0) && (anvHudfarg[nr].validDate.day > 9))
+                return anvHudfarg[nr].validDate.year.ToString() + "-0" + anvHudfarg[nr].validDate.month.ToString() + "-" + anvHudfarg[nr].validDate.day.ToString();
+            else if ((anvHudfarg[nr].validDate.year > 0) && (anvHudfarg[nr].validDate.month > 0) && (anvHudfarg[nr].validDate.day > 0))
+                return anvHudfarg[nr].validDate.year.ToString() + "-0" + anvHudfarg[nr].validDate.month.ToString() + "-0" + anvHudfarg[nr].validDate.day.ToString();
+            else if ((anvHudfarg[nr].validDate.year > 0) && (anvHudfarg[nr].validDate.month > 9))
+                return anvHudfarg[nr].validDate.year.ToString() + "-" + anvHudfarg[nr].validDate.month.ToString();
+            else if ((anvHudfarg[nr].validDate.year > 0) && (anvHudfarg[nr].validDate.month > 0))
+                return anvHudfarg[nr].validDate.year.ToString() + "-0" + anvHudfarg[nr].validDate.month.ToString();
+            else if ((anvHudfarg[nr].validDate.year > 0))
+                return anvHudfarg[nr].validDate.year.ToString();
+            else
+                return "";
+        }
         public string getUserSkinToneTag(int nr)
         {
             if (anvHudfarg[nr].etnicType == EtnicityType.Asian)
@@ -3589,172 +4096,379 @@ namespace PhotoEditor00002
         public string getUserSkinToneBlueChannel(int nr) { return anvHudfarg[nr].blueChannelValue.ToString(); }
         public bool setUserSkinToneTag(string hf)
         {
-            if ((hf == "Asian") || (hf == "asian"))
-                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Asian;
-            else if ((hf == "Negro") || (hf == "negro") || (hf == "African") || (hf == "african"))
-                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Negro;
-            else if ((hf == "Indian") || (hf == "indian"))
-                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Indian;
-            else if ((hf == "Cocation") || (hf == "cocation") || (hf == "White") || (hf == "white"))
-                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Cocation;
-            else if ((hf == "Mulatto") || (hf == "mulatto") || (hf == "Mixed") || (hf == "mixed"))
-                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Mulatto;
-            else if ((hf == "Mexican") || (hf == "mexican") || (hf == "SouthAmerican") || (hf == "southamerican"))
-                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Mexican;
-            else if ((hf == "Innuit") || (hf == "innuit"))
-                anvHudfarg[noOfComplexions].etnicType = EtnicityType.Innuit;
-            else
+            if (!(checkEnumeration(hf, noOfComplexions, currEnum.Etnicity)))
+            {
                 anvHudfarg[noOfComplexions].etnicType = EtnicityType.UndefEtnicity;
+                return false;
+            }
             return true;
         }
+        public bool setUserSkinTone(int nr, string tag, int rval, int gval, int bval, string dat)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfComplexions)
+            {
+                if (checkEnumeration(tag, nr, currEnum.Etnicity))
+                {
+                    anvHudfarg[nr].redChannelValue = rval;
+                    anvHudfarg[nr].greenChannelValue = gval;
+                    anvHudfarg[nr].blueChannelValue = bval;
+                    retVal = handleDate(dat, nr, currEnum.Etnicity);
+                }
+            }
+            return retVal;
+        }
+        public bool removeUserSkinTone(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfComplexions))
+            {
+                for (int i = nr; i < noOfComplexions; i++)
+                {
+                    anvHudfarg[i].blueChannelValue = anvHudfarg[i + 1].blueChannelValue;
+                    anvHudfarg[i].etnicType = anvHudfarg[i + 1].etnicType;
+                    anvHudfarg[i].greenChannelValue = anvHudfarg[i + 1].greenChannelValue;
+                    anvHudfarg[i].redChannelValue = anvHudfarg[i + 1].redChannelValue;
+                    anvHudfarg[i].validDate = anvHudfarg[i + 1].validDate;
+                }
+                retVal = true;
+                noOfComplexions--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region EyeColor
         // --- Eye Color Data ---
         public int getNumberOfEyeData() { return noOfEyeColorData; }
-        public string getUserEyeColorTag(int nr) { return anvEyes[nr].colorTag; }
-        public string getUserEyeFormTag(int nr) { return anvEyes[nr].formTag; }
-        public string getUserEyeDataValidDate(int nr) { return anvEyes[nr].validDate.year.ToString() + "-" + anvEyes[nr].validDate.month.ToString() + "-" + anvEyes[nr].validDate.day.ToString(); }
-        public bool setUserEyeData(string clr, string frm, string dte)
+        public string getUserEyeColorTag(int nr) { return anvEyes[Math.Max(nr, 0)].colorTag; }
+        public string getUserEyeFormTag(int nr) { return anvEyes[Math.Max(nr, 0)].formTag; }
+        public string getUserEyeDataValidDate(int nr)
+        {
+            if ((anvEyes[nr].validDate.year > 0) && (anvEyes[nr].validDate.month > 9) && (anvEyes[nr].validDate.day > 9))
+                return anvEyes[nr].validDate.year.ToString() + "-" + anvEyes[nr].validDate.month.ToString() + "-" + anvEyes[nr].validDate.day.ToString();
+            else if ((anvEyes[nr].validDate.year > 0) && (anvEyes[nr].validDate.month > 9) && (anvEyes[nr].validDate.day > 0))
+                return anvEyes[nr].validDate.year.ToString() + "-" + anvEyes[nr].validDate.month.ToString() + "-0" + anvEyes[nr].validDate.day.ToString();
+            else if ((anvEyes[nr].validDate.year > 0) && (anvEyes[nr].validDate.month > 0) && (anvEyes[nr].validDate.day > 9))
+                return anvEyes[nr].validDate.year.ToString() + "-0" + anvEyes[nr].validDate.month.ToString() + "-" + anvEyes[nr].validDate.day.ToString();
+            else if ((anvEyes[nr].validDate.year > 0) && (anvEyes[nr].validDate.month > 0) && (anvEyes[nr].validDate.day > 0))
+                return anvEyes[nr].validDate.year.ToString() + "-0" + anvEyes[nr].validDate.month.ToString() + "-0" + anvEyes[nr].validDate.day.ToString();
+            else if ((anvEyes[nr].validDate.year > 0) && (anvEyes[nr].validDate.month > 9))
+                return anvEyes[nr].validDate.year.ToString() + "-" + anvEyes[nr].validDate.month.ToString();
+            else if ((anvEyes[nr].validDate.year > 0) && (anvEyes[nr].validDate.month > 0))
+                return anvEyes[nr].validDate.year.ToString() + "-0" + anvEyes[nr].validDate.month.ToString();
+            else if (anvEyes[nr].validDate.year > 0)
+                return anvEyes[nr].validDate.year.ToString();
+            else
+                return "";
+        }
+        public bool getUserEyeGlasses(int nr) { return anvEyes[nr].glasses; }
+        public bool setUserEyeData(int nr, string clr, string frm, string dte)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfEyeColorData)
+            {
+                anvEyes[nr].colorTag = clr;
+                anvEyes[nr].formTag = frm;
+                retVal = handleDate(dte, nr, currEnum.Eyes);
+            }
+            return retVal;
+        }
+        public bool setUserEyeData(int nr, string clr, string frm, string dte, bool glasses)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfEyeColorData)
+            {
+                anvEyes[nr].colorTag = clr;
+                anvEyes[nr].formTag = frm;
+                retVal = handleDate(dte, nr, currEnum.Eyes);
+                anvEyes[nr].glasses = glasses;
+            }
+            return retVal;
+        }
+        public bool addUserEyeData(string clr, string frm, string dte)
         {
             bool retVal = false;
             if (noOfEyeColorData < maxNoOfEyeColorData)
             {
                 anvEyes[noOfEyeColorData].colorTag = clr;
                 anvEyes[noOfEyeColorData].formTag = frm;
-                int dp0 = dte.IndexOf("-");
-                if ((dp0 > 0) && (dp0 < dte.Length))
+                retVal = handleDate(dte, noOfEyeColorData, currEnum.Eyes);
+                noOfEyeColorData++;
+            }
+            return retVal;
+        }
+        public bool addUserEyeData(string clr, string frm, string dte, bool glasses)
+        {
+            bool retVal = false;
+            if (noOfEyeColorData < maxNoOfEyeColorData)
+            {
+                anvEyes[noOfEyeColorData].colorTag = clr;
+                anvEyes[noOfEyeColorData].formTag = frm;
+                retVal = handleDate(dte, noOfEyeColorData, currEnum.Eyes);
+                anvEyes[noOfEyeColorData].glasses = glasses;
+                noOfEyeColorData++;
+            }
+            return retVal;
+        }
+        public bool removeUserEyeData(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfEyeColorData))
+            {
+                for (int i = nr; i < noOfEyeColorData; i++)
                 {
-                    if (dte.Length > 9)
-                    {
-                        // Format YYYY-MM-DD
-                        string syr = dte.Substring(0, 4);
-                        string smt = dte.Substring(5, 2);
-                        string sdy = dte.Substring(8, 2);
-                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(syr);
-                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(smt);
-                        anvEyes[noOfEyeColorData].validDate.day = int.Parse(sdy);
-                        noOfEyeColorData++;
-                        retVal = true;
-                    }
-                    else if (dte.Length > 7)
-                    {
-                        // Format YY-MM-DD
-                        string syr = dte.Substring(0, 2);
-                        string smt = dte.Substring(3, 2);
-                        string sdy = dte.Substring(6, 2);
-                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(syr) + 1900;
-                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(smt);
-                        anvEyes[noOfEyeColorData].validDate.day = int.Parse(sdy);
-                        noOfEyeColorData++;
-                        retVal = true;
-                    }
-                    else if (dte.Length > 6)
-                    {
-                        // Format YYYY-MM
-                        string syr = dte.Substring(0, 4);
-                        string smt = dte.Substring(5, 2);
-                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(syr);
-                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(smt);
-                        noOfEyeColorData++;
-                        retVal = true;
-                    }
-                    else if (dte.Length > 4)
-                    {
-                        // Format YY-MM
-                        string syr = dte.Substring(0, 2);
-                        string smt = dte.Substring(3, 2);
-                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(syr) + 1900;
-                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(smt);
-                        noOfEyeColorData++;
-                        retVal = true;
-                    }
+                    anvEyes[i].colorTag = anvEyes[i + 1].colorTag;
+                    anvEyes[i].formTag = anvEyes[i + 1].formTag;
+                    anvEyes[i].glasses = anvEyes[i + 1].glasses;
+                    anvEyes[i].validDate = anvEyes[i + 1].validDate;
                 }
-                else
+                retVal = true;
+                noOfEyeColorData--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region GenderData
+        // --- Gender Data ---
+        public int getNumberOfGenderData() { return noOfGenderInfo; }
+        public string getUserGenderType(int nr) { return anvKonsInfo[nr].type.ToString(); }
+        public string getUserGenderLength(int nr) { return anvKonsInfo[nr].length.ToString() + " " + anvKonsInfo[nr].usedUnits.ToString(); }
+        public string getUserGenderLengthValue(int nr) { return anvKonsInfo[nr].length.ToString(); }
+        public string getUserGenderCircumf(int nr) { return anvKonsInfo[nr].circumference.ToString() + " " + anvKonsInfo[nr].usedUnits.ToString(); }
+        public string getUserGenderCircumfValue(int nr) { return anvKonsInfo[nr].circumference.ToString(); }
+        public string getUserGenderUnit(int nr) { return anvKonsInfo[nr].usedUnits.ToString(); }
+        public string getUserGenderAppearance(int nr) { return anvKonsInfo[nr].appearance.ToString(); }
+        public string getUserGenderBehaviour(int nr) { return anvKonsInfo[nr].behaviour.ToString(); }
+        public string getUserGenderPres(int nr)
+        {
+            if (anvKonsInfo[nr].presentation != null)
+                return anvKonsInfo[nr].presentation;
+            else
+                return "";
+        }
+        public string getUserGenderInfoValidDate(int nr) 
+        {
+            if ((anvKonsInfo[nr].validDate.month > 9) && (anvKonsInfo[nr].validDate.day > 9))
+                return anvKonsInfo[nr].validDate.year.ToString() + "-" + anvKonsInfo[nr].validDate.month.ToString() + "-" + anvKonsInfo[nr].validDate.day.ToString();
+            else if ((anvKonsInfo[nr].validDate.month > 9) && (anvKonsInfo[nr].validDate.day > 0))
+                return anvKonsInfo[nr].validDate.year.ToString() + "-" + anvKonsInfo[nr].validDate.month.ToString() + "-0" + anvKonsInfo[nr].validDate.day.ToString();
+            else if ((anvKonsInfo[nr].validDate.month > 0) && (anvKonsInfo[nr].validDate.day > 9))
+                return anvKonsInfo[nr].validDate.year.ToString() + "-0" + anvKonsInfo[nr].validDate.month.ToString() + "-" + anvKonsInfo[nr].validDate.day.ToString();
+            else if ((anvKonsInfo[nr].validDate.month > 0) && (anvKonsInfo[nr].validDate.day > 0))
+                return anvKonsInfo[nr].validDate.year.ToString() + "-0" + anvKonsInfo[nr].validDate.month.ToString() + "-0" + anvKonsInfo[nr].validDate.day.ToString();
+            else if (anvKonsInfo[nr].validDate.month > 9)
+                return anvKonsInfo[nr].validDate.year.ToString() + "-" + anvKonsInfo[nr].validDate.month.ToString();
+            else if (anvKonsInfo[nr].validDate.month > 0)
+                return anvKonsInfo[nr].validDate.year.ToString() + "-0" + anvKonsInfo[nr].validDate.month.ToString();
+            else
+                return anvKonsInfo[nr].validDate.year.ToString();
+        }
+        public bool setUserGenderData(int nr, string gentyp, int lnt, int circ, string unit, string aprnc, string behv, string gprs, string dat)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfGenderInfo)
+            {
+                if(checkEnumeration(gentyp, nr, currEnum.Gender))
                 {
-                    if (dte.Length > 7)
+                    if(checkEnumeration(unit, nr, currEnum.Gender))
                     {
-                        // Format YYYYMMDD
-                        string syr = dte.Substring(0, 4);
-                        string smt = dte.Substring(4, 2);
-                        string sdy = dte.Substring(6, 2);
-                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(syr);
-                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(smt);
-                        anvEyes[noOfEyeColorData].validDate.day = int.Parse(sdy);
-                        noOfEyeColorData++;
-                        retVal = true;
-                    }
-                    else if (dte.Length > 5)
-                    {
-                        // Format YYMMDD
-                        string syr = dte.Substring(0, 2);
-                        string smt = dte.Substring(2, 2);
-                        string sdy = dte.Substring(4, 2);
-                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(syr) + 1900;
-                        anvEyes[noOfEyeColorData].validDate.month = int.Parse(smt);
-                        anvEyes[noOfEyeColorData].validDate.day = int.Parse(sdy);
-                        noOfEyeColorData++;
-                        retVal = true;
-                    }
-                    else if (dte.Length > 3)
-                    {
-                        // Format YYYY
-                        string syr = dte.Substring(0, 4);
-                        anvEyes[noOfEyeColorData].validDate.year = int.Parse(syr);
-                        noOfEyeColorData++;
-                        retVal = true;
+                        if(checkEnumeration(aprnc, nr, currEnum.GenApp))
+                        {
+                            if(checkEnumeration(behv, nr, currEnum.GenBeh))
+                            {
+                                anvKonsInfo[nr].length = lnt;
+                                anvKonsInfo[nr].circumference = circ;
+                                anvKonsInfo[nr].presentation = gprs;
+                                retVal = handleDate(dat, nr, currEnum.Gender);
+                            }
+                        }
                     }
                 }
             }
             return retVal;
         }
-        // --- Gender Data ---
-        public int getNumberOfGenderData() { return noOfGenderInfo; }
-        public string getUserGenderType(int nr) { return anvKonsInfo[nr].type.ToString(); }
-        public string getUserGenderLength(int nr) { return anvKonsInfo[nr].length.ToString() + " " + anvKonsInfo[nr].usedUnits.ToString(); }
-        public string getUserGenderCircumf(int nr) { return anvKonsInfo[nr].circumference.ToString() + " " + anvKonsInfo[nr].usedUnits.ToString(); }
-        public string getUserGenderUnit(int nr) { return anvKonsInfo[nr].usedUnits.ToString(); }
-        public string getUserGenderAppearance(int nr) { return anvKonsInfo[nr].appearance.ToString(); }
-        public string getUserGenderBehaviour(int nr) { return anvKonsInfo[nr].behaviour.ToString(); }
-        public string getUserGenderPres(int nr) { return anvKonsInfo[nr].presentation; }
-        public string getUserGenderInfoValidDate(int nr) 
-        { 
-            if ((anvKonsInfo[nr].validDate.month > 9) && (anvKonsInfo[nr].validDate.day > 9))
-                return anvKonsInfo[nr].validDate.year.ToString() + "-" + anvKonsInfo[nr].validDate.month.ToString() + "-" + anvKonsInfo[nr].validDate.day.ToString(); 
-            else if (anvKonsInfo[nr].validDate.month > 9)
-                return anvKonsInfo[nr].validDate.year.ToString() + "-" + anvKonsInfo[nr].validDate.month.ToString() + "-0" + anvKonsInfo[nr].validDate.day.ToString();
-            else if (anvKonsInfo[nr].validDate.day > 9)
-                return anvKonsInfo[nr].validDate.year.ToString() + "-0" + anvKonsInfo[nr].validDate.month.ToString() + "-" + anvKonsInfo[nr].validDate.day.ToString();
-            else
-                return anvKonsInfo[nr].validDate.year.ToString() + "-0" + anvKonsInfo[nr].validDate.month.ToString() + "-0" + anvKonsInfo[nr].validDate.day.ToString();
+        public bool addUserGenderData(string gentyp, float lnt, float circ, string unit, string aprnc, string behv, string gprs, string dat)
+        {
+            bool retVal = false;
+            if (noOfGenderInfo < maxNoOfGenderInfo)
+            {
+                if (checkEnumeration(gentyp, noOfGenderInfo, currEnum.Gender))
+                {
+                    if (checkEnumeration(unit, noOfGenderInfo, currEnum.Gender))
+                    {
+                        if (checkEnumeration(aprnc, noOfGenderInfo, currEnum.GenApp))
+                        {
+                            if (checkEnumeration(behv, noOfGenderInfo, currEnum.GenBeh))
+                            {
+                                anvKonsInfo[noOfGenderInfo].length = lnt;
+                                anvKonsInfo[noOfGenderInfo].circumference = circ;
+                                anvKonsInfo[noOfGenderInfo].presentation = gprs;
+                                retVal = handleDate(dat, noOfGenderInfo, currEnum.Gender);
+                                noOfGenderInfo++;
+                            }
+                        }
+                    }
+                }
+            }
+            return retVal;
         }
+        public bool removeUserGenderData(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfGenderInfo))
+            {
+                for (int i = nr; i < noOfGenderInfo; i++)
+                {
+                    anvKonsInfo[i].appearance = anvKonsInfo[i + 1].appearance;
+                    anvKonsInfo[i].behaviour = anvKonsInfo[i + 1].behaviour;
+                    anvKonsInfo[i].circumference = anvKonsInfo[i + 1].circumference;
+                    anvKonsInfo[i].length = anvKonsInfo[i + 1].length;
+                    anvKonsInfo[i].presentation = anvKonsInfo[i + 1].presentation;
+                    anvKonsInfo[i].type = anvKonsInfo[i + 1].type;
+                    anvKonsInfo[i].usedUnits = anvKonsInfo[i + 1].usedUnits;
+                    anvKonsInfo[i].validDate = anvKonsInfo[i + 1].validDate;
+                }
+                retVal = true;
+                noOfGenderInfo--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region LengthData
         // --- Length Data ---
         public int getNumberOfLengthData() { return noOfLengthData; }
         public string getUserLengthValue(int nr) { return anvLangdData[nr].value.ToString() + " " + anvLangdData[nr].unit.ToString(); }
+        public string getUserLengthVal(int nr) { return anvLangdData[nr].value.ToString(); }
+        public string getUserLengthUnit(int nr) { return anvLangdData[nr].unit.ToString(); }
         public string getUserLengthInfoValidDate(int nr) 
-        { 
+        {
             if ((anvLangdData[nr].validDate.month > 9) && (anvLangdData[nr].validDate.day > 9))
-                return anvLangdData[nr].validDate.year.ToString() + "-" + anvLangdData[nr].validDate.month.ToString() + "-" + anvLangdData[nr].validDate.day.ToString(); 
-            else if (anvLangdData[nr].validDate.month > 9)
+                return anvLangdData[nr].validDate.year.ToString() + "-" + anvLangdData[nr].validDate.month.ToString() + "-" + anvLangdData[nr].validDate.day.ToString();
+            else if ((anvLangdData[nr].validDate.month > 9) && (anvLangdData[nr].validDate.day > 0))
                 return anvLangdData[nr].validDate.year.ToString() + "-" + anvLangdData[nr].validDate.month.ToString() + "-0" + anvLangdData[nr].validDate.day.ToString();
-            else if (anvLangdData[nr].validDate.day > 9)
+            else if ((anvLangdData[nr].validDate.month > 0) && (anvLangdData[nr].validDate.day > 9))
                 return anvLangdData[nr].validDate.year.ToString() + "-0" + anvLangdData[nr].validDate.month.ToString() + "-" + anvLangdData[nr].validDate.day.ToString();
-            else
+            else if ((anvLangdData[nr].validDate.month > 0) && (anvLangdData[nr].validDate.day > 0))
                 return anvLangdData[nr].validDate.year.ToString() + "-0" + anvLangdData[nr].validDate.month.ToString() + "-0" + anvLangdData[nr].validDate.day.ToString();
+            else if (anvLangdData[nr].validDate.month > 9)
+                return anvLangdData[nr].validDate.year.ToString() + "-" + anvLangdData[nr].validDate.month.ToString();
+            else if (anvLangdData[nr].validDate.month > 0)
+                return anvLangdData[nr].validDate.year.ToString() + "-0" + anvLangdData[nr].validDate.month.ToString();
+            else
+                return anvLangdData[nr].validDate.year.ToString();
         }
+        public bool setUserLength(int nr, float value, string unit, string dat)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfLengthData)
+            {
+                if (checkEnumeration(unit, nr, currEnum.Length))
+                {
+                    anvLangdData[nr].value = value;
+                    retVal = handleDate(dat, nr, currEnum.Length);
+                }
+            }
+            return retVal;
+        }
+        public bool addUserLength(float value, string unit, string dat)
+        {
+            bool retVal = false;
+            if (noOfLengthData < maxNoOfLengthData)
+            {
+                if (checkEnumeration(unit, noOfLengthData, currEnum.Length))
+                {
+                    anvLangdData[noOfLengthData].value = value;
+                    retVal = handleDate(dat, noOfLengthData, currEnum.Length);
+                    noOfLengthData++;
+                }
+            }
+            return retVal;
+        }
+        public bool removeUserLength(int nr)
+        {
+            bool retVal = false;
+            if ((nr < maxNoOfLengthData) && (nr < noOfLengthData - 1))
+            {
+                for (int i = nr; i < maxNoOfLengthData; i++)
+                {
+                    anvLangdData[i].unit = anvLangdData[i + 1].unit;
+                    anvLangdData[i].validDate = anvLangdData[i + 1].validDate;
+                    anvLangdData[i].value = anvLangdData[i + 1].value;
+                }
+                retVal = true;
+                noOfLengthData--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region WeightData
         // --- Weight Data ---
         public int getNumberOfWeightData() { return noOfWeightData; }
         public string getUserWeightValue(int nr) { return anvViktData[nr].value.ToString() + " " + anvViktData[nr].unit.ToString(); }
         public string getUserWeightVal(int nr) { return anvViktData[nr].value.ToString(); }
         public string getUserWeightUnit(int nr) { return anvViktData[nr].unit.ToString(); }
         public string getUserWeightInfoValidDate(int nr) 
-        { 
+        {
             if ((anvViktData[nr].validDate.month > 9) && (anvViktData[nr].validDate.day > 9))
-                return anvViktData[nr].validDate.year.ToString() + "-" + anvViktData[nr].validDate.month.ToString() + "-" + anvViktData[nr].validDate.day.ToString(); 
-            else if (anvViktData[nr].validDate.month > 9)
+                return anvViktData[nr].validDate.year.ToString() + "-" + anvViktData[nr].validDate.month.ToString() + "-" + anvViktData[nr].validDate.day.ToString();
+            else if ((anvViktData[nr].validDate.month > 9) && (anvViktData[nr].validDate.day > 0))
                 return anvViktData[nr].validDate.year.ToString() + "-" + anvViktData[nr].validDate.month.ToString() + "-0" + anvViktData[nr].validDate.day.ToString();
-            else if (anvViktData[nr].validDate.day > 9)
+            else if ((anvViktData[nr].validDate.month > 0) && (anvViktData[nr].validDate.day > 9))
                 return anvViktData[nr].validDate.year.ToString() + "-0" + anvViktData[nr].validDate.month.ToString() + "-" + anvViktData[nr].validDate.day.ToString();
-            else
+            else if ((anvViktData[nr].validDate.month > 0) && (anvViktData[nr].validDate.day > 0))
                 return anvViktData[nr].validDate.year.ToString() + "-0" + anvViktData[nr].validDate.month.ToString() + "-0" + anvViktData[nr].validDate.day.ToString();
+            else if (anvViktData[nr].validDate.month > 9)
+                return anvViktData[nr].validDate.year.ToString() + "-" + anvViktData[nr].validDate.month.ToString();
+            else if (anvViktData[nr].validDate.month > 0)
+                return anvViktData[nr].validDate.year.ToString() + "-0" + anvViktData[nr].validDate.month.ToString();
+            else
+                return anvViktData[nr].validDate.year.ToString();
         }
+        public bool setUserWeightData(int nr, float value, string unit, string date)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfWeightData)
+            {
+                if (checkEnumeration(unit, nr, currEnum.Weight))
+                {
+                    anvViktData[nr].value = value;
+                    retVal = handleDate(date, nr, currEnum.Weight);
+                }
+            }
+            return retVal;
+        }
+        public bool addUserWeightData(float value, string unit, string date)
+        {
+            bool retVal = false;
+            if (noOfWeightData < maxNoOfWeightData)
+            {
+                if (checkEnumeration(unit, noOfWeightData, currEnum.Weight))
+                {
+                    anvViktData[noOfWeightData].value = value;
+                    retVal = handleDate(date, noOfWeightData, currEnum.Weight);
+                    noOfWeightData++;
+                }
+            }
+            return retVal;
+        }
+        public bool removeUserWeightData(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfWeightData) && (nr < maxNoOfWeightData))
+            {
+                for (int i = nr; i < maxNoOfWeightData; i++)
+                {
+                    anvViktData[i].value = anvViktData[i + 1].value;
+                    anvViktData[i].unit = anvViktData[i + 1].unit;
+                    anvViktData[i].validDate = anvViktData[i + 1].validDate;
+                }
+                retVal = true;
+                noOfWeightData--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region ChestData
         // --- Chest Data ---
         public int getNumberOfChestData() { return noOfChestData; }
         public string getUserChestType(int nr) { return anvBrostData[nr].type.ToString(); }
@@ -3763,32 +4477,188 @@ namespace PhotoEditor00002
         public string getUserChestCircumfUnit(int nr) { return anvBrostData[nr].units.ToString(); }
         public string getUserChestSizeType(int nr) { return anvBrostData[nr].sizeType.ToString(); }
         public string getUserChestInfoValidDate(int nr) 
-        { 
+        {
             if ((anvBrostData[nr].validDate.month > 9) && (anvBrostData[nr].validDate.day > 9))
-                return anvBrostData[nr].validDate.year.ToString() + "-" + anvBrostData[nr].validDate.month.ToString() + "-" + anvBrostData[nr].validDate.day.ToString(); 
-            else if (anvBrostData[nr].validDate.month > 9)
+                return anvBrostData[nr].validDate.year.ToString() + "-" + anvBrostData[nr].validDate.month.ToString() + "-" + anvBrostData[nr].validDate.day.ToString();
+            else if ((anvBrostData[nr].validDate.month > 9) && (anvBrostData[nr].validDate.day > 0))
                 return anvBrostData[nr].validDate.year.ToString() + "-" + anvBrostData[nr].validDate.month.ToString() + "-0" + anvBrostData[nr].validDate.day.ToString();
-            else if (anvBrostData[nr].validDate.day > 9)
+            else if ((anvBrostData[nr].validDate.month > 0) && (anvBrostData[nr].validDate.day > 9))
                 return anvBrostData[nr].validDate.year.ToString() + "-0" + anvBrostData[nr].validDate.month.ToString() + "-" + anvBrostData[nr].validDate.day.ToString();
-            else
+            else if ((anvBrostData[nr].validDate.month > 0) && (anvBrostData[nr].validDate.day > 0))
                 return anvBrostData[nr].validDate.year.ToString() + "-0" + anvBrostData[nr].validDate.month.ToString() + "-0" + anvBrostData[nr].validDate.day.ToString();
+            else if (anvBrostData[nr].validDate.month > 9)
+                return anvBrostData[nr].validDate.year.ToString() + "-" + anvBrostData[nr].validDate.month.ToString();
+            else if (anvBrostData[nr].validDate.month > 0)
+                return anvBrostData[nr].validDate.year.ToString() + "-0" + anvBrostData[nr].validDate.month.ToString();
+            else
+                return anvBrostData[nr].validDate.year.ToString();
         }
+        public bool setUserChestData(int nr, string chtp, float circ, string chsztp, string dat)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfChestData)
+            {
+                if (checkEnumeration(chtp, nr, currEnum.BrstTp))
+                {
+                    if (checkEnumeration(chsztp, nr, currEnum.BrstSz))
+                    {
+                        anvBrostData[nr].circumference = circ;
+                        retVal = handleDate(dat, nr, currEnum.BrstTp);
+                    }
+                }
+            }
+            return retVal;
+        }
+        public bool addUserChestData(string chtp, float circ, string unit, string chsztp, string dat)
+        {
+            bool retVal = false;
+            if (noOfChestData < maxNoOfChestData)
+            {
+                if (checkEnumeration(chtp, noOfChestData, currEnum.BrstTp))
+                {
+                    if (checkEnumeration(chsztp, noOfChestData, currEnum.BrstSz))
+                    {
+                        if (checkEnumeration(unit, noOfChestData, currEnum.BrstSz))
+                        {
+                            anvBrostData[noOfChestData].circumference = circ;
+                            retVal = handleDate(dat, noOfChestData, currEnum.BrstTp);
+                        }
+                    }
+                }
+                noOfChestData++;
+            }
+            return retVal;
+        }
+        public bool removeUserChestData(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfChestData))
+            {
+                for (int i = nr; i < noOfChestData; i++)
+                {
+                    anvBrostData[i].type = anvBrostData[i + 1].type;
+                    anvBrostData[i].circumference = anvBrostData[i + 1].circumference;
+                    anvBrostData[i].units = anvBrostData[i + 1].units;
+                    anvBrostData[i].sizeType = anvBrostData[i + 1].sizeType;
+                    anvBrostData[i].validDate = anvBrostData[i + 1].validDate;
+                }
+                retVal = false;
+                noOfChestData--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region HairData
         // --- Hair Data ---
         public int getNumberOfHairData() { return noOfHairData; }
         public string getUserHairColor(int nr) { return anvHaar[nr].hairColor.tag; }
         public string getUserHairTexture(int nr) { return anvHaar[nr].textureTag.ToString(); }
         public string getUserHairLength(int nr) { return anvHaar[nr].lengthTag.ToString(); }
         public string getUserHairValidDate(int nr) 
-        { 
+        {
             if ((anvHaar[nr].validDate.month > 9) && (anvHaar[nr].validDate.day > 9))
-                return anvHaar[nr].validDate.year.ToString() + "-" + anvHaar[nr].validDate.month.ToString() + "-" + anvHaar[nr].validDate.day.ToString(); 
-            else if (anvHaar[nr].validDate.month > 9)
+                return anvHaar[nr].validDate.year.ToString() + "-" + anvHaar[nr].validDate.month.ToString() + "-" + anvHaar[nr].validDate.day.ToString();
+            else if ((anvHaar[nr].validDate.month > 9) && (anvHaar[nr].validDate.month > 0))
                 return anvHaar[nr].validDate.year.ToString() + "-" + anvHaar[nr].validDate.month.ToString() + "-0" + anvHaar[nr].validDate.day.ToString();
-            else if (anvHaar[nr].validDate.day > 9)
+            else if ((anvHaar[nr].validDate.month > 0) && (anvHaar[nr].validDate.day > 9))
                 return anvHaar[nr].validDate.year.ToString() + "-0" + anvHaar[nr].validDate.month.ToString() + "-" + anvHaar[nr].validDate.day.ToString();
-            else
+            else if ((anvHaar[nr].validDate.month > 0) && (anvHaar[nr].validDate.day > 0))
                 return anvHaar[nr].validDate.year.ToString() + "-0" + anvHaar[nr].validDate.month.ToString() + "-0" + anvHaar[nr].validDate.day.ToString();
+            else if (anvHaar[nr].validDate.month > 9)
+                return anvHaar[nr].validDate.year.ToString() + "-" + anvHaar[nr].validDate.month.ToString();
+            else if (anvHaar[nr].validDate.month > 0)
+                return anvHaar[nr].validDate.year.ToString() + "-0" + anvHaar[nr].validDate.month.ToString();
+            else
+                return anvHaar[nr].validDate.year.ToString();
         }
+        public bool setUserHairData(int nr, string clrtg, string txtrtg, string lnttg, string date)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfHairData)
+            {
+                if (checkEnumeration(txtrtg, nr, currEnum.HairText))
+                {
+                    if (checkEnumeration(lnttg, nr, currEnum.HairLnt))
+                    {
+                        bool foundcategory = false;
+                        for (int i = 0; i < noOfHairColorCategories; i++)
+                        {
+                            if (clrtg == hairColorCategory[i].tag)
+                            {
+                                foundcategory = true;
+                                anvHaar[nr].hairColor = hairColorCategory[i];
+                                retVal = true;
+                            }
+                        }
+                        if ((!(foundcategory)) && (noOfHairColorCategories < maxNoOfHairColorCategories))
+                        {
+                            anvHaar[nr].hairColor.tag = clrtg;
+                            anvHaar[nr].hairColor.description = "";
+                            anvHaar[nr].hairColor.level = 0;
+                            addHairColorCategory(clrtg, "", "Undefined");
+                            retVal = true;
+                        }
+                        if (retVal)
+                            retVal = handleDate(date, nr, currEnum.HairLnt);
+                    }
+                }
+            }
+            return retVal;
+        }
+        public bool addUserHairData(string clrtg, string txtrtg, string lnttg, string date)
+        {
+            bool retVal = false;
+            if (noOfHairData < maxNoOfHairData)
+            {
+                if (checkEnumeration(txtrtg, noOfHairData, currEnum.HairText))
+                {
+                    if (checkEnumeration(lnttg, noOfHairData, currEnum.HairLnt))
+                    {
+                        bool foundcategory = false;
+                        for (int i = 0; i < noOfHairColorCategories; i++)
+                        {
+                            if (clrtg == hairColorCategory[i].tag)
+                            {
+                                foundcategory = true;
+                                anvHaar[noOfHairData].hairColor = hairColorCategory[i];
+                                retVal = true;
+                            }
+                        }
+                        if ((!(foundcategory)) && (noOfHairColorCategories < maxNoOfHairColorCategories))
+                        {
+                            anvHaar[noOfHairData].hairColor.tag = clrtg;
+                            anvHaar[noOfHairData].hairColor.description = "";
+                            anvHaar[noOfHairData].hairColor.level = 0;
+                            addHairColorCategory(clrtg, "", "Undefined");
+                            retVal = true;
+                        }
+                        if (retVal)
+                            retVal = handleDate(date, noOfHairData, currEnum.HairLnt);
+                        noOfHairData++;
+                    }
+                }
+            }
+            return retVal;
+        }
+        public bool removeUserHairData(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfHairData))
+            {
+                for (int i = nr; i < noOfHairData; i++)
+                {
+                    anvHaar[i].hairColor.tag = anvHaar[i + 1].hairColor.tag;
+                    anvHaar[i].hairColor.level = anvHaar[i + 1].hairColor.level;
+                    anvHaar[i].hairColor.description = anvHaar[i + 1].hairColor.description;
+                    anvHaar[i].hairColor.value = anvHaar[i + 1].hairColor.value;
+                }
+                retVal = true;
+                noOfHairData--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region MarkingsData
         // --- Markings Data ---
         public int getNoOfMarkingsData() { return noOfMarkingData; }
         public string getActorMarkingType(int nr) { return anvMarkningar[nr].markTag.ToString(); }
@@ -3799,41 +4669,164 @@ namespace PhotoEditor00002
             else
                 return "";
         }
-        public string getActorMarkingMotif(int nr) { return anvMarkningar[nr].motif.ToString(); }
-        public string getActorMarkingValidDate(int nr) 
-        { 
-            if ((anvMarkningar[nr].validDate.month > 9) && (anvMarkningar[nr].validDate.day > 9))
-                return anvMarkningar[nr].validDate.year.ToString() + "-" + anvMarkningar[nr].validDate.month.ToString() + "-" + anvMarkningar[nr].validDate.day.ToString(); 
-            else if (anvMarkningar[nr].validDate.month > 9)
-                return anvMarkningar[nr].validDate.year.ToString() + "-" + anvMarkningar[nr].validDate.month.ToString() + "-0" + anvMarkningar[nr].validDate.day.ToString();
-            else if (anvMarkningar[nr].validDate.day > 9)
-                return anvMarkningar[nr].validDate.year.ToString() + "-0" + anvMarkningar[nr].validDate.month.ToString() + "-" + anvMarkningar[nr].validDate.day.ToString();
+        public string getActorMarkingMotif(int nr)
+        {
+            if ((nr >= 0) && (nr < noOfMarkingData))
+                return anvMarkningar[nr].motif;
             else
-                return anvMarkningar[nr].validDate.year.ToString() + "-0" + anvMarkningar[nr].validDate.month.ToString() + "-0" + anvMarkningar[nr].validDate.day.ToString();
+                return "";
         }
+        public string getActorMarkingValidDate(int nr) 
+        {
+            if ((anvMarkningar[nr].validDate.month > 9) && (anvMarkningar[nr].validDate.day > 9))
+                return anvMarkningar[nr].validDate.year.ToString() + "-" + anvMarkningar[nr].validDate.month.ToString() + "-" + anvMarkningar[nr].validDate.day.ToString();
+            else if ((anvMarkningar[nr].validDate.month > 9) && (anvMarkningar[nr].validDate.day > 0))
+                return anvMarkningar[nr].validDate.year.ToString() + "-" + anvMarkningar[nr].validDate.month.ToString() + "-0" + anvMarkningar[nr].validDate.day.ToString();
+            else if ((anvMarkningar[nr].validDate.month > 0) && (anvMarkningar[nr].validDate.day > 9))
+                return anvMarkningar[nr].validDate.year.ToString() + "-0" + anvMarkningar[nr].validDate.month.ToString() + "-" + anvMarkningar[nr].validDate.day.ToString();
+            else if ((anvMarkningar[nr].validDate.month > 0) && (anvMarkningar[nr].validDate.day > 0))
+                return anvMarkningar[nr].validDate.year.ToString() + "-0" + anvMarkningar[nr].validDate.month.ToString() + "-0" + anvMarkningar[nr].validDate.day.ToString();
+            else if (anvMarkningar[nr].validDate.month > 9)
+                return anvMarkningar[nr].validDate.year.ToString() + "-" + anvMarkningar[nr].validDate.month.ToString();
+            else if (anvMarkningar[nr].validDate.month > 0)
+                return anvMarkningar[nr].validDate.year.ToString() + "-0" + anvMarkningar[nr].validDate.month.ToString();
+            else
+                return anvMarkningar[nr].validDate.year.ToString();
+        }
+        public bool setActorMarkingData(int nr, string typeTag, string placement, string motif, string date)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfMarkingData)
+            {
+                if (checkEnumeration(typeTag, nr, currEnum.MrkTp))
+                {
+                    anvMarkningar[nr].placement = placement;
+                    anvMarkningar[nr].motif = motif;
+                    retVal = handleDate(date, nr, currEnum.MrkTp);
+                }
+            }
+            return retVal;
+        }
+        public bool addActorMarkingData(string typeTag, string placement, string motif, string date)
+        {
+            bool retVal = false;
+            if (noOfMarkingData < maxNoOfMarkingData)
+            {
+                if (checkEnumeration(typeTag, noOfMarkingData, currEnum.MrkTp))
+                {
+                    anvMarkningar[noOfMarkingData].placement = placement;
+                    anvMarkningar[noOfMarkingData].motif = motif;
+                    retVal = handleDate(date, noOfMarkingData, currEnum.MrkTp);
+                    noOfMarkingData++;
+                }
+            }
+            return retVal;
+        }
+        public bool removeActorMarkingData(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfMarkingData))
+            {
+                for (int i = nr; i < noOfMarkingData; i++)
+                {
+                    anvMarkningar[i].markTag = anvMarkningar[i + 1].markTag;
+                    anvMarkningar[i].placement = anvMarkningar[i + 1].placement;
+                    anvMarkningar[i].motif = anvMarkningar[i + 1].motif;
+                    anvMarkningar[i].validDate = anvMarkningar[i + 1].validDate;
+                }
+                noOfMarkingData--;
+                retVal = true;
+            }
+            return retVal;
+        }
+        #endregion
+        #region OccupationData
         // --- Occupation Data ---
         public int getNoOfOccupationsData() { return noOfOccupationData; }
-        public string getActorOccupationTitle(int nr) { return anvAnstallningar[nr].title; }
-        public string getActorOccupationCompany(int nr) { return anvAnstallningar[nr].company; }
-        public string getActorOccupationStreetname(int nr) { return anvAnstallningar[nr].streetname + " " + anvAnstallningar[nr].number.ToString(); }
-        public string getActorOccupationStrtNme(int nr) { return anvAnstallningar[nr].streetname; }
-        public string getActorOccupationStrtNum(int nr) { return anvAnstallningar[nr].number.ToString(); }
-        public string getActorOccupationStatename(int nr) { return anvAnstallningar[nr].statename; }
-        public string getActorOccupationAreaname(int nr) { return anvAnstallningar[nr].areaname; }
-        public string getActorOccupationZipcode(int nr) { return anvAnstallningar[nr].zipcode.ToString(); }
-        public string getActorOccupationCountry(int nr) { return anvAnstallningar[nr].country; }
+        public string getActorOccupationTitle(int nr)
+        {
+            if ((nr >= 0) && (nr < noOfOccupationData))
+                return anvAnstallningar[nr].title;
+            else
+                return "";
+        }
+        public string getActorOccupationCompany(int nr)
+        {
+            if ((nr >= 0) && (nr < noOfOccupationData))
+                return anvAnstallningar[nr].company;
+            else
+                return "";
+        }
+        public string getActorOccupationStreetname(int nr) 
+        {
+            if ((nr >= 0) && (nr < noOfOccupationData))
+                return anvAnstallningar[nr].streetname + " " + anvAnstallningar[nr].number.ToString();
+            else
+                return "";
+        }
+        public string getActorOccupationStrtNme(int nr) 
+        {
+            if ((nr >= 0) && (nr < noOfOccupationData))
+                return anvAnstallningar[nr].streetname;
+            else
+                return "";
+        }
+        public string getActorOccupationStrtNum(int nr) 
+        {
+            if ((nr >= 0) && (nr < noOfOccupationData))
+                return anvAnstallningar[nr].number.ToString();
+            else
+                return "";
+        }
+        public string getActorOccupationStatename(int nr) 
+        {
+            if ((nr >= 0) && (nr < noOfOccupationData))
+                return anvAnstallningar[nr].statename;
+            else
+                return "";
+        }
+        public string getActorOccupationAreaname(int nr) 
+        {
+            if ((nr >= 0) && (nr < noOfOccupationData))
+                return anvAnstallningar[nr].areaname;
+            else
+                return "";
+        }
+        public string getActorOccupationZipcode(int nr) 
+        {
+            if ((nr >= 0) && (nr < noOfOccupationData))
+                return anvAnstallningar[nr].zipcode.ToString();
+            else
+                return "";
+        }
+        public string getActorOccupationCountry(int nr) 
+        {
+            if ((nr >= 0) && (nr < noOfOccupationData))
+                return anvAnstallningar[nr].country;
+            else
+                return "";
+        }
+        public string getActorOccupationCity(int nr) 
+        {
+            if ((nr >= 0) && (nr < noOfOccupationData))
+                return anvAnstallningar[nr].cityname;
+            else
+                return "";
+        }
         public string getActorOccupationStarted(int nr)
         {
             if (anvAnstallningar[nr].started.year > 0)
             {
                 if ((anvAnstallningar[nr].started.month > 9) && (anvAnstallningar[nr].started.day > 9))
                     return anvAnstallningar[nr].started.year.ToString() + "-" + anvAnstallningar[nr].started.month.ToString() + "-" + anvAnstallningar[nr].started.day.ToString();
-                else if (anvAnstallningar[nr].started.month > 9)
+                else if ((anvAnstallningar[nr].started.month > 9) && (anvAnstallningar[nr].started.day > 0))
                     return anvAnstallningar[nr].started.year.ToString() + "-" + anvAnstallningar[nr].started.month.ToString() + "-0" + anvAnstallningar[nr].started.day.ToString();
-                else if (anvAnstallningar[nr].started.day > 9)
+                else if ((anvAnstallningar[nr].started.month > 0) && (anvAnstallningar[nr].started.day > 9))
                     return anvAnstallningar[nr].started.year.ToString() + "-0" + anvAnstallningar[nr].started.month.ToString() + "-" + anvAnstallningar[nr].started.day.ToString();
                 else if ((anvAnstallningar[nr].started.day > 0) && (anvAnstallningar[nr].started.month > 0))
                     return anvAnstallningar[nr].started.year.ToString() + "-0" + anvAnstallningar[nr].started.month.ToString() + "-0" + anvAnstallningar[nr].started.day.ToString();
+                else if (anvAnstallningar[nr].started.month > 9)
+                    return anvAnstallningar[nr].started.year.ToString() + "-" + anvAnstallningar[nr].started.month.ToString();
                 else if (anvAnstallningar[nr].started.month > 0)
                     return anvAnstallningar[nr].started.year.ToString() + "-0" + anvAnstallningar[nr].started.month.ToString();
                 else
@@ -3848,12 +4841,14 @@ namespace PhotoEditor00002
             {
                 if ((anvAnstallningar[nr].ended.month > 9) && (anvAnstallningar[nr].ended.day > 9))
                     return anvAnstallningar[nr].ended.year.ToString() + "-" + anvAnstallningar[nr].ended.month.ToString() + "-" + anvAnstallningar[nr].ended.day.ToString();
-                else if (anvAnstallningar[nr].ended.month > 9)
+                else if ((anvAnstallningar[nr].ended.month > 9) && (anvAnstallningar[nr].ended.day > 0))
                     return anvAnstallningar[nr].ended.year.ToString() + "-" + anvAnstallningar[nr].ended.month.ToString() + "-0" + anvAnstallningar[nr].ended.day.ToString();
-                else if (anvAnstallningar[nr].ended.day > 9)
+                else if ((anvAnstallningar[nr].ended.month > 0) && (anvAnstallningar[nr].ended.day > 9))
                     return anvAnstallningar[nr].ended.year.ToString() + "-0" + anvAnstallningar[nr].ended.month.ToString() + "-" + anvAnstallningar[nr].ended.day.ToString();
                 else if ((anvAnstallningar[nr].ended.month > 0) && (anvAnstallningar[nr].ended.month > 0))
                     return anvAnstallningar[nr].ended.year.ToString() + "-0" + anvAnstallningar[nr].ended.month.ToString() + "-0" + anvAnstallningar[nr].ended.day.ToString();
+                else if (anvAnstallningar[nr].ended.month > 9)
+                    return anvAnstallningar[nr].ended.year.ToString() + "-" + anvAnstallningar[nr].ended.month.ToString();
                 else if (anvAnstallningar[nr].ended.month > 0)
                     return anvAnstallningar[nr].ended.year.ToString() + "-0" + anvAnstallningar[nr].ended.month.ToString();
                 else
@@ -3863,7 +4858,7 @@ namespace PhotoEditor00002
             else
                 return "";
         }
-        public bool setActorOccupationData(string title, string company, string street, string state, string area, string zipcode, string country, string start, string end)
+        public bool addActorOccupationData(string title, string company, string street, string city, string state, string area, string zipcode, string country, string start, string end)
         {
             bool retVal = false;
             if (noOfOccupationData < maxNoOfOccupationData)
@@ -3880,148 +4875,74 @@ namespace PhotoEditor00002
                 }
                 else
                     anvAnstallningar[noOfOccupationData].streetname = street;
+                anvAnstallningar[noOfOccupationData].cityname = city;
                 anvAnstallningar[noOfOccupationData].statename = state;
                 anvAnstallningar[noOfOccupationData].zipcode = int.Parse(zipcode);
                 anvAnstallningar[noOfOccupationData].country = country;
-                dp0 = start.IndexOf("-");
-                if ((dp0 > 0) && (dp0 < start.Length))
-                {
-                    if (start.Length > 9)
-                    {
-                        // Format YYYY-MM-DD
-                        string syr = start.Substring(0, 4);
-                        string smt = start.Substring(5, 2);
-                        string sdy = start.Substring(8, 2);
-                        anvAnstallningar[noOfOccupationData].started.year = int.Parse(syr);
-                        anvAnstallningar[noOfOccupationData].started.month = int.Parse(smt);
-                        anvAnstallningar[noOfOccupationData].started.day = int.Parse(sdy);
-                        retVal = true;
-                    }
-                    else if (start.Length > 7)
-                    {
-                        // Format YY-MM-DD
-                        string syr = start.Substring(0, 2);
-                        string smt = start.Substring(3, 2);
-                        string sdy = start.Substring(6, 2);
-                        anvAnstallningar[noOfOccupationData].started.year = int.Parse(syr) + 1900;
-                        anvAnstallningar[noOfOccupationData].started.month = int.Parse(smt);
-                        anvAnstallningar[noOfOccupationData].started.day = int.Parse(sdy);
-                        retVal = true;
-                    }
-                    else if (start.Length > 4)
-                    {
-                        // Format YY-MM
-                        string syr = start.Substring(0, 2);
-                        string smt = start.Substring(3, 2);
-                        anvAnstallningar[noOfOccupationData].started.year = int.Parse(syr) + 1900;
-                        anvAnstallningar[noOfOccupationData].started.month = int.Parse(smt);
-                        retVal = true;
-                    }
-                }
-                else
-                {
-                    if (start.Length > 7)
-                    {
-                        // Format YYYYMMDD
-                        string syr = start.Substring(0, 4);
-                        string smt = start.Substring(4, 2);
-                        string sdy = start.Substring(6, 2);
-                        anvAnstallningar[noOfOccupationData].started.year = int.Parse(syr);
-                        anvAnstallningar[noOfOccupationData].started.month = int.Parse(smt);
-                        anvAnstallningar[noOfOccupationData].started.day = int.Parse(sdy);
-                        retVal = true;
-                    }
-                    else if (start.Length > 5)
-                    {
-                        // Format YYMMDD
-                        string syr = start.Substring(0, 2);
-                        string smt = start.Substring(2, 2);
-                        string sdy = start.Substring(4, 2);
-                        anvAnstallningar[noOfOccupationData].started.year = int.Parse(syr) + 1900;
-                        anvAnstallningar[noOfOccupationData].started.month = int.Parse(smt);
-                        anvAnstallningar[noOfOccupationData].started.day = int.Parse(sdy);
-                        retVal = true;
-                    }
-                    else if (start.Length > 3)
-                    {
-                        // Format YYYY
-                        string syr = start.Substring(0, 4);
-                        anvAnstallningar[noOfOccupationData].started.year = int.Parse(syr);
-                        retVal = true;
-                    }
-                }
-                dp0 = end.IndexOf("-");
-                if ((dp0 > 0) && (dp0 < end.Length))
-                {
-                    if (end.Length > 9)
-                    {
-                        // Format YYYY-MM-DD
-                        string syr = end.Substring(0, 4);
-                        string smt = end.Substring(5, 2);
-                        string sdy = end.Substring(8, 2);
-                        anvAnstallningar[noOfOccupationData].ended.year = int.Parse(syr);
-                        anvAnstallningar[noOfOccupationData].ended.month = int.Parse(smt);
-                        anvAnstallningar[noOfOccupationData].ended.day = int.Parse(sdy);
-                        retVal = true;
-                    }
-                    else if (end.Length > 7)
-                    {
-                        // Format YY-MM-DD
-                        string syr = end.Substring(0, 2);
-                        string smt = end.Substring(3, 2);
-                        string sdy = end.Substring(6, 2);
-                        anvAnstallningar[noOfOccupationData].ended.year = int.Parse(syr) + 1900;
-                        anvAnstallningar[noOfOccupationData].ended.month = int.Parse(smt);
-                        anvAnstallningar[noOfOccupationData].ended.day = int.Parse(sdy);
-                        retVal = true;
-                    }
-                    else if (end.Length > 4)
-                    {
-                        // Format YY-MM
-                        string syr = start.Substring(0, 2);
-                        string smt = start.Substring(3, 2);
-                        anvAnstallningar[noOfOccupationData].ended.year = int.Parse(syr) + 1900;
-                        anvAnstallningar[noOfOccupationData].ended.month = int.Parse(smt);
-                        retVal = true;
-                    }
-                }
-                else
-                {
-                    if (end.Length > 7)
-                    {
-                        // Format YYYYMMDD
-                        string syr = end.Substring(0, 4);
-                        string smt = end.Substring(4, 2);
-                        string sdy = end.Substring(6, 2);
-                        anvAnstallningar[noOfOccupationData].ended.year = int.Parse(syr);
-                        anvAnstallningar[noOfOccupationData].ended.month = int.Parse(smt);
-                        anvAnstallningar[noOfOccupationData].ended.day = int.Parse(sdy);
-                        retVal = true;
-                    }
-                    else if (end.Length > 5)
-                    {
-                        // Format YYMMDD
-                        string syr = end.Substring(0, 2);
-                        string smt = end.Substring(2, 2);
-                        string sdy = end.Substring(4, 2);
-                        anvAnstallningar[noOfOccupationData].ended.year = int.Parse(syr) + 1900;
-                        anvAnstallningar[noOfOccupationData].ended.month = int.Parse(smt);
-                        anvAnstallningar[noOfOccupationData].ended.day = int.Parse(sdy);
-                        retVal = true;
-                    }
-                    else if (end.Length > 3)
-                    {
-                        // Format YYYY
-                        string syr = end.Substring(0, 4);
-                        anvAnstallningar[noOfOccupationData].ended.year = int.Parse(syr);
-                        retVal = true;
-                    }
-                }
+                anvAnstallningar[noOfOccupationData].started.year = 0;
+                handleDate(start, noOfOccupationData, currEnum.Occupation);
+                anvAnstallningar[noOfOccupationData].ended.year = 0;
+                handleDate(end, noOfOccupationData, currEnum.Occupation);
                 noOfOccupationData++;
                 retVal = true;
             }
             return retVal;
         }
+        public bool settingActorOccupationData(int nr, string title, string company, string street, string city, string state, string area, string zipcode, string country, string start, string end)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfOccupationData)
+            {
+                anvAnstallningar[nr].title = title;
+                anvAnstallningar[nr].company = company;
+                int dp0 = street.IndexOf(" ");
+                if ((dp0 > 0) && (dp0 < street.Length))
+                {
+                    string strt = street.Substring(0, dp0);
+                    anvAnstallningar[nr].streetname = strt;
+                    string nmbr = street.Substring(dp0 + 1, street.Length - dp0 - 1);
+                    anvAnstallningar[nr].number = int.Parse(nmbr);
+                }
+                else
+                    anvAnstallningar[nr].streetname = street;
+                anvAnstallningar[nr].cityname = city;
+                anvAnstallningar[nr].statename = state;
+                anvAnstallningar[nr].zipcode = int.Parse(zipcode);
+                anvAnstallningar[nr].country = country;
+                anvAnstallningar[nr].started.year = 0;
+                handleDate(start, nr, currEnum.Occupation);
+                anvAnstallningar[nr].ended.year = 0;
+                handleDate(end, nr, currEnum.Occupation);
+                retVal = true;
+            }
+            return retVal;
+        }
+        public bool removeActorOccupationData(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfOccupationData))
+            {
+                for (int i = nr; i < noOfOccupationData; i++)
+                {
+                    anvAnstallningar[i].title = anvAnstallningar[i + 1].title;
+                    anvAnstallningar[i].company = anvAnstallningar[i + 1].company;
+                    anvAnstallningar[i].streetname = anvAnstallningar[i + 1].streetname;
+                    anvAnstallningar[i].number = anvAnstallningar[i + 1].number;
+                    anvAnstallningar[i].cityname = anvAnstallningar[i + 1].cityname;
+                    anvAnstallningar[i].statename = anvAnstallningar[i + 1].statename;
+                    anvAnstallningar[i].areaname = anvAnstallningar[i + 1].areaname;
+                    anvAnstallningar[i].country = anvAnstallningar[i + 1].country;
+                    anvAnstallningar[i].ended = anvAnstallningar[i + 1].ended;
+                    anvAnstallningar[i].started = anvAnstallningar[i + 1].started;
+                    anvAnstallningar[i].zipcode = anvAnstallningar[i + 1].zipcode;
+                }
+                retVal = true;
+                noOfOccupationData--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region ResicenceData
         // --- Residence Data ---
         public int getNoOfResicenceData() { return noOfResidences; }
         public string getActorResidStreetname(int nr) { return anvBostader[nr].streetname + " " + anvBostader[nr].number.ToString() + anvBostader[nr].additive; }
@@ -4038,12 +4959,14 @@ namespace PhotoEditor00002
             {
                 if ((anvBostader[nr].boughtDate.month > 9) && (anvBostader[nr].boughtDate.day > 9))
                     return anvBostader[nr].boughtDate.year.ToString() + "-" + anvBostader[nr].boughtDate.month.ToString() + "-" + anvBostader[nr].boughtDate.day.ToString();
-                else if (anvBostader[nr].boughtDate.month > 9)
+                else if ((anvBostader[nr].boughtDate.month > 9) && (anvBostader[nr].boughtDate.day > 0))
                     return anvBostader[nr].boughtDate.year.ToString() + "-" + anvBostader[nr].boughtDate.month.ToString() + "-0" + anvBostader[nr].boughtDate.day.ToString();
-                else if (anvBostader[nr].boughtDate.day > 9)
+                else if ((anvBostader[nr].boughtDate.month > 0) && (anvBostader[nr].boughtDate.day > 9))
                     return anvBostader[nr].boughtDate.year.ToString() + "-0" + anvBostader[nr].boughtDate.month.ToString() + "-" + anvBostader[nr].boughtDate.day.ToString();
                 else if ((anvBostader[nr].boughtDate.month > 0) && (anvBostader[nr].boughtDate.day > 0))
                     return anvBostader[nr].boughtDate.year.ToString() + "-0" + anvBostader[nr].boughtDate.month.ToString() + "-0" + anvBostader[nr].boughtDate.day.ToString();
+                else if (anvBostader[nr].boughtDate.month > 9)
+                    return anvBostader[nr].boughtDate.year.ToString() + "-" + anvBostader[nr].boughtDate.month.ToString();
                 else if (anvBostader[nr].boughtDate.month > 0)
                     return anvBostader[nr].boughtDate.year.ToString() + "-0" + anvBostader[nr].boughtDate.month.ToString();
                 else
@@ -4056,12 +4979,14 @@ namespace PhotoEditor00002
         { 
             if ((anvBostader[nr].salesDate.month > 9) && (anvBostader[nr].salesDate.day > 9))
                 return anvBostader[nr].salesDate.year.ToString() + "-" + anvBostader[nr].salesDate.month.ToString() + "-" + anvBostader[nr].salesDate.day.ToString();
-            else if (anvBostader[nr].salesDate.month > 9)
+            else if ((anvBostader[nr].salesDate.month > 9) && (anvBostader[nr].salesDate.day > 0))
                 return anvBostader[nr].salesDate.year.ToString() + "-" + anvBostader[nr].salesDate.month.ToString() + "-0" + anvBostader[nr].salesDate.day.ToString();
-            else if (anvBostader[nr].salesDate.day > 9)
+            else if ((anvBostader[nr].salesDate.month > 0) && (anvBostader[nr].salesDate.day > 9))
                 return anvBostader[nr].salesDate.year.ToString() + "-0" + anvBostader[nr].salesDate.month.ToString() + "-" + anvBostader[nr].salesDate.day.ToString();
             else if ((anvBostader[nr].salesDate.month > 0) && (anvBostader[nr].salesDate.day > 0))
                 return anvBostader[nr].salesDate.year.ToString() + "-0" + anvBostader[nr].salesDate.month.ToString() + "-0" + anvBostader[nr].salesDate.day.ToString();
+            else if (anvBostader[nr].salesDate.month > 9)
+                return anvBostader[nr].salesDate.year.ToString() + "-" + anvBostader[nr].salesDate.month.ToString();
             else if (anvBostader[nr].salesDate.month > 0)
                 return anvBostader[nr].salesDate.year.ToString() + "-0" + anvBostader[nr].salesDate.month.ToString();
             else
@@ -4072,36 +4997,160 @@ namespace PhotoEditor00002
         public string getActorResidSalesValue(int nr) { return anvBostader[nr].salesValue.ToString() + " " + anvBostader[nr].usedCurrency.tag; }
         public string getActorResidSalesVal(int nr) { return anvBostader[nr].salesValue.ToString(); }
         public string getActorResidCurrency(int nr) { return anvBostader[nr].usedCurrency.tag; }
+        public bool setActorResidenceData(int nr, string streetname, int number, string addon, string cityname, string areaname, int zipCode, string country, string bought, string sold, float boughtSum, float salesSum, string currency)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfResidences)
+            {
+                anvBostader[nr].boughtDate.year = 0;
+                if (handleDate(bought, nr, currEnum.Residence))
+                {
+                    anvBostader[nr].streetname = streetname;
+                    anvBostader[nr].number = number;
+                    anvBostader[nr].additive = addon;
+                    anvBostader[nr].city = cityname;
+                    anvBostader[nr].area = areaname;
+                    anvBostader[nr].zipcode = zipCode;
+                    anvBostader[nr].country = country;
+                    // string sold, float boughtSum, float salesSum, string currency
+                    anvBostader[nr].salesDate.year = 0;
+                    anvBostader[nr].boughtValue = boughtSum;
+                    if (handleDate(sold, nr, currEnum.Residence))
+                        anvBostader[nr].salesValue = salesSum;
+                    bool foundcurrency = false;
+                    for (int i = 0; i < maxNoOfCurrencyCategories; i++)
+                    {
+                        if (currencyCategory[i].tag == currency)
+                        {
+                            anvBostader[nr].usedCurrency = currencyCategory[i];
+                            foundcurrency = true;
+                        }
+                    }
+                    if ((!(foundcurrency)) && (noOfCurrencyCategories < maxNoOfCurrencyCategories))
+                    {
+                        anvBostader[nr].usedCurrency.tag = currency;
+                        anvBostader[nr].usedCurrency.description = "";
+                        anvBostader[nr].usedCurrency.level = 0;
+                        addCurrencyCategory(currency, "", "Undefiled", 0);
+                    }
+                    retVal = true;
+                }
+            }
+            return retVal;
+        }
+        public bool addActorResidenceData(string streetname, int number, string addon, string cityname, string areaname, int zipCode, string country, string bought, string sold, float boughtSum, float salesSum, string currency)
+        {
+            bool retVal = false;
+            if (noOfResidences < maxNoOfResidences)
+            {
+                anvBostader[noOfResidences].boughtDate.year = 0;
+                if (handleDate(bought, noOfResidences, currEnum.Residence))
+                {
+                    anvBostader[noOfResidences].streetname = streetname;
+                    anvBostader[noOfResidences].number = number;
+                    anvBostader[noOfResidences].additive = addon;
+                    anvBostader[noOfResidences].city = cityname;
+                    anvBostader[noOfResidences].area = areaname;
+                    anvBostader[noOfResidences].zipcode = zipCode;
+                    anvBostader[noOfResidences].country = country;
+                    // string sold, float boughtSum, float salesSum, string currency
+                    anvBostader[noOfResidences].salesDate.year = 0;
+                    anvBostader[noOfResidences].boughtValue = boughtSum;
+                    if (handleDate(sold, noOfResidences, currEnum.Residence))
+                        anvBostader[noOfResidences].salesValue = salesSum;
+                    else
+                        anvBostader[noOfResidences].salesValue = 0;
+                    bool foundcurrency = false;
+                    for (int i = 0; i < maxNoOfCurrencyCategories; i++)
+                    {
+                        if (currencyCategory[i].tag == currency)
+                        {
+                            anvBostader[noOfResidences].usedCurrency = currencyCategory[i];
+                            foundcurrency = true;
+                        }
+                    }
+                    if ((!(foundcurrency)) && (noOfCurrencyCategories < maxNoOfCurrencyCategories))
+                    {
+                        anvBostader[noOfResidences].usedCurrency.tag = currency;
+                        anvBostader[noOfResidences].usedCurrency.description = "";
+                        anvBostader[noOfResidences].usedCurrency.level = 0;
+                        addCurrencyCategory(currency, "", "Undefiled", 0);
+                    }
+                    retVal = true;
+                    noOfResidences++;
+                }
+            }
+            return retVal;
+        }
+        public bool removeActorResidence(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfResidences))
+            {
+                for (int i = nr; i < noOfResidences; i++)
+                {
+                    anvBostader[i].streetname = anvBostader[i + 1].streetname;
+                    anvBostader[i].number = anvBostader[i + 1].number;
+                    anvBostader[i].additive = anvBostader[i + 1].additive;
+                    anvBostader[i].city = anvBostader[i + 1].city;
+                    anvBostader[i].area = anvBostader[i + 1].area;
+                    anvBostader[i].zipcode = anvBostader[i + 1].zipcode;
+                    anvBostader[i].country = anvBostader[i + 1].country;
+                    anvBostader[i].boughtDate = anvBostader[i + 1].boughtDate;
+                    anvBostader[i].boughtValue = anvBostader[i + 1].boughtValue;
+                    anvBostader[i].salesDate = anvBostader[i + 1].salesDate;
+                    anvBostader[i].salesValue = anvBostader[i + 1].salesValue;
+                    anvBostader[i].usedCurrency = anvBostader[i + 1].usedCurrency;
+                }
+                retVal = true;
+                noOfResidences--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region AttdEventData
         // --- Attended Events Data ---
         public int getNoOfAttendedEventsData() { return noOfAttendedEventData; }
         public string getActorAttendedEventID(int nr) { return anvTillstallningar[nr].eventID; }
         public string getActorAttendedEventType(int nr) { return anvTillstallningar[nr].eventCategory; }//anvTillstallningar[nr].type.ToString(); }
         public string getActorAttendedEventStarted(int nr) 
-        { 
+        {
             if ((anvTillstallningar[nr].started.month > 9) && (anvTillstallningar[nr].started.day > 9))
-                return anvTillstallningar[nr].started.year.ToString() + "-" + anvTillstallningar[nr].started.month.ToString() + "-" + anvTillstallningar[nr].started.day.ToString(); 
-            else if (anvTillstallningar[nr].started.day > 9)
+                return anvTillstallningar[nr].started.year.ToString() + "-" + anvTillstallningar[nr].started.month.ToString() + "-" + anvTillstallningar[nr].started.day.ToString();
+            else if ((anvTillstallningar[nr].started.month > 0) && (anvTillstallningar[nr].started.day > 9))
                 return anvTillstallningar[nr].started.year.ToString() + "-0" + anvTillstallningar[nr].started.month.ToString() + "-" + anvTillstallningar[nr].started.day.ToString();
-            else if (anvTillstallningar[nr].started.month > 9)
+            else if ((anvTillstallningar[nr].started.month > 9) && (anvTillstallningar[nr].started.day > 0))
                 return anvTillstallningar[nr].started.year.ToString() + "-" + anvTillstallningar[nr].started.month.ToString() + "-0" + anvTillstallningar[nr].started.day.ToString();
-            else
+            else if ((anvTillstallningar[nr].started.month > 0) && (anvTillstallningar[nr].started.day > 0))
                 return anvTillstallningar[nr].started.year.ToString() + "-0" + anvTillstallningar[nr].started.month.ToString() + "-0" + anvTillstallningar[nr].started.day.ToString();
+            else if (anvTillstallningar[nr].started.month > 9)
+                return anvTillstallningar[nr].started.year.ToString() + "-" + anvTillstallningar[nr].started.month.ToString();
+            else if (anvTillstallningar[nr].started.month > 0)
+                return anvTillstallningar[nr].started.year.ToString() + "-0" + anvTillstallningar[nr].started.month.ToString();
+            else
+                return anvTillstallningar[nr].started.year.ToString();
         }
         public string getActorAttendedEventEnded(int nr)
-        { 
+        {
             if ((anvTillstallningar[nr].ended.month > 9) && (anvTillstallningar[nr].ended.day > 9))
-                return anvTillstallningar[nr].ended.year.ToString() + "-" + anvTillstallningar[nr].ended.month.ToString() + "-" + anvTillstallningar[nr].ended.day.ToString(); 
-            else if (anvTillstallningar[nr].ended.day > 9)
+                return anvTillstallningar[nr].ended.year.ToString() + "-" + anvTillstallningar[nr].ended.month.ToString() + "-" + anvTillstallningar[nr].ended.day.ToString();
+            else if ((anvTillstallningar[nr].ended.month > 0) && (anvTillstallningar[nr].ended.day > 9))
                 return anvTillstallningar[nr].ended.year.ToString() + "-0" + anvTillstallningar[nr].ended.month.ToString() + "-" + anvTillstallningar[nr].ended.day.ToString();
-            else if (anvTillstallningar[nr].ended.month > 9)
+            else if ((anvTillstallningar[nr].ended.month > 9) && (anvTillstallningar[nr].ended.day > 0))
                 return anvTillstallningar[nr].ended.year.ToString() + "-" + anvTillstallningar[nr].ended.month.ToString() + "-0" + anvTillstallningar[nr].ended.day.ToString();
-            else
+            else if ((anvTillstallningar[nr].ended.month > 0) && (anvTillstallningar[nr].ended.day > 0))
                 return anvTillstallningar[nr].ended.year.ToString() + "-0" + anvTillstallningar[nr].ended.month.ToString() + "-0" + anvTillstallningar[nr].ended.day.ToString();
+            else if (anvTillstallningar[nr].ended.month > 9)
+                return anvTillstallningar[nr].ended.year.ToString() + "-" + anvTillstallningar[nr].ended.month.ToString();
+            else if (anvTillstallningar[nr].ended.month > 0)
+                return anvTillstallningar[nr].ended.year.ToString() + "-0" + anvTillstallningar[nr].ended.month.ToString();
+            else
+                return anvTillstallningar[nr].ended.year.ToString();
         }
         public string getActorAttendedEventRoleTag(int nr) { return anvTillstallningar[nr].role.tag; }
         public string getActorAttendedEventRoleDescription(int nr) { return anvTillstallningar[nr].role.description; }
         public int getActorAttendedEventRoleLevel(int nr) { return anvTillstallningar[nr].role.level; }
-        public bool setActorAttendedEventData(string id, string typ, string start, string ended, string roleTag)
+        public bool addActorAttendedEventData(string id, string typ, string start, string ended, string roleTag)
         {
             bool retVal = false;
             if (noOfAttendedEventData < maxNoOfAttendedEventData)
@@ -4121,132 +5170,10 @@ namespace PhotoEditor00002
                     addEventCategory(typ, "No description", "Undefined");
                     anvTillstallningar[noOfAttendedEventData].eventType.tag = typ;
                 }
-                int dp0 = start.IndexOf("-");
-                if ((dp0 > 0) && (dp0 < start.Length))
-                {
-                    // We have "-" delimeters
-                    if (start.Length > 9)
-                    {
-                        // Format YYYY-MM-DD
-                        string yrstr = start.Substring(0, 4);
-                        string mntstr = start.Substring(5, 2);
-                        string daystr = start.Substring(8, 2);
-                        anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrstr);
-                        anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mntstr);
-                        anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(daystr);
-                    }
-                    else if (start.Length > 7)
-                    {
-                        // Format YY-MM-DD
-                        string yrstr = start.Substring(0, 2);
-                        string mntstr = start.Substring(3, 2);
-                        string daystr = start.Substring(6, 2);
-                        anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrstr) + 1900;
-                        anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mntstr);
-                        anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(daystr);
-                    }
-                    else if (start.Length > 6)
-                    {
-                        // Format YYYY-MM
-                        string yrstr = start.Substring(0, 4);
-                        string mntstr = start.Substring(5, 2);
-                        anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrstr);
-                        anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mntstr);
-                    }
-                }
-                else
-                {
-                    // We don't have a delimiter
-                    if (start.Length > 7)
-                    {
-                        // Format YYYYMMDD
-                        string yrstr = start.Substring(0, 4);
-                        string mntstr = start.Substring(4, 2);
-                        string daystr = start.Substring(6, 2);
-                        anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrstr);
-                        anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mntstr);
-                        anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(daystr);
-                    }
-                    else if (start.Length > 5)
-                    {
-                        // Format YYMMDD
-                        string yrstr = start.Substring(0, 2);
-                        string mntstr = start.Substring(2, 2);
-                        string daystr = start.Substring(4, 2);
-                        anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrstr) + 1900;
-                        anvTillstallningar[noOfAttendedEventData].started.month = int.Parse(mntstr);
-                        anvTillstallningar[noOfAttendedEventData].started.day = int.Parse(daystr);
-                    }
-                    else if (start.Length > 3)
-                    {
-                        // Format YYYY
-                        string yrstr = start.Substring(0, 4);
-                        anvTillstallningar[noOfAttendedEventData].started.year = int.Parse(yrstr);
-                    }
-                }
-                dp0 = ended.IndexOf("-");
-                if ((dp0 > 0) && (dp0 < ended.Length))
-                {
-                    // We have "-" delimeters
-                    if (ended.Length > 9)
-                    {
-                        // Format YYYY-MM-DD
-                        string yrstr = ended.Substring(0, 4);
-                        string mntstr = ended.Substring(5, 2);
-                        string daystr = ended.Substring(8, 2);
-                        anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrstr);
-                        anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mntstr);
-                        anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(daystr);
-                    }
-                    else if (ended.Length > 7)
-                    {
-                        // Format YY-MM-DD
-                        string yrstr = ended.Substring(0, 2);
-                        string mntstr = ended.Substring(3, 2);
-                        string daystr = ended.Substring(6, 2);
-                        anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrstr) + 1900;
-                        anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mntstr);
-                        anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(daystr);
-                    }
-                    else if (ended.Length > 6)
-                    {
-                        // Format YYYY-MM
-                        string yrstr = ended.Substring(0, 4);
-                        string mntstr = ended.Substring(5, 2);
-                        anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrstr);
-                        anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mntstr);
-                    }
-                }
-                else
-                {
-                    // We don't have a delimiter
-                    if (ended.Length > 7)
-                    {
-                        // Format YYYYMMDD
-                        string yrstr = ended.Substring(0, 4);
-                        string mntstr = ended.Substring(4, 2);
-                        string daystr = ended.Substring(6, 2);
-                        anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrstr);
-                        anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mntstr);
-                        anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(daystr);
-                    }
-                    else if (ended.Length > 5)
-                    {
-                        // Format YYMMDD
-                        string yrstr = ended.Substring(0, 2);
-                        string mntstr = ended.Substring(2, 2);
-                        string daystr = ended.Substring(4, 2);
-                        anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrstr) + 1900;
-                        anvTillstallningar[noOfAttendedEventData].ended.month = int.Parse(mntstr);
-                        anvTillstallningar[noOfAttendedEventData].ended.day = int.Parse(daystr);
-                    }
-                    else if (ended.Length > 3)
-                    {
-                        // Format YYYY
-                        string yrstr = ended.Substring(0, 4);
-                        anvTillstallningar[noOfAttendedEventData].ended.year = int.Parse(yrstr);
-                    }
-                }
+                anvTillstallningar[noOfAttendedEventData].started.year = 0;
+                handleDate(start, noOfAttendedEventData, currEnum.Event);
+                anvTillstallningar[noOfAttendedEventData].ended.year = 0;
+                handleDate(ended, noOfAttendedEventData, currEnum.Event);
                 bool foundRoleCategory = false;
                 for (int i = 0; i < noOfRoleCategories; i++)
                 { 
@@ -4268,10 +5195,110 @@ namespace PhotoEditor00002
             }
             return retVal;
         }
+        public bool setActorAttendedEventData(int nr, string id, string typ, string start, string ended, string roleTag)
+        {
+            bool retVal = false;
+            if (nr < maxNoOfAttendedEventData)
+            {
+                anvTillstallningar[nr].eventID = id;
+                bool foundCategory = false;
+                for (int i = 0; i < noOfEventCategories; i++)
+                {
+                    if (typ == eventCategories[i].tag)
+                    {
+                        anvTillstallningar[nr].eventCategory = eventCategories[i].tag;
+                        foundCategory = true;
+                    }
+                }
+                if (!(foundCategory))
+                {
+                    addEventCategory(typ, "No description", "Undefined");
+                    anvTillstallningar[nr].eventType.tag = typ;
+                }
+                anvTillstallningar[nr].started.year = 0;
+                handleDate(start, nr, currEnum.Event);
+                anvTillstallningar[nr].ended.year = 0;
+                handleDate(ended, nr, currEnum.Event);
+                bool foundRoleCategory = false;
+                for (int i = 0; i < noOfRoleCategories; i++)
+                {
+                    if (roleTag == roleCategories[i].tag)
+                    {
+                        foundRoleCategory = true;
+                        anvTillstallningar[nr].role = roleCategories[i];
+                    }
+                }
+                if ((!(foundRoleCategory)) && (noOfRoleCategories < maxNoOfRoleCategories))
+                {
+                    anvTillstallningar[nr].role.tag = roleTag;
+                    anvTillstallningar[nr].role.description = "";
+                    anvTillstallningar[nr].role.level = 0;
+                    addRoleCategory(roleTag, "", "Undefined");
+                }
+                retVal = true;
+            }
+            return retVal;
+        }
+        public bool removeActorAttendedEventData(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfAttendedEventData))
+            {
+                for (int i = nr; i < noOfAttendedEventData; i++)
+                {
+                    anvTillstallningar[i].eventID = anvTillstallningar[i + 1].eventID;
+                    anvTillstallningar[i].eventCategory = anvTillstallningar[i + 1].eventCategory;
+                    anvTillstallningar[i].ended = anvTillstallningar[i + 1].ended;
+                    anvTillstallningar[i].eventType = anvTillstallningar[i + 1].eventType;
+                    anvTillstallningar[i].role = anvTillstallningar[i + 1].role;
+                    anvTillstallningar[i].started = anvTillstallningar[i + 1].started;
+                }
+                retVal = true;
+                noOfAttendedEventData--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region ReltdImages
         // --- Related Images Data ---
+        private void findFilesInDir(string sDir)
+        {
+            string[] fileArray = System.IO.Directory.GetFiles(sDir);
+            foreach (var exiFile in fileArray)
+            {
+                bool foundRootImagePath = false;
+                for (int i = 0; i < noOfRelatedImagesData; i++)
+                {
+                    if (exiFile == anvRelBilder[i].imagePathName)
+                    {
+                        foundRootImagePath = true;
+                    }
+                }
+                if ((!foundRootImagePath) && (noOfRelatedImagesData < maxNoOfRelatedImagesData))
+                {
+                    anvRelBilder[noOfRelatedImagesData].imagePathName = exiFile;
+                    anvRelBilder[noOfRelatedImagesData].imageContext.tag = "Unknown";
+                    anvRelBilder[noOfRelatedImagesData].imageContext.description = "";
+                    anvRelBilder[noOfRelatedImagesData].imageContext.level = 0;
+                    anvRelBilder[noOfRelatedImagesData].classificationLevel = ClassificationType.Unclassified;
+                    noOfRelatedImagesData++;
+                }
+            }
+        }
+        public void findDirsInDir(string sDir, string sStore)
+        {
+            string[] directoryArray = System.IO.Directory.GetDirectories(sDir);
+            foreach (var exiDir in directoryArray)
+            {
+                string sStepDir = exiDir;
+                findFilesInDir(sStepDir);
+                findDirsInDir(sStepDir, sStore);
+            }
+            //saveActorData(userId, sStore);
+        }
         public int getNoOfRelatedImages() { return noOfRelatedImagesData; }
         public string getActorRelatedImagePath(int nr) { return anvRelBilder[nr].imagePathName; }
-        public string getActorRelatedImageContent(int nr) { return anvRelBilder[nr].imageContext.tag; }
+        public string getActorRelatedImageContent(int nr) { return anvRelBilder[Math.Max(nr, 0)].imageContext.tag; }
         public string getActorRelatedImageClass(int nr) { return anvRelBilder[nr].classificationLevel.ToString(); }
         public int getActorRelatedImageClassValue(int nr)
         {
@@ -4309,39 +5336,115 @@ namespace PhotoEditor00002
                     addContextCategory(imctxc, "No description", imlvl);
                     anvRelBilder[noOfRelatedImagesData].imageContext.tag = imctxc;
                 }
-                // UndefLevel, Unclassified, Limited, Confidential,     Secret, QualifSecret
-                // Undefined,  Open,         Limited, Medium, Relative, Secret, QualifSecret
-                if ((imlvl == "Unclassified") || (imlvl == "Open"))
-                    anvRelBilder[noOfRelatedImagesData].classificationLevel = ClassificationType.Unclassified;
-                else if (imlvl == "Limited")
-                    anvRelBilder[noOfRelatedImagesData].classificationLevel = ClassificationType.Limited;
-                else if ((imlvl == "Confidential") || (imlvl == "Medium") || (imlvl == "Relative"))
-                    anvRelBilder[noOfRelatedImagesData].classificationLevel = ClassificationType.Confidential;
-                else if (imlvl == "Secret")
-                    anvRelBilder[noOfRelatedImagesData].classificationLevel = ClassificationType.Secret;
-                else if (imlvl == "QualifSecret")
-                    anvRelBilder[noOfRelatedImagesData].classificationLevel = ClassificationType.QualifSecret;
-                else
+                if (!(checkEnumeration(imlvl, noOfRelatedImagesData, currEnum.RelImg)))
                     anvRelBilder[noOfRelatedImagesData].classificationLevel = ClassificationType.UndefLevel;
                 noOfRelatedImagesData++;
                 retVal = true;
             }
             return retVal;
         }
+        public bool removeActorRelatedImage(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < maxNoOfRelatedImagesData) && (nr < noOfRelatedImagesData))
+            {
+                for (int i = nr; i < noOfRelatedImagesData; i++)
+                {
+                    anvRelBilder[i].imagePathName = anvRelBilder[i + 1].imagePathName;
+                    anvRelBilder[i].imageContext = anvRelBilder[i + 1].imageContext;
+                    anvRelBilder[i].classificationLevel = anvRelBilder[i + 1].classificationLevel;
+                }
+                retVal = true;
+                noOfRelatedImagesData--;
+            }
+            return retVal;
+        }
+        #endregion
+        #region UserRootDir
+        public int getMaxNoOfRootDirs() { return maxNoOfRootDirs; }
+        public int getNoOfRootDirs() { return noOfRootDirs; }
+        public bool removeActorRootDir(string instr, string sStore)
+        {
+            bool retVal = false;
+            for (int i = 0; i < noOfRootDirs; i++)
+            {
+                if (userRootDir[i] == instr)
+                {
+                    retVal = true;
+                    for (int j = i; (j + 1) < maxNoOfRootDirs; j++)
+                    {
+                        userRootDir[j] = userRootDir[j + 1];
+                    }
+                }
+            }
+            noOfRootDirs = Math.Max(noOfRootDirs - 1, 0);
+            saveActorData(userId, sStore);
+            return retVal;
+        }
+        public bool addActorRootDir(string instr, string sStore) 
+        {
+            bool foundDir = false;
+            for (int i = 0; i < noOfRootDirs; i++)
+            {
+                if (userRootDir[i] == instr)
+                    foundDir = true;
+            }
+            if ((noOfRootDirs < maxNoOfRootDirs) && (!foundDir))
+            {
+                userRootDir[noOfRootDirs++] = instr;
+                saveActorData(userId, sStore);
+                return true;
+            }
+            return false;
+        }
+        public string getActorRootDir(int nr) { return userRootDir[nr]; }
+        #endregion
+        #region Nationality
         // --- Nationality ---
         public int getNoOfNationalityData() { return noOfNationalityData; }
-        public string getNationalityData(int nr) { return nationality[nr]; }
+        public string getNationalityData(int nr) { return anvNationalities[nr].nationName; }
+        public string getNationalityName(int nr) { return anvNationalities[nr].nationName; }
+        public string getNationalityTag(int nr) { return anvNationalities[nr].nationTag; }
+        public int getNationalityValue(int nr) { return anvNationalities[nr].nationNumber; }
         public bool setNationalityData(string indata)
         {
             bool retVal = false;
             if (noOfNationalityData < maxNoOfNationalityData)
             {
-                nationality[noOfNationalityData] = indata;
+                anvNationalities[noOfNationalityData].nationName = indata;
                 noOfNationalityData++;
                 retVal = true;
             }
             return retVal;
         }
+        public bool setNationalityInfo(string name, string tag)
+        {
+            bool retVal = false;
+            if (noOfNationalityData < maxNoOfNationalityData)
+            {
+                anvNationalities[noOfNationalityData].nationName = name;
+                anvNationalities[noOfNationalityData].nationTag = tag;
+                noOfNationalityData++;
+                retVal = true;
+            }
+            return retVal;
+        }
+        public bool removeNationalityData(int nr)
+        {
+            bool retVal = false;
+            if ((nr >= 0) && (nr < noOfNationalityData))
+            {
+                for (int i = nr; i < noOfNationalityData; i++)
+                {
+                    anvNationalities[i].nationName = anvNationalities[i + 1].nationName;
+                    anvNationalities[i].nationTag = anvNationalities[i + 1].nationTag;
+                }
+                retVal = true;
+                noOfNationalityData--;
+            }
+            return retVal;
+        }
+        #endregion
         // ---------------------------
     }
 }

@@ -186,7 +186,7 @@ namespace myLoginForm//PhotoEditor00001
             this.btnCheckCred.Location = new System.Drawing.Point(6, 410);
             this.btnCheckCred.Name = "btnCheckCred";
             this.btnCheckCred.Size = new System.Drawing.Size(170, 28);
-            this.btnCheckCred.TabIndex = 502;
+            this.btnCheckCred.TabIndex = 3;
             this.btnCheckCred.Text = "Check Credentials";
             this.btnCheckCred.UseVisualStyleBackColor = false;
             this.btnCheckCred.Click += new System.EventHandler(this.btnCheckCred_Click);
@@ -198,7 +198,7 @@ namespace myLoginForm//PhotoEditor00001
             this.btnEditUserData.Location = new System.Drawing.Point(179, 410);
             this.btnEditUserData.Name = "btnEditUserData";
             this.btnEditUserData.Size = new System.Drawing.Size(161, 28);
-            this.btnEditUserData.TabIndex = 503;
+            this.btnEditUserData.TabIndex = 4;
             this.btnEditUserData.Text = "Edit User Data";
             this.btnEditUserData.UseVisualStyleBackColor = false;
             this.btnEditUserData.Click += new System.EventHandler(this.btnEditUserData_Click);
@@ -441,7 +441,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.btnAddEventType.BackColor = System.Drawing.SystemColors.Control;
             this.btnAddEventType.Enabled = false;
-            this.btnAddEventType.Location = new System.Drawing.Point(219, 122);
+            this.btnAddEventType.Location = new System.Drawing.Point(231, 122);
             this.btnAddEventType.Name = "btnAddEventType";
             this.btnAddEventType.Size = new System.Drawing.Size(54, 20);
             this.btnAddEventType.TabIndex = 523;
@@ -658,6 +658,7 @@ namespace myLoginForm//PhotoEditor00001
             this.txtBoxSetEventStorage.Size = new System.Drawing.Size(188, 20);
             this.txtBoxSetEventStorage.TabIndex = 524;
             this.txtBoxSetEventStorage.Visible = false;
+            this.txtBoxSetEventStorage.TextChanged += new System.EventHandler(this.txtBoxSetEventStorage_TextChanged);
             // 
             // btnEventStorage
             // 
@@ -759,6 +760,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.tabPageUserMetadata.AutoScroll = true;
             this.tabPageUserMetadata.AutoScrollMargin = new System.Drawing.Size(3, 3);
+            this.tabPageUserMetadata.Controls.Add(this.btnAddEventType);
             this.tabPageUserMetadata.Controls.Add(this.btnAddRole);
             this.tabPageUserMetadata.Controls.Add(this.txtBxRoleToAdd);
             this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingRoles);
@@ -802,7 +804,6 @@ namespace myLoginForm//PhotoEditor00001
             this.tabPageUserMetadata.Controls.Add(this.btnAddContentType);
             this.tabPageUserMetadata.Controls.Add(this.txtbxEventTypeToAdd);
             this.tabPageUserMetadata.Controls.Add(this.txtBxContentTypeToAdd);
-            this.tabPageUserMetadata.Controls.Add(this.btnAddEventType);
             this.tabPageUserMetadata.Controls.Add(this.cmbBxExistingContentTypes);
             this.tabPageUserMetadata.Controls.Add(this.lblContentType);
             this.tabPageUserMetadata.Controls.Add(this.txtBxMotifTypeAdding);
@@ -1076,7 +1077,7 @@ namespace myLoginForm//PhotoEditor00001
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(662, 446);
+            this.ClientSize = new System.Drawing.Size(678, 485);
             this.Controls.Add(this.userDataTabControl);
             this.Controls.Add(this.btnEditUserData);
             this.Controls.Add(this.btnCheckCred);
@@ -1085,6 +1086,7 @@ namespace myLoginForm//PhotoEditor00001
             this.Controls.Add(this.txtBxUserIdentity);
             this.Controls.Add(this.lblUserIdentity);
             this.Controls.Add(this.pictureBox1);
+            this.KeyPreview = true;
             this.Name = "LoginForm";
             this.Text = "LoginForm";
             this.TopMost = true;

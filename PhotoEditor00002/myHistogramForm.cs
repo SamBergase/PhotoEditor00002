@@ -16,7 +16,7 @@ namespace PhotoEditor00002
         #region parameterDef
         string activeFileNamePath;
         public Bitmap activeBitmap;
-        Bitmap histogramBitmap;
+//        Bitmap histogramBitmap;
         int[] alphaArray = new int[256];
         int[] redArray = new int[256];
         int[] greenArray = new int[256];
@@ -279,11 +279,13 @@ namespace PhotoEditor00002
         }
         private void histogramPicBx_Click(object sender, EventArgs e)
         {
-            // TODO - Handle this event.
+            // This is not handled.
         }
         private void imagePicBx_Click(object sender, EventArgs e)
         {
-            // TODO - Should we react on this event?
+            // TODO - start a 'marking cross' as one corner, take the next click as the other corner.
+            //        after second click zoom in on the selected area.
+            //        Double-click resumes full image size.
         }
         private void activBtn_Click(object sender, EventArgs e)
         {
