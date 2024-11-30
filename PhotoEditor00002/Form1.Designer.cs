@@ -412,16 +412,6 @@ namespace PhotoEditor00002
             this.EventStartTextBox = new System.Windows.Forms.TextBox();
             this.EventLatitudeTextBox = new System.Windows.Forms.TextBox();
             this.sortingTabPage = new System.Windows.Forms.TabPage();
-            this.sortingButton22 = new System.Windows.Forms.Button();
-            this.sortingButton21 = new System.Windows.Forms.Button();
-            this.sortingButton20 = new System.Windows.Forms.Button();
-            this.sortingButton19 = new System.Windows.Forms.Button();
-            this.sortingButton18 = new System.Windows.Forms.Button();
-            this.sortingButton17 = new System.Windows.Forms.Button();
-            this.sortingButton16 = new System.Windows.Forms.Button();
-            this.sortingButton15 = new System.Windows.Forms.Button();
-            this.sortingButton14 = new System.Windows.Forms.Button();
-            this.sortingButton13 = new System.Windows.Forms.Button();
             this.sortingButton12 = new System.Windows.Forms.Button();
             this.sortingButton11 = new System.Windows.Forms.Button();
             this.sortingButton10 = new System.Windows.Forms.Button();
@@ -707,6 +697,8 @@ namespace PhotoEditor00002
             this.pictureCanvas.MouseHover += new System.EventHandler(this.pictureCanvas_MouseHover);
             this.pictureCanvas.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureCanvas_ClickUp);
             this.pictureCanvas.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.pictureCanvas_MouseWheel);
+            this.pictureCanvas.MouseLeave += new System.EventHandler(this.pictureCanvas_MouseLeave);
+            this.pictureCanvas.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureCanvas_MouseMove);
             // 
             // pictureName
             // 
@@ -4658,16 +4650,6 @@ namespace PhotoEditor00002
             // 
             // sortingTabPage
             // 
-            this.sortingTabPage.Controls.Add(this.sortingButton22);
-            this.sortingTabPage.Controls.Add(this.sortingButton21);
-            this.sortingTabPage.Controls.Add(this.sortingButton20);
-            this.sortingTabPage.Controls.Add(this.sortingButton19);
-            this.sortingTabPage.Controls.Add(this.sortingButton18);
-            this.sortingTabPage.Controls.Add(this.sortingButton17);
-            this.sortingTabPage.Controls.Add(this.sortingButton16);
-            this.sortingTabPage.Controls.Add(this.sortingButton15);
-            this.sortingTabPage.Controls.Add(this.sortingButton14);
-            this.sortingTabPage.Controls.Add(this.sortingButton13);
             this.sortingTabPage.Controls.Add(this.sortingButton12);
             this.sortingTabPage.Controls.Add(this.sortingButton11);
             this.sortingTabPage.Controls.Add(this.sortingButton10);
@@ -4687,136 +4669,6 @@ namespace PhotoEditor00002
             this.sortingTabPage.TabIndex = 6;
             this.sortingTabPage.Text = "Sorting";
             this.sortingTabPage.UseVisualStyleBackColor = true;
-            // 
-            // sortingButton22
-            // 
-            this.sortingButton22.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton22.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sortingButton22.Location = new System.Drawing.Point(6, 616);
-            this.sortingButton22.Name = "sortingButton22";
-            this.sortingButton22.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton22.TabIndex = 21;
-            this.sortingButton22.Text = "Sorting Button 22";
-            this.sortingButton22.UseVisualStyleBackColor = false;
-            this.sortingButton22.Visible = false;
-            this.sortingButton22.Click += new System.EventHandler(this.sortingButton22_Click);
-            // 
-            // sortingButton21
-            // 
-            this.sortingButton21.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton21.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sortingButton21.Location = new System.Drawing.Point(6, 587);
-            this.sortingButton21.Name = "sortingButton21";
-            this.sortingButton21.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton21.TabIndex = 20;
-            this.sortingButton21.Text = "Sorting Button 21";
-            this.sortingButton21.UseVisualStyleBackColor = false;
-            this.sortingButton21.Visible = false;
-            this.sortingButton21.Click += new System.EventHandler(this.sortingButton21_Click);
-            // 
-            // sortingButton20
-            // 
-            this.sortingButton20.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton20.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sortingButton20.Location = new System.Drawing.Point(6, 558);
-            this.sortingButton20.Name = "sortingButton20";
-            this.sortingButton20.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton20.TabIndex = 19;
-            this.sortingButton20.Text = "Sorting Button 20";
-            this.sortingButton20.UseVisualStyleBackColor = false;
-            this.sortingButton20.Visible = false;
-            this.sortingButton20.Click += new System.EventHandler(this.sortingButton20_Click);
-            // 
-            // sortingButton19
-            // 
-            this.sortingButton19.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton19.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sortingButton19.Location = new System.Drawing.Point(6, 528);
-            this.sortingButton19.Name = "sortingButton19";
-            this.sortingButton19.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton19.TabIndex = 18;
-            this.sortingButton19.Text = "Sorting Button 19";
-            this.sortingButton19.UseVisualStyleBackColor = false;
-            this.sortingButton19.Visible = false;
-            this.sortingButton19.Click += new System.EventHandler(this.sortingButton19_Click);
-            // 
-            // sortingButton18
-            // 
-            this.sortingButton18.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton18.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sortingButton18.Location = new System.Drawing.Point(6, 499);
-            this.sortingButton18.Name = "sortingButton18";
-            this.sortingButton18.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton18.TabIndex = 17;
-            this.sortingButton18.Text = "Sorting Button 18";
-            this.sortingButton18.UseVisualStyleBackColor = false;
-            this.sortingButton18.Visible = false;
-            this.sortingButton18.Click += new System.EventHandler(this.sortingButton18_Click);
-            // 
-            // sortingButton17
-            // 
-            this.sortingButton17.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton17.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sortingButton17.Location = new System.Drawing.Point(6, 470);
-            this.sortingButton17.Name = "sortingButton17";
-            this.sortingButton17.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton17.TabIndex = 16;
-            this.sortingButton17.Text = "Sorting Button 17";
-            this.sortingButton17.UseVisualStyleBackColor = false;
-            this.sortingButton17.Visible = false;
-            this.sortingButton17.Click += new System.EventHandler(this.sortingButton17_Click);
-            // 
-            // sortingButton16
-            // 
-            this.sortingButton16.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton16.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sortingButton16.Location = new System.Drawing.Point(6, 441);
-            this.sortingButton16.Name = "sortingButton16";
-            this.sortingButton16.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton16.TabIndex = 15;
-            this.sortingButton16.Text = "Sorting Button 16";
-            this.sortingButton16.UseVisualStyleBackColor = false;
-            this.sortingButton16.Visible = false;
-            this.sortingButton16.Click += new System.EventHandler(this.sortingButton16_Click);
-            // 
-            // sortingButton15
-            // 
-            this.sortingButton15.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton15.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sortingButton15.Location = new System.Drawing.Point(6, 412);
-            this.sortingButton15.Name = "sortingButton15";
-            this.sortingButton15.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton15.TabIndex = 14;
-            this.sortingButton15.Text = "Sorting Button 15";
-            this.sortingButton15.UseVisualStyleBackColor = false;
-            this.sortingButton15.Visible = false;
-            this.sortingButton15.Click += new System.EventHandler(this.sortingButton15_Click);
-            // 
-            // sortingButton14
-            // 
-            this.sortingButton14.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton14.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sortingButton14.Location = new System.Drawing.Point(6, 384);
-            this.sortingButton14.Name = "sortingButton14";
-            this.sortingButton14.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton14.TabIndex = 13;
-            this.sortingButton14.Text = "Sorting Button 14";
-            this.sortingButton14.UseVisualStyleBackColor = false;
-            this.sortingButton14.Visible = false;
-            this.sortingButton14.Click += new System.EventHandler(this.sortingButton14_Click);
-            // 
-            // sortingButton13
-            // 
-            this.sortingButton13.BackColor = System.Drawing.Color.Silver;
-            this.sortingButton13.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.sortingButton13.Location = new System.Drawing.Point(6, 355);
-            this.sortingButton13.Name = "sortingButton13";
-            this.sortingButton13.Size = new System.Drawing.Size(310, 23);
-            this.sortingButton13.TabIndex = 12;
-            this.sortingButton13.Text = "Sorting Button 13";
-            this.sortingButton13.UseVisualStyleBackColor = false;
-            this.sortingButton13.Visible = false;
-            this.sortingButton13.Click += new System.EventHandler(this.sortingButton13_Click);
             // 
             // sortingButton12
             // 
@@ -5482,14 +5334,6 @@ namespace PhotoEditor00002
         private System.Windows.Forms.Button sortingButton3;
         private System.Windows.Forms.Button sortingButton2;
         private System.Windows.Forms.Button sortingButton1;
-        private System.Windows.Forms.Button sortingButton20;
-        private System.Windows.Forms.Button sortingButton19;
-        private System.Windows.Forms.Button sortingButton18;
-        private System.Windows.Forms.Button sortingButton17;
-        private System.Windows.Forms.Button sortingButton16;
-        private System.Windows.Forms.Button sortingButton15;
-        private System.Windows.Forms.Button sortingButton14;
-        private System.Windows.Forms.Button sortingButton13;
         private System.Windows.Forms.Button sortingButton12;
         private System.Windows.Forms.Button sortingButton11;
         private System.Windows.Forms.Button sortingButton10;
@@ -5507,8 +5351,6 @@ namespace PhotoEditor00002
         private System.Windows.Forms.TextBox LatValueTextBox;
         private System.Windows.Forms.Button ViewGeoDataPosButton;
         private System.Windows.Forms.TextBox noOfComponentsTextBox;
-        private System.Windows.Forms.Button sortingButton22;
-        private System.Windows.Forms.Button sortingButton21;
         private System.Windows.Forms.ComboBox EventAttenderIDComboBox1;
         private System.Windows.Forms.ComboBox EventImageNameComboBox;
         private System.Windows.Forms.ToolStripMenuItem histogramToolStripMenuItem;

@@ -115,15 +115,16 @@ namespace PhotoEditor00002
         private int noOfActors = 0;
         //private bool genderTypeSet = false;
         //private bool genderLookSet = false;
+        private Point startingPoint = Point.Empty;
+        private Point movingPoint = Point.Empty;
+        private bool panning = false;
         #endregion
         public Form1()
         {
             Login_Win_Open();
             InitializeComponent();
             sortButtons = new[] { sortingButton1, sortingButton2, sortingButton3, sortingButton4, sortingButton5, sortingButton6, sortingButton7,
-                sortingButton8, sortingButton9, sortingButton10, sortingButton11, sortingButton12, sortingButton13, sortingButton14,
-                sortingButton15, sortingButton16, sortingButton17, sortingButton18, sortingButton19, sortingButton20, sortingButton21,
-                sortingButton22 };
+                sortingButton8, sortingButton9, sortingButton10, sortingButton11, sortingButton12 };
             int tnr = currUser.IndexOf("\\");
             if ((tnr > 0) && (tnr < currUser.Length - 1))
                 currUser = currUser.Substring(tnr + 1, currUser.Length - tnr - 1);
@@ -1096,56 +1097,6 @@ namespace PhotoEditor00002
             sortingButton12.Location = new Point(6, (rowNumber * 29) + 6);
             sortingButton12.Size = new Size(width - 12, 23);
             #endregion
-            #region sortingButton13
-            rowNumber++;
-            sortingButton13.Location = new Point(6, (rowNumber * 29) + 6);
-            sortingButton13.Size = new Size(width - 12, 23);
-            #endregion
-            #region sortingButton14
-            rowNumber++;
-            sortingButton14.Location = new Point(6, (rowNumber * 29) + 6);
-            sortingButton14.Size = new Size(width - 12, 23);
-            #endregion
-            #region sortingButton15
-            rowNumber++;
-            sortingButton15.Location = new Point(6, (rowNumber * 29) + 6);
-            sortingButton15.Size = new Size(width - 12, 23);
-            #endregion
-            #region sortingButton16
-            rowNumber++;
-            sortingButton16.Location = new Point(6, (rowNumber * 29) + 6);
-            sortingButton16.Size = new Size(width - 12, 23);
-            #endregion
-            #region sortingButton17
-            rowNumber++;
-            sortingButton17.Location = new Point(6, (rowNumber * 29) + 6);
-            sortingButton17.Size = new Size(width - 12, 23);
-            #endregion
-            #region sortingButton18
-            rowNumber++;
-            sortingButton18.Location = new Point(6, (rowNumber * 29) + 6);
-            sortingButton18.Size = new Size(width - 12, 23);
-            #endregion
-            #region sortingButton19
-            rowNumber++;
-            sortingButton19.Location = new Point(6, (rowNumber * 29) + 6);
-            sortingButton19.Size = new Size(width - 12, 23);
-            #endregion
-            #region sortingButton20
-            rowNumber++;
-            sortingButton20.Location = new Point(6, (rowNumber * 29) + 6);
-            sortingButton20.Size = new Size(width - 12, 23);
-            #endregion
-            #region sortingButton21
-            rowNumber++;
-            sortingButton21.Location = new Point(6, (rowNumber * 29) + 6);
-            sortingButton21.Size = new Size(width - 12, 23);
-            #endregion
-            #region sortingButton22
-            rowNumber++;
-            sortingButton22.Location = new Point(6, (rowNumber * 29) + 6);
-            sortingButton22.Size = new Size(width - 12, 23);
-            #endregion
 
             sortingTabPage.Refresh();
         }
@@ -1299,17 +1250,6 @@ namespace PhotoEditor00002
             {
                 linwin.saveUserData();
             }
-
-            // TODO: --- Below code should be removed ---
-            if (changesToSave)
-            {
-                var result = MessageBox.Show("Save changes to the image?", "Existing changes", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if ((result == DialogResult.Yes) && (loadedImageFileName != null))
-                    try { picture.Save(loadedImageFileName); } catch { }
-                if (picture != null)
-                    picture.Dispose();
-            }
-            // -----------------------------------------
 
             setInformationText("Closing the program", informationType.INFO, sender, e);
 //            try { linwin.saveUserData(); } catch { setInformationText("Cought an exeption when saving user data.", informationType.ERROR, sender, e); }
@@ -2130,6 +2070,41 @@ namespace PhotoEditor00002
             EventAttenderIDComboBox1.Items.Clear();
             EventImageNameComboBox.Items.Clear();
         }
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (currentMode == programMode.SORTINGVIEW)
+            {
+                if (sortingButton1.Visible && e.KeyCode == Keys.F1)
+                    sortingButton1_Click(sender, e);
+                else if (sortingButton2.Visible && e.KeyCode == Keys.F2)
+                    sortingButton2_Click(sender, e);
+                else if (sortingButton3.Visible && e.KeyCode == Keys.F3)
+                    sortingButton3_Click(sender, e);
+                else if (sortingButton4.Visible && e.KeyCode == Keys.F4)
+                    sortingButton4_Click(sender, e);
+                else if (sortingButton5.Visible && e.KeyCode == Keys.F5)
+                    sortingButton5_Click(sender, e);
+                else if (sortingButton6.Visible && e.KeyCode == Keys.F6)
+                    sortingButton6_Click(sender, e);
+                else if (sortingButton7.Visible && e.KeyCode == Keys.F7)
+                    sortingButton7_Click(sender, e);
+                else if (sortingButton8.Visible && e.KeyCode == Keys.F8)
+                    sortingButton8_Click(sender, e);
+                else if (sortingButton9.Visible && e.KeyCode == Keys.F9)
+                    sortingButton9_Click(sender, e);
+                else if (sortingButton10.Visible && e.KeyCode == Keys.F10)
+                    sortingButton10_Click(sender, e);
+                else if (sortingButton11.Visible && e.KeyCode == Keys.F11)
+                    sortingButton11_Click(sender, e);
+                else if (sortingButton12.Visible && e.KeyCode == Keys.F12)
+                    sortingButton12_Click(sender, e);
+            }
+            else if (currentMode == programMode.IMAGEVIEW)
+            {
+                if (e.KeyCode == Keys.Escape)
+                    pictureCanvas.Cursor = Cursors.Hand;
+            }
+        }
         #endregion
 
         #region Main menu items
@@ -2143,7 +2118,7 @@ namespace PhotoEditor00002
         {
             iAmWorking = true;
             this.UseWaitCursor = true;
-            if ((toSave.imageChanges) || (changesToSave)) // TODO - remove the last part.
+            if (toSave.imageChanges)
             {
                 var result = MessageBox.Show("Save changes to the image?", "Existing changes", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
@@ -2209,10 +2184,6 @@ namespace PhotoEditor00002
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO - Adapt to check what data has been changed:
-            //    possible data change [image|user|actor|event]
-            //
-            // currentMode = enum programMode [IMAGEVIEW|DIRECTORYVIEW|SORTINGVIEW|ACTORVIEW|EVENTVIEW|USERVIEW]
             try
             {
                 if (toSave.imageChanges)
@@ -2276,73 +2247,6 @@ namespace PhotoEditor00002
                     toSave.userChanges = false;
                 }
 
-                // TODO - the lines below is to be removed.
-                if (currentMode == programMode.IMAGEVIEW)
-                {
-                    ImageCodecInfo myImageCodecInfo;
-                    System.Drawing.Imaging.Encoder myEncoder;
-                    EncoderParameter myEncoderParameter;
-                    EncoderParameters myEncoderParameters;
-
-                    if ((detFileTypeName == "jpg") || (detFileTypeName == "JPG") || (detFileTypeName == "jpeg") || (detFileTypeName == "JPEG"))
-                        myImageCodecInfo = GetEncoderInfo("image/jpeg");
-                    else if ((detFileTypeName == "bmp") || (detFileTypeName == "BMP"))
-                        myImageCodecInfo = GetEncoderInfo("image/bmp");
-                    else if ((detFileTypeName == "gif") || (detFileTypeName == "GIF"))
-                        myImageCodecInfo = GetEncoderInfo("image/gif");
-                    else if ((detFileTypeName == "tiff") || (detFileTypeName == "TIFF"))
-                        myImageCodecInfo = GetEncoderInfo("image/tiff");
-                    else if ((detFileTypeName == "png") || (detFileTypeName == "PNG"))
-                        myImageCodecInfo = GetEncoderInfo("image/png");
-                    else
-                        myImageCodecInfo = GetEncoderInfo("image/jpeg");
-
-                    myEncoder = System.Drawing.Imaging.Encoder.Quality;
-
-                    myEncoderParameters = new EncoderParameters(1);
-
-                    myEncoderParameter = new EncoderParameter(myEncoder, 100L); // 25L);
-                    myEncoderParameters.Param[0] = myEncoderParameter;
-
-                    picture.Save(loadedImageFileName);
-
-                    setInformationText("Saved file " + loadedImageFileName, informationType.INFO, sender, e);
-                    picture = Image.FromFile(loadedImageFileName);
-                    pictureCanvas.Image = picture;
-                }
-                else if (currentMode == programMode.DIRECTORYVIEW)
-                {
-                    setInformationText("Saving in directory mode is not permitted.", informationType.ERROR, sender, e);
-                    return;
-                }
-                else if (currentMode == programMode.SORTINGVIEW)
-                {
-                    setInformationText("Saving in sorting mode is not permitted.", informationType.ERROR, sender, e);
-                    return;
-                }
-                else if (currentMode == programMode.ACTORVIEW)
-                {
-                    string sSavePath = linwin.getActorStoragePath() + "\\ActorData_" + actorClass.getUserId() + ".acf";
-                    if (!(actorClass.saveActorData(actorClass.getUserId(), sSavePath)))
-                    {
-                        setInformationText("Could not save actor data.", informationType.ERROR, sender, e);
-                        return;
-                    }
-                }
-                else if (currentMode == programMode.EVENTVIEW)
-                {
-                    string sSavePath = linwin.getEventStoragePath() + "\\" + eventClass.getEventID() + ".edf";
-                    if (!(eventClass.saveEvent(eventClass.getEventID(), sSavePath)))
-                    {
-                        setInformationText("Could not save event data.", informationType.ERROR, sender, e);
-                    }
-                }
-                else if (currentMode == programMode.USERVIEW)
-                {
-                    linwin.saveUserData();
-                }
-                changesToSave = false;
-                // ---------------------------------------------
                 saveToolStripMenuItem.Enabled = false;
                 saveAsToolStripMenuItem.Enabled = false;
             }
@@ -2525,196 +2429,11 @@ namespace PhotoEditor00002
                 sfd.Dispose();
                 toSave.userChanges = false;
             }
-
-            // TODO - remove the lines below
-            if (currentMode == programMode.IMAGEVIEW)
-            {
-                sfd.Filter = "Text files (*.txt)|*.txt|" +
-                             "Document files (*.doc)|*.doc|" +
-                             "xml files (*.xml)|*.xml|" +
-                             "jpg files (*.jpg)|*.jpg|" +
-                             "gif files (*.gif)|*.gif|" +
-                             "bmp files (*.bmp)|*.bmp|" +
-                             "mpg files (*.mpg)|*.mpg|" +
-                             "mp3 files (*.mp3)|*.mp3|" +
-                             "All files (*.*)|*.*";
-                sfd.FilterIndex = 9;
-                sfd.RestoreDirectory = true;
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    if (sfd.FileName.ToString() != "")
-                    {
-                        string originalFileName = loadedImageFileName;
-                        int dpe = sfd.FileName.ToString().LastIndexOf(".");
-                        string fleExt = sfd.FileName.ToString().Substring(dpe + 1, sfd.FileName.ToString().Length - dpe - 1);
-                        // --- Clear the picture and loadedImageFile ---
-                        // --- Fetch original file to bitmap ---
-                        Image theNewFile = pictureCanvas.Image;//Image.FromFile(loadedImageFileName);
-                        bool managedToSave = false;
-                        switch (fleExt.ToLower())
-                        {
-                            case "bmp":
-                                {
-                                    theNewFile.Save(sfd.FileName.ToString(), ImageFormat.Bmp);
-                                    managedToSave = true;
-                                }
-                                break;
-                            case "emf":
-                                {
-                                    theNewFile.Save(sfd.FileName.ToString(), ImageFormat.Emf);
-                                    managedToSave = true;
-                                }
-                                break;
-                            case "exif":
-                                {
-                                    theNewFile.Save(sfd.FileName.ToString(), ImageFormat.Exif);
-                                    managedToSave = true;
-                                }
-                                break;
-                            case "gif":
-                                {
-                                    theNewFile.Save(sfd.FileName.ToString(), ImageFormat.Gif);
-                                    managedToSave = true;
-                                }
-                                break;
-                            case "icon":
-                                {
-                                    theNewFile.Save(sfd.FileName.ToString(), ImageFormat.Icon);
-                                    managedToSave = true;
-                                }
-                                break;
-                            case "jpeg":
-                            case "jpg":
-                                {
-                                    theNewFile.Save(sfd.FileName.ToString(), ImageFormat.Jpeg);
-                                    managedToSave = true;
-                                }
-                                break;
-                            case "png":
-                                {
-                                    theNewFile.Save(sfd.FileName.ToString(), ImageFormat.Png);
-                                    managedToSave = true;
-                                }
-                                break;
-                            case "tiff":
-                                {
-                                    theNewFile.Save(sfd.FileName.ToString(), ImageFormat.Tiff);
-                                    managedToSave = true;
-                                }
-                                break;
-                            case "wmf":
-                                {
-                                    theNewFile.Save(sfd.FileName.ToString(), ImageFormat.Wmf);
-                                    managedToSave = true;
-                                }
-                                break;
-                            default:
-                                setInformationText("Requested image format," + fleExt.ToLower() + ", not handled!", informationType.ERROR, sender, e);
-                                break;
-                        }
-                        //theNewFile.Dispose();
-                        // --- Load the new file ---
-                        if (managedToSave)
-                        {
-                            //pictureCanvas.Image.Dispose();
-                            //picture.Dispose();
-                            loadedImageFileName = sfd.FileName.ToString();
-                            toSave.imageChanges = true;
-                            changesToSave = true; // TODO - should be removed.
-                            saveToolStripMenuItem.Enabled = false;
-                            saveAsToolStripMenuItem.Enabled = false;
-                            //picture = theNewFile;//Image.FromFile(loadedImageFileName);
-                            //pictureCanvas.SizeMode = PictureBoxSizeMode.Zoom;
-                            //getImageMetadataValues(sfd.FileName.ToString(), sender, e);
-                            //pictureCanvas.Image = picture; // TODO - parametern är inte giltig.
-                            //pictureName.Text = loadedImageFileName;
-                            //expandedImage = true;
-                            //saveAsToolStripMenuItem.Enabled = true;
-                        }
-                        theNewFile.Dispose();
-                    }
-                    else
-                        setInformationText("Failed to save file", informationType.ERROR, sender, e);
-                }
-                sfd.Dispose();
-                this.imageViewToolStripMenuItem_Click(sender, e);
-            }
-            else if (currentMode == programMode.DIRECTORYVIEW)
-            {
-                setInformationText("Saving a whole directory is not implemented.", informationType.ERROR, sender, e);
-                return;
-            }
-            else if (currentMode == programMode.SORTINGVIEW)
-            {
-                setInformationText("Saving in sorting mode not needed.", informationType.INFO, sender, e);
-                return;
-            }
-            else if (currentMode == programMode.ACTORVIEW)
-            {
-                sfd.Filter = "Actor data files (*.acf)|*.acf|" +
-                             "Txt files (*.txt)|*.txt|" +
-                             "All files (*.*)|*.*";
-                sfd.FilterIndex = 3;
-                sfd.RestoreDirectory = true;
-                if ((sfd.ShowDialog() == DialogResult.OK) && (actorClass.getUserId() != null))
-                {
-                    if (!(actorClass.saveActorData(actorClass.getUserId(), sfd.FileName.ToString())))
-                    {
-                        setInformationText("Failed to save actor data!", informationType.ERROR, sender, e);
-                        return;
-                    }
-                    toSave.actorChanges = false;
-                    changesToSave = false; // TODO - remove this line.
-                }
-                else
-                {
-                    setInformationText("Failed to save actor data!", informationType.ERROR, sender, e);
-                }
-                sfd.Dispose();
-            }
-            else if (currentMode == programMode.EVENTVIEW)
-            {
-                sfd.Filter = "Event data files (*.edf)|*.edf|" +
-                             "Text files (*.txt)|*.txt|" +
-                             "All files (*.*)|*.*";
-                sfd.FilterIndex = 3;
-                sfd.RestoreDirectory = true;
-                if ((sfd.ShowDialog() == DialogResult.OK) && (eventClass.getEventID() != null) && (eventClass.getEventID() != ""))
-                {
-                    if (!(eventClass.saveEvent(eventClass.getEventID(), sfd.FileName.ToString())))
-                    {
-                        setInformationText("Failed to save event data!", informationType.ERROR, sender, e);
-                        return;
-                    }
-                    toSave.eventChanges = false;
-                    changesToSave = false; // TODO - remove this line.
-                }
-                else
-                {
-                    setInformationText("Failed to save event data!", informationType.ERROR, sender, e);
-                }
-                sfd.Dispose();
-            }
-            else if (currentMode == programMode.USERVIEW)
-            {
-                sfd.Filter = "User data files (*.acf)|*.acf|" +
-                             "Text files (*.txt)|*.txt|" +
-                             "All files (*.*)|*.*";
-                sfd.FilterIndex = 3;
-                sfd.RestoreDirectory = true;
-                if ((sfd.ShowDialog() == DialogResult.OK) && (linwin.userId != null) && (linwin.userId != ""))
-                {
-                    linwin.saveUserData();
-                }
-                sfd.Dispose();
-                toSave.userChanges = false;
-                changesToSave = false; // TODO - remove this line.
-            }
-            // -----------------------------
         }
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if ((toSave.imageChanges) || (toSave.actorChanges) || (toSave.eventChanges) || (toSave.userChanges))
+                saveToolStripMenuItem_Click(sender, e);
             CloseDown(sender, e);
         }
         #endregion
@@ -2742,7 +2461,6 @@ namespace PhotoEditor00002
             fixImageDisplayAndSortingButtons(baseFolderName, sender, e);
             this.UseWaitCursor = false;
             folderBrowserDialog.Dispose();
-            // TODO - set buttons allocated to number keys that are related to sub-directories.
         }
         private void imageRestoringToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2814,7 +2532,16 @@ namespace PhotoEditor00002
             if ((sasp != "") && (System.IO.Directory.Exists(sasp)))
                 eventFilePaths = System.IO.Directory.GetFiles(sasp + "\\", "EventData_*.edf");
             else
-                eventFilePaths = System.IO.Directory.GetFiles(rootPath + "\\EventData\\", "EventData_*.edf");
+            {
+                if ((rootPath != "") && (System.IO.Directory.Exists(rootPath)) && (System.IO.Directory.Exists(rootPath + "\\EventData")))
+                    eventFilePaths = System.IO.Directory.GetFiles(rootPath + "\\EventData\\", "EventData_*.edf");
+                else
+                {
+                    System.IO.Directory.CreateDirectory(rootPath);
+                    System.IO.Directory.CreateDirectory(rootPath + "\\EventData");
+                    toSave.userChanges = true;
+                }
+            }
             activeEventComboBox.Items.Clear();
             activeEventComboBox.Items.Add("Select...");
             foreach (var efp in eventFilePaths)
@@ -3035,6 +2762,8 @@ namespace PhotoEditor00002
         private void searchDeletedFiles(int fileType, string startDir, string searchPhrase, object sender, EventArgs e)
         {
             // TODO - Recovering deleted files not implemented yet.
+            // See: https://stackoverflow.com/questions/8819188/c-sharp-classes-to-undelete-files
+            // -------------------------------------------------------------
             string tempOutStr = "Trying to find deleted files";
             if (startDir != "")
             {
@@ -3803,30 +3532,40 @@ namespace PhotoEditor00002
         {
             tt.Show("Currently loaded image name.", (Control)sender);
         }
-        private void pictureCanvas_ClickDown(object sender, EventArgs e)
+        void pictureCanvas_ClickDown(object sender, MouseEventArgs e)
         {
-            // Get the mouse position, set cursor to cross.
-            mousePos.X = Cursor.Position.X - 5;
-            mousePos.Y = Cursor.Position.Y - 26;
-            pictureCanvas.Cursor = Cursors.Cross;
+            panning = true;
+            pictureCanvas.Cursor = Cursors.Hand;
+            startingPoint = new Point(e.Location.X - movingPoint.X, e.Location.Y - movingPoint.Y);
+            setInformationText("Panning started at position X=" + e.Location.X.ToString() + " and Y=" + e.Location.Y.ToString() + ".", informationType.INFO, sender, e);
         }
-        private void pictureCanvas_ClickUp(object sender, EventArgs e)
+        void pictureCanvas_ClickUp(object sender, MouseEventArgs e)
         {
-            // TODO - Should this zoom in on the marked area or pan the image?
-            //        <CTRL>-button could control panning. ???
-            if (pictureCanvas.Image != null)
-            {
-                // get the mouse position, zoom in picture to the area marked.
-                // 5, 26
-                // pictureCanvas.SizeMode = PictureBoxSizeMode.Normal;
-                Rectangle rect = new Rectangle(mousePos.X, mousePos.Y, Cursor.Position.X - 5, Cursor.Position.Y - 26);
-                string sOutStr = "Start at " + mousePos.X.ToString() + ", " + mousePos.Y.ToString() + " end at " +
-                    (rect.X + (Cursor.Position.X - 5)).ToString() + ", " + (rect.Y + (Cursor.Position.Y - 26)).ToString() + ".";
-                setInformationText(sOutStr, informationType.INFO, sender, e);
-                Bitmap bmp = new Bitmap(pictureCanvas.Image, Convert.ToInt32(pictureCanvas.Width), Convert.ToInt32(pictureCanvas.Height));
-                //pictureCanvas.Image.
-            }
+            panning = false;
             pictureCanvas.Cursor = Cursors.Default;
+            setInformationText("Panning ended at position X=" + e.Location.X.ToString() + " and Y=" + e.Location.Y.ToString() + ".", informationType.INFO, sender, e);
+        }
+        void pictureCanvas_MouseLeave(object sender, EventArgs e)
+        {
+            panning = false;
+            pictureCanvas.Cursor = Cursors.Default;
+            setInformationText("Mouse left the canvas area!", informationType.INFO, sender, e);
+        }
+        void pictureCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            // TODO - This does not work!
+            if ((picture != null) && (panning))
+            {
+                movingPoint = new Point(e.Location.X - startingPoint.X, e.Location.Y - startingPoint.Y);
+                pictureCanvas.Invalidate();
+                setInformationText("Mouse move on canvas, dX=" + movingPoint.X.ToString() + " and cY=" + movingPoint.Y.ToString() + ".", informationType.INFO, sender, e);
+            }
+        }
+        void pictureCanvas_Paint(object sender, PaintEventArgs e)
+        {
+            // TODO - This does not work!
+            e.Graphics.Clear(Color.White);
+            e.Graphics.DrawImage(picture, movingPoint);
         }
         private void pictureCanvas_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -3835,6 +3574,7 @@ namespace PhotoEditor00002
                 picture = Image.FromFile(loadedImageFileName);
                 int originalImageHeight = picture.Height;
                 int originalImageWidth = picture.Width;
+                startingPoint = new Point(e.Location.X, e.Location.Y);
                 if (pictureCanvas.SizeMode != PictureBoxSizeMode.Normal)
                 {
                     pictureCanvas.SizeMode = PictureBoxSizeMode.Normal;
@@ -3847,11 +3587,13 @@ namespace PhotoEditor00002
                 {
                     if (e.Delta > 0)
                     {
-                        zoom += 0.01;
+                        //zoom += 0.01;
+                        zoom *= 1.25;
                     }
                     else if (e.Delta < 0)
                     {
-                        zoom -= 0.01;
+                        //zoom -= 0.01;
+                        zoom /= 1.25;
                     }
                 }
                 imageZoomed = true;
@@ -3980,7 +3722,6 @@ namespace PhotoEditor00002
             if (managedToSaveSomething)
             {
                 toSave.imageChanges = true;
-                changesToSave = true; // TODO - remove this line.
                 saveToolStripMenuItem_Click(sender, e);
                 saveToolStripMenuItem.Enabled = false;
                 SaveGenDataChangesButton.Enabled = false;
@@ -4208,7 +3949,6 @@ namespace PhotoEditor00002
             if (managedToSaveSomething)
             {
                 toSave.imageChanges = true;
-                changesToSave = true; // TODO - remove this line.
                 saveToolStripMenuItem.Enabled = true;
                 toSave.imageChanges = true;
                 SaveGenHWDataChangesButton.Enabled = false;
@@ -6220,55 +5960,46 @@ namespace PhotoEditor00002
                 actorClass.setUserBirthStreet(workstr);
             }
             toSave.actorChanges = true;
-            changesToSave = true; // TODO - remove this line.
         }
         private void BirthZipCodeTextBox_TextChanged(object sender, EventArgs e)
         {
             actorClass.setUserBirthZipcode(BirthZipCodeTextBox.Text);
             toSave.actorChanges = true;
-            changesToSave = true; // TODO - remove this line.
         }
         private void BirthAreaNameTextBox_TextChanged(object sender, EventArgs e)
         {
             actorClass.setUserBirthAreaname(BirthAreaNameTextBox.Text);
             toSave.actorChanges = true;
-            changesToSave = true; // TODO - Remove this line.
         }
         private void BirthCitynameTextBox_TextChanged(object sender, EventArgs e)
         {
             actorClass.setUserBirthCityname(BirthCitynameTextBox.Text);
             toSave.actorChanges = true;
-            changesToSave = true; // TODO - remove this line.
         }
         private void BirthCountryTextBox_TextChanged(object sender, EventArgs e)
         {
             actorClass.setUserBirthCountry(BirthCountryTextBox.Text);
             toSave.actorChanges = true;
-            changesToSave = true; // TODO - remove this line.
         }
         private void BirthDateTextBox_TextChanged(object sender, EventArgs e)
         {
             actorClass.setUserBirthDate(BirthDateTextBox.Text);
             toSave.actorChanges = true;
-            changesToSave = true; // TODO - remove this line.
         }
         private void SocSecNumberTextBox_TextChanged(object sender, EventArgs e)
         {
             actorClass.setUserBirthSocNo(SocSecNumberTextBox.Text);
             toSave.actorChanges = true;
-            changesToSave = true; // TODO - remove this line.
         }
         private void BirthLatitudeTextBox_TextChanged(object sender, EventArgs e)
         {
             actorClass.setUserBirthLatitude(BirthLatitudeTextBox.Text);
             toSave.actorChanges = true;
-            changesToSave = true; // TODO - remove this line.
         }
         private void BirthLongitudeTextBox_TextChanged(object sender, EventArgs e)
         {
             actorClass.setUserBirthLongitude(BirthLongitudeTextBox.Text);
             toSave.actorChanges = true;
-            changesToSave = true; // TODO - remove this line
         }
         private void ViewGeoPosButton_Click(object sender, EventArgs e)
         {
@@ -6493,7 +6224,6 @@ namespace PhotoEditor00002
                 SkinToneTagTextBox.Size = new Size(((ActorData.Size.Width - AddSkinToneButton.Size.Width - SkinToneDateTxtBx.Size.Width) - 10), 20);
                 toSave.actorChanges = true;
                 toSave.userChanges = true;
-                changesToSave = true; // TODO - remove this line.
                 saveToolStripMenuItem.Enabled = true;
                 saveAsToolStripMenuItem.Enabled = true;
             }
@@ -6563,7 +6293,6 @@ namespace PhotoEditor00002
                 sWorkDate = SkinToneDateTimePicker.Value.ToString();
                 actorClass.setUserSkinTone(actorClass.getNumberOfSkinTones(), sWorkTag, iRCh, iGCh, iBCh, sWorkDate);
                 toSave.actorChanges = true;
-                changesToSave = true; // TODO - remove this line.
                 saveToolStripMenuItem.Enabled = true;
                 saveAsToolStripMenuItem.Enabled = true;
             }
@@ -6741,7 +6470,6 @@ namespace PhotoEditor00002
                 SelEyeColorTextBox.Size = new Size(((ActorData.Size.Width - AddEyeColorButton.Size.Width - EyeColorValidDateComboBox.Size.Width) - 10), 20);
                 toSave.actorChanges = true;
                 toSave.userChanges = true;
-                changesToSave = true; // TODO - remove this line.
                 saveToolStripMenuItem.Enabled = true;
                 saveAsToolStripMenuItem.Enabled = true;
             }
@@ -6791,7 +6519,6 @@ namespace PhotoEditor00002
                 sWorkDate = EyeColorDteTmePckr.Value.ToString();
                 actorClass.setUserEyeData(actorClass.getNumberOfEyeData(), sWorkColor, sWorkForm, sWorkDate, bGlasses);
                 toSave.actorChanges = true;
-                changesToSave = true; // TODO - remove this line.
                 saveToolStripMenuItem.Enabled = true;
                 saveAsToolStripMenuItem.Enabled = true;
             }
@@ -7127,7 +6854,6 @@ namespace PhotoEditor00002
                 SaveActorDataChangesButton.Enabled = true;
                 DiscardActorDataChangesButton.Enabled = true;
                 toSave.actorChanges = true;
-                changesToSave = true; // TODO - remove this line
                 saveToolStripMenuItem.Enabled = true;
                 saveAsToolStripMenuItem.Enabled = true;
                 //Continue here
@@ -7312,7 +7038,6 @@ namespace PhotoEditor00002
                 {
                     actorClass.addUserLength(fValue, setUnitString, setDateString);
                     toSave.actorChanges = true;
-                    changesToSave = true; // TODO - remove this line
                     saveToolStripMenuItem.Enabled = true;
                     saveAsToolStripMenuItem.Enabled = true;
                     // --- reset GUI ---
@@ -7331,7 +7056,6 @@ namespace PhotoEditor00002
                     LengthValidDateComboBox.Enabled = true;
                     LengthValidDateComboBox.Visible = true;
                     toSave.actorChanges = true;
-                    changesToSave = true; // TODO - remove this line.
                     saveToolStripMenuItem.Enabled = true;
                     saveAsToolStripMenuItem.Enabled = true;
                 }
@@ -7398,7 +7122,6 @@ namespace PhotoEditor00002
                 {
                     actorClass.addUserWeightData(fValue, setUnitString, setDateString);
                     toSave.actorChanges = true;
-                    changesToSave = true; // TODO - remove this line.
                     saveToolStripMenuItem.Enabled = true;
                     saveAsToolStripMenuItem.Enabled = true;
                     // --- reset GUI ---
@@ -7417,7 +7140,6 @@ namespace PhotoEditor00002
                     WeightValidDateComboBox.Enabled = true;
                     WeightValidDateComboBox.Visible = true;
                     toSave.actorChanges = true;
-                    changesToSave = true; // TODO - remove this line.
                     saveToolStripMenuItem.Enabled = true;
                     saveAsToolStripMenuItem.Enabled = true;
                 }
@@ -7522,7 +7244,6 @@ namespace PhotoEditor00002
             ChestSizeTextBox.Enabled = false;
             ChestSizeTextBox.Visible = true;
             toSave.actorChanges = true;
-            changesToSave = true; // TODO - remove this line.
             saveToolStripMenuItem.Enabled = true;
             saveAsToolStripMenuItem.Enabled = true;
         }
@@ -7648,7 +7369,6 @@ namespace PhotoEditor00002
                 HairLengthTextBox.Enabled = false;
                 HairLengthTextBox.Visible = true;
                 toSave.actorChanges = true;
-                changesToSave = true; // TODO - remove this line.
                 saveToolStripMenuItem.Enabled = true;
                 saveAsToolStripMenuItem.Enabled = true;
             }
@@ -7701,7 +7421,6 @@ namespace PhotoEditor00002
                 HairLengthTextBox.Enabled = false;
                 HairLengthTextBox.Visible = true;
                 toSave.actorChanges = true;
-                changesToSave = true; // TODO - remove this line.
                 saveToolStripMenuItem.Enabled = true;
                 saveAsToolStripMenuItem.Enabled = true;
             }
@@ -10665,126 +10384,6 @@ namespace PhotoEditor00002
             else
             {
                 moveFileToDir(sortingButton12.Text, sender, e);
-            }
-        }
-        private void sortingButton13_Click(object sender, EventArgs e)
-        {
-            if (sortingButton13.Text == "Add directory...")
-            {
-                if (!(addDirAndFixButtons(13)))
-                    setInformationText("Failed to add directory.", informationType.ERROR, sender, e);
-            }
-            else
-            {
-                moveFileToDir(sortingButton13.Text, sender, e);
-            }
-        }
-        private void sortingButton14_Click(object sender, EventArgs e)
-        {
-            if (sortingButton14.Text == "Add directory...")
-            {
-                if (!(addDirAndFixButtons(14)))
-                    setInformationText("Failed to add directory.", informationType.ERROR, sender, e);
-            }
-            else
-            {
-                moveFileToDir(sortingButton14.Text, sender, e);
-            }
-        }
-        private void sortingButton15_Click(object sender, EventArgs e)
-        {
-            if (sortingButton15.Text == "Add directory...")
-            {
-                if (!(addDirAndFixButtons(15)))
-                    setInformationText("Failed to add directory.", informationType.ERROR, sender, e);
-            }
-            else
-            {
-                moveFileToDir(sortingButton15.Text, sender, e);
-            }
-        }
-        private void sortingButton16_Click(object sender, EventArgs e)
-        {
-            if (sortingButton16.Text == "Add directory...")
-            {
-                if (!(addDirAndFixButtons(16)))
-                    setInformationText("Failed to add directory.", informationType.ERROR, sender, e);
-            }
-            else
-            {
-                moveFileToDir(sortingButton16.Text, sender, e);
-            }
-        }
-        private void sortingButton17_Click(object sender, EventArgs e)
-        {
-            if (sortingButton17.Text == "Add directory...")
-            {
-                if (!(addDirAndFixButtons(17)))
-                    setInformationText("Failed to add directory.", informationType.ERROR, sender, e);
-            }
-            else
-            {
-                moveFileToDir(sortingButton17.Text, sender, e);
-            }
-        }
-        private void sortingButton18_Click(object sender, EventArgs e)
-        {
-            if (sortingButton18.Text == "Add directory...")
-            {
-                if (!(addDirAndFixButtons(18)))
-                    setInformationText("Failed to add directory.", informationType.ERROR, sender, e);
-            }
-            else
-            {
-                moveFileToDir(sortingButton18.Text, sender, e);
-            }
-        }
-        private void sortingButton19_Click(object sender, EventArgs e)
-        {
-            if (sortingButton19.Text == "Add directory...")
-            {
-                if (!(addDirAndFixButtons(19)))
-                    setInformationText("Failed to add directory.", informationType.ERROR, sender, e);
-            }
-            else
-            {
-                moveFileToDir(sortingButton19.Text, sender, e);
-            }
-        }
-        private void sortingButton20_Click(object sender, EventArgs e)
-        {
-            if (sortingButton20.Text == "Add directory...")
-            {
-                if (!(addDirAndFixButtons(20)))
-                    setInformationText("Failed to add directory.", informationType.ERROR, sender, e);
-            }
-            else
-            {
-                moveFileToDir(sortingButton20.Text, sender, e);
-            }
-        }
-        private void sortingButton21_Click(object sender, EventArgs e)
-        {
-            if (sortingButton21.Text == "Add directory...")
-            {
-                if (!(addDirAndFixButtons(21)))
-                    setInformationText("Failed to add directory.", informationType.ERROR, sender, e);
-            }
-            else
-            {
-                moveFileToDir(sortingButton21.Text, sender, e);
-            }
-        }
-        private void sortingButton22_Click(object sender, EventArgs e)
-        {
-            if (sortingButton22.Text == "Add directory...")
-            {
-                if (!(addDirAndFixButtons(22)))
-                    setInformationText("Failed to add directory.", informationType.ERROR, sender, e);
-            }
-            else
-            {
-                moveFileToDir(sortingButton22.Text, sender, e);
             }
         }
         #endregion
